@@ -9,9 +9,16 @@ import com.bit.envdev.service.MemberService;
 import com.bit.envdev.service.PointHistoryService;
 import com.bit.envdev.service.PointService;
 import lombok.RequiredArgsConstructor;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -160,4 +167,32 @@ public class MemberController {
             return ResponseEntity.badRequest().body(responseDTO);
         }
     }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout() {
+        ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
+        System.out.println("로그아웃 시도");
+        try {
+            SecurityContext securityContext = SecurityContextHolder.getContext();
+            securityContext.setAuthentication(null);
+            SecurityContextHolder.setContext(securityContext);
+
+            Map<String, String> msgMap = new HashMap<>();
+
+            msgMap.put("logoutMsg", "logout success");
+
+            responseDTO.setItem(msgMap);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+            System.out.println("로그아웃 성공");
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            System.out.println("로그아웃 실패");
+            responseDTO.setErrorMessage(e.getMessage());
+            responseDTO.setErrorCode(202);
+            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+
+
 }
