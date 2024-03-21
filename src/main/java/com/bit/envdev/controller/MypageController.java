@@ -36,20 +36,14 @@ public class MypageController {
     @GetMapping
     public ResponseEntity<?> mypage(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
-        System.out.println("마이페이지");
-        System.out.println(customUserDetails.getUsername());
         
         String username = customUserDetails.getUsername();
         MemberDTO memberDTO = memberService.findByUsername(username);
-
-        System.out.println("username" + username);
-        System.out.println("memberDTO.getProfileFile()" + memberDTO.getProfileFile());
 
         try {
             Map<String, String> msgMap = new HashMap<>();
 
             msgMap.put("msg", "마이페이지 입니다.");
-
             responseDTO.setItem(memberDTO);
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(responseDTO);
