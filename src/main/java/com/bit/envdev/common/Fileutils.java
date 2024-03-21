@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Component
-public class FileUtils {
+public class Fileutils {
     private final AmazonS3 s3;
 
     public FileUtils(NaverConfiguration naverConfiguration) {
