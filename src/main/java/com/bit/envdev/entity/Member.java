@@ -29,12 +29,16 @@ public class Member {
     @Column
     private String role;
 
+    @Column
+    private String profileFile;
+
     public MemberDTO toDTO() {
         return MemberDTO.builder()
                 .id(this.id)
                 .username(this.username)
                 .password(this.password)
                 .role(this.role)
+                .profileFile(this.profileFile)
                 .build();
     }
 }

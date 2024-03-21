@@ -15,6 +15,7 @@ public class MemberDTO {
     private String userNickname;
     private String role;
     private String token;
+    private String profileFile;
 
     public Member toEntity() {
         return Member.builder()
@@ -23,6 +24,7 @@ public class MemberDTO {
                 .password(this.password)
                 .userNickname(this.userNickname)
                 .role(this.role)
+                .profileFile(this.profileFile)
                 .build();
     }
 
