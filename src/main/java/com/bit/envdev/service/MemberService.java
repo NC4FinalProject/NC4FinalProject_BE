@@ -14,5 +14,7 @@ public interface MemberService {
     MemberDTO updateProfile(String fileString, MemberDTO memberDTO);
 
     MemberDTO findByUsername(String username);
+
+    MemberDTO updateUserNickname(String userNickname, MemberDTO memberDTO);
     
 }

@@ -98,4 +98,14 @@ public class MemberServiceImpl implements MemberService {
         MemberDTO NewMemberDTO = memberRepository.findByUsername(username).get().toDTO();
         return NewMemberDTO;
     }
+
+    @Override
+    public MemberDTO updateUserNickname(String userNickname, MemberDTO memberDTO) {
+
+        MemberDTO NewMemberDTO = memberRepository.findByUsername(memberDTO.getUsername()).get().toDTO();
+        NewMemberDTO.setUserNickname(userNickname);
+
+        Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
+        return joinMember.toDTO();
+    }
 }
