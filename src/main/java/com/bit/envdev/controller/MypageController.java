@@ -99,26 +99,57 @@ public class MypageController {
 
         ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
         
-try {
-    
-    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    UserDetails userDetails = (UserDetails)principal;
-    String username = userDetails.getUsername();
-    MemberDTO newMemberDTO = memberService.findByUsername(username);
-    
-    memberService.updateUserNickname(userNickname, newMemberDTO);
-    Map<String, String> msgMap = new HashMap<>();
-    
-            msgMap.put("msg", "정상적으로 입력되었습니다.");
+        try {
+            
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails userDetails = (UserDetails)principal;
+            String username = userDetails.getUsername();
+            MemberDTO newMemberDTO = memberService.findByUsername(username);
+            
+            memberService.updateUserNickname(userNickname, newMemberDTO);
+            Map<String, String> msgMap = new HashMap<>();
+            
+                    msgMap.put("msg", "정상적으로 입력되었습니다.");
 
-            responseDTO.setItem(msgMap);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            return ResponseEntity.ok(responseDTO);
-        } catch (Exception e) {
-            responseDTO.setErrorMessage(e.getMessage());
-            responseDTO.setErrorCode(202);
-            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
-            return ResponseEntity.badRequest().body(responseDTO);
-        }
+                    responseDTO.setItem(msgMap);
+                    responseDTO.setStatusCode(HttpStatus.OK.value());
+                    return ResponseEntity.ok(responseDTO);
+                } catch (Exception e) {
+                    responseDTO.setErrorMessage(e.getMessage());
+                    responseDTO.setErrorCode(202);
+                    responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                    return ResponseEntity.badRequest().body(responseDTO);
+                }
+    }
+
+    @GetMapping("/wannabe-teacher")
+    public ResponseEntity<?> wannabeTeacher(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
+        
+        System.out.println("컨트롤러 호출");
+        try {
+            
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails userDetails = (UserDetails)principal;
+            String username = userDetails.getUsername();
+            MemberDTO memberDTO = memberService.findByUsername(username);
+            
+            System.out.println("memberDTO : 변경전 나와라" + memberDTO.isWannabeTeacher());
+            memberService.wannabeTeacher(memberDTO);
+            System.out.println("memberDTO : 변경후 나와라" + memberDTO.isWannabeTeacher());
+            Map<String, String> msgMap = new HashMap<>();
+            
+                    msgMap.put("msg", "정상적으로 입력되었습니다.");
+
+                    responseDTO.setItem(msgMap);
+                    responseDTO.setStatusCode(HttpStatus.OK.value());
+                    return ResponseEntity.ok(responseDTO);
+                } catch (Exception e) {
+                    responseDTO.setErrorMessage(e.getMessage());
+                    responseDTO.setErrorCode(202);
+                    responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                    return ResponseEntity.badRequest().body(responseDTO);
+                }
     }
 }

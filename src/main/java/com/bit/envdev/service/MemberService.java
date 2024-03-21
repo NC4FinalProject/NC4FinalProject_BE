@@ -16,5 +16,7 @@ public interface MemberService {
     MemberDTO findByUsername(String username);
 
     MemberDTO updateUserNickname(String userNickname, MemberDTO memberDTO);
+
+    MemberDTO wannabeTeacher(MemberDTO memberDTO);
     
 }

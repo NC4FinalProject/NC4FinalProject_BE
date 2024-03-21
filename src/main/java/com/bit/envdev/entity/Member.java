@@ -32,6 +32,9 @@ public class Member {
     @Column
     private String profileFile;
 
+    @Column
+    private boolean wannabeTeacher;
+
     public MemberDTO toDTO() {
         return MemberDTO.builder()
                 .id(this.id)
@@ -40,6 +43,7 @@ public class Member {
                 .userNickname(this.userNickname)
                 .role(this.role)
                 .profileFile(this.profileFile)
+                .wannabeTeacher(this.wannabeTeacher)
                 .build();
     }
 }
