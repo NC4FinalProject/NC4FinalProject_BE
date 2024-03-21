@@ -52,19 +52,11 @@ public class SecurityConfiguration {
 
                     authorizationManagerRequestMatcherRegistry.requestMatchers(swaggerPath).permitAll();
                     authorizationManagerRequestMatcherRegistry.requestMatchers(AUTH_PATH).permitAll();
-                    authorizationManagerRequestMatcherRegistry.requestMatchers("/favicon.ico").permitAll();
-                    authorizationManagerRequestMatcherRegistry.requestMatchers("/logo192.png").permitAll();
-                    authorizationManagerRequestMatcherRegistry.requestMatchers("/manifest.json").permitAll();
-                    authorizationManagerRequestMatcherRegistry.requestMatchers("/asset-manifest.json").permitAll();
-                    authorizationManagerRequestMatcherRegistry.requestMatchers("/robots.txt").permitAll();
-                    authorizationManagerRequestMatcherRegistry.requestMatchers("/index.html").permitAll();
-                    authorizationManagerRequestMatcherRegistry.requestMatchers("/static/**").permitAll();
-                    authorizationManagerRequestMatcherRegistry.requestMatchers("/images/**").permitAll();
                     // anyRequest()에 대한 모든 권한 permitAll() 설정
                     // 각 요청에 대한 권한 설정 필요
                     authorizationManagerRequestMatcherRegistry.requestMatchers("/board/**").hasAnyRole("ADMIN", "USER");
                     authorizationManagerRequestMatcherRegistry.requestMatchers("/review/**").hasAnyRole("ADMIN", "USER");
-//                    authorizationManagerRequestMatcherRegistry.requestMatchers(HttpMethod.GET, "/", "/*.html", "/*/*.html", "/*/*.css", "/*/*.js").permitAll();
+                    authorizationManagerRequestMatcherRegistry.requestMatchers("/mypage/**").authenticated();
                     authorizationManagerRequestMatcherRegistry.anyRequest().permitAll();
                 })
                 // filter 등록

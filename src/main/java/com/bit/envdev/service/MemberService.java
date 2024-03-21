@@ -10,5 +10,13 @@ public interface MemberService {
     MemberDTO emailCheck(MemberDTO memberDTO);
 
     MemberDTO nicknameCheck(MemberDTO memberDTO);
+
+    MemberDTO updateProfile(String fileString, MemberDTO memberDTO);
+
+    MemberDTO findByUsername(String username);
+
+    MemberDTO updateUserNickname(String userNickname, MemberDTO memberDTO);
+
+    MemberDTO wannabeTeacher(MemberDTO memberDTO);
     
 }
