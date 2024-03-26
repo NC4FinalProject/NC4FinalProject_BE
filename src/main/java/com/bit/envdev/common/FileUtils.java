@@ -38,7 +38,7 @@ public class FileUtils {
 
     public FileDTO parseFileInfo(MultipartFile multipartFile, String directory) {
         //버킷 이름
-        String bucketName = "envdev";
+        String bucketName = "bitcamp-bucket-36";
 
         // 리턴할 BoardFileDTO 객체 생성
         FileDTO fileDTO = new FileDTO();

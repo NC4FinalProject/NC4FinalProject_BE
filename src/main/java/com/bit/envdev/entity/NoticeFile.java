@@ -1,31 +1,44 @@
-package com.bit.envdev.dto;
-import com.bit.envdev.entity.Notice;
-import com.bit.envdev.entity.NoticeFile;
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
+package com.bit.envdev.entity;
 
+import com.bit.envdev.dto.FileDTO;
+import jakarta.persistence.*;
 import lombok.*;
 
+
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
-public class FileDTO {
+public class NoticeFile {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long itemId;
+
+    @Column(nullable = false)
     private long itemFileId;
+
+    @Column(nullable = false)
     private String itemFileName;
+
+    @Column(nullable = false)
     private String itemFilePath;
+
+    @Column(nullable = false)
     private String itemFileOrigin;
 
-    public NoticeFile toEntity(Notice notice) {
-        return NoticeFile.builder()
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notice_id")
+    private Notice notice;
+
+    public FileDTO toDTO() {
+        return FileDTO.builder()
                 .itemId(this.itemId)
                 .itemFileId(this.itemFileId)
                 .itemFileName(this.itemFileName)
                 .itemFilePath(this.itemFilePath)
                 .itemFileOrigin(this.itemFileOrigin)
-                .notice(notice)
                 .build();
     }
 }
