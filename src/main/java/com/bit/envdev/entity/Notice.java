@@ -1,6 +1,5 @@
 package com.bit.envdev.entity;
 
-import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.dto.NoticeDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,12 +16,13 @@ import java.util.List;
 public class Notice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notice_id")
     private Long id;
 
     @Column(nullable = false)
     private String noticeTitle;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String noticeContent;
 
     @Column(nullable = false)

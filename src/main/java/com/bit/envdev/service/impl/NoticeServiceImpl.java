@@ -1,5 +1,6 @@
 package com.bit.envdev.service.impl;
 
+import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.NoticeDTO;
 import com.bit.envdev.entity.Notice;
 import com.bit.envdev.entity.NoticeFile;
@@ -10,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NoticeServiceImpl implements NoticeService {
     private final NoticeRepository noticeRepository;
+    private final FileUtils fileUtils;
     @Override
     public Page<NoticeDTO> searchAll(Pageable pageable, String searchCondition, String searchKeyword) {
         Page<Notice> noticePage = noticeRepository.searchAll(pageable, searchCondition, searchKeyword);
@@ -55,6 +56,17 @@ public class NoticeServiceImpl implements NoticeService {
         Notice notice = noticeRepository.findById(noticeNo).orElseThrow();
 
         return notice.toDTO();
+    }
+
+    @Override
+    public void removeImage(List<String> temporaryImage) {
+        if(temporaryImage != null || temporaryImage.size() > 0) {
+            temporaryImage.forEach(image -> {
+                String imgName = image.replace("https://kr.object.ncloudstorage.com/bitcamp-bucket-36/","");
+                System.out.println("imgName = " + imgName);
+                fileUtils.deleteObject(image);
+            });
+        }
     }
 
 }

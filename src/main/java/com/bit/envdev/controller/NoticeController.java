@@ -1,28 +1,22 @@
 package com.bit.envdev.controller;
 
+import com.bit.envdev.common.CKEditorImage;
 import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.FileDTO;
 import com.bit.envdev.dto.NoticeDTO;
 import com.bit.envdev.dto.ResponseDTO;
-import com.bit.envdev.entity.CustomUserDetails;
-import com.bit.envdev.entity.Member;
 import com.bit.envdev.service.MemberService;
 import com.bit.envdev.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +25,8 @@ public class NoticeController {
     private final NoticeService noticeService;
     private final FileUtils fileUtils;
     private final MemberService memberService;
+    private final CKEditorImage ckEditorImage;
+    private List<String> temporaryImage = new ArrayList<>();
 
     @GetMapping("/notice-list")
     public ResponseEntity<?> getBoardList(@PageableDefault(page = 0, size = 15) Pageable pageable,
@@ -49,7 +45,7 @@ public class NoticeController {
             responseDTO.setStatusCode(HttpStatus.OK.value());
 
             return ResponseEntity.ok(responseDTO);
-        } catch(Exception e) {
+        } catch (Exception e) {
             responseDTO.setErrorCode(401);
             responseDTO.setErrorMessage(e.getMessage());
             responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
@@ -59,29 +55,15 @@ public class NoticeController {
     }
 
     @PostMapping("/notice")
-    public ResponseEntity<?> postNoticeWithImage(@RequestBody NoticeDTO noticeDTO,
-                                                 @RequestParam(value = "uploadFiles", required = false) MultipartFile[] multipartFiles,
+    public ResponseEntity<?> postNoticeWithImage(@RequestPart("noticeDTO") NoticeDTO noticeDTO,
+                                                 @RequestPart(value = "fileDTOList", required = false) List<FileDTO> noticeFileDTOList,
                                                  @PageableDefault(page = 0, size = 10) Pageable pageable) {
         ResponseDTO<NoticeDTO> responseDTO = new ResponseDTO<>();
-
         try {
-            List<FileDTO> noticeFileDTOList = new ArrayList<>();
-
-            // 이미지 파일이 전송되었을 때 처리
-            if(multipartFiles != null) {
-                Arrays.stream(multipartFiles).forEach(multipartFile -> {
-                    if (multipartFile.getOriginalFilename() != null &&
-                            !multipartFile.getOriginalFilename().equalsIgnoreCase("")) {
-                        FileDTO noticeFile = fileUtils.parseFileInfo(multipartFile, "notice/");
-                        noticeFileDTOList.add(noticeFile);
-                    }
-                });
-            }
-
             noticeDTO.setNoticeFileDTOList(noticeFileDTOList);
 
             noticeService.post(noticeDTO);
-
+            temporaryImage.clear();
             // 페이지네이션된 모든 글 불러오기
             Page<NoticeDTO> noticeDTOPage = noticeService.searchAll(pageable, "all", "");
 
@@ -89,7 +71,7 @@ public class NoticeController {
             responseDTO.setStatusCode(HttpStatus.OK.value());
 
             return ResponseEntity.ok(responseDTO);
-        } catch(Exception e) {
+        } catch (Exception e) {
             responseDTO.setErrorCode(500);
             responseDTO.setErrorMessage("Internal server error: " + e.getMessage());
             responseDTO.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -98,24 +80,20 @@ public class NoticeController {
         }
     }
 
+
     @GetMapping("/notice/{noticeNo}")
     public ResponseEntity<?> getNotice(@PathVariable("noticeNo") Long noticeNo) {
         ResponseDTO<NoticeDTO> responseDTO = new ResponseDTO<>();
         try {
-            System.out.println("여기까지 오나");
             NoticeDTO noticeDTO = noticeService.findById(noticeNo);
-            System.out.println(noticeDTO.getNoticeWriter());
             String profileImageUrl = memberService.getProfileImageUrl(noticeDTO.getNoticeWriter());
-            System.out.println(profileImageUrl);
             noticeDTO.setProfileImageUrl(profileImageUrl);
-            System.out.println("--------------------------------");
 
             responseDTO.setItem(noticeDTO);
             responseDTO.setStatusCode(HttpStatus.OK.value());
-            System.out.println("보내짐");
 
             return ResponseEntity.ok(responseDTO);
-        } catch(Exception e) {
+        } catch (Exception e) {
             responseDTO.setErrorCode(404);
             responseDTO.setErrorMessage("Notice not found: " + e.getMessage());
             responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
@@ -124,4 +102,30 @@ public class NoticeController {
         }
     }
 
+    @PostMapping("/upload")
+    public ResponseEntity<?> upload(MultipartFile upload) {
+        Map<String, String> result = new HashMap<>();
+
+        FileDTO fileDTO = fileUtils.parseFileInfo(upload, "notice/");
+        temporaryImage.add(fileDTO.getItemFilePath() + fileDTO.getItemFileName());
+        System.out.println(temporaryImage);
+        System.out.println("https://kr.object.ncloudstorage.com/bitcamp-bucket-36/" + fileDTO.getItemFilePath() + fileDTO.getItemFileName());
+        result.put("url", "https://kr.object.ncloudstorage.com/bitcamp-bucket-36/" + fileDTO.getItemFilePath() + fileDTO.getItemFileName());
+        result.put("itemFilePath", fileDTO.getItemFilePath());
+        result.put("itemFileName", fileDTO.getItemFileName());
+        result.put("itemFileOrigin", fileDTO.getItemFileOrigin());
+
+        return ResponseEntity.ok(result);
+    }
+    @PutMapping("/remove")
+    public ResponseEntity<?> handleNotSaveRequest() {
+        try{
+         noticeService.removeImage(temporaryImage);
+         temporaryImage.clear();
+         return ResponseEntity.ok().body("이미지가 삭제되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("이미지 삭제에 실패했습니다.");
+        }
 }
+}
+

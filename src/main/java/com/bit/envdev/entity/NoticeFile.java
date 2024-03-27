@@ -14,9 +14,6 @@ import lombok.*;
 public class NoticeFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long itemId;
-
-    @Column(nullable = false)
     private long itemFileId;
 
     @Column(nullable = false)
@@ -34,7 +31,6 @@ public class NoticeFile {
 
     public FileDTO toDTO() {
         return FileDTO.builder()
-                .itemId(this.itemId)
                 .itemFileId(this.itemFileId)
                 .itemFileName(this.itemFileName)
                 .itemFilePath(this.itemFilePath)

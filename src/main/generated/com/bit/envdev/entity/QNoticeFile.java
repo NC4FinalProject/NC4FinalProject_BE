@@ -30,8 +30,6 @@ public class QNoticeFile extends EntityPathBase<NoticeFile> {
 
     public final StringPath itemFilePath = createString("itemFilePath");
 
-    public final NumberPath<Long> itemId = createNumber("itemId", Long.class);
-
     public final QNotice notice;
 
     public QNoticeFile(String variable) {
