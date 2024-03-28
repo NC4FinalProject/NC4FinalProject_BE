@@ -81,4 +81,45 @@ public class MemberServiceImpl implements MemberService {
 
         return memberDTO;
     }
+
+    @Override
+    public MemberDTO updateProfile(String fileString, MemberDTO memberDTO) {
+
+        MemberDTO NewMemberDTO = memberRepository.findByUsername(memberDTO.getUsername()).get().toDTO();
+        NewMemberDTO.setProfileFile(fileString);
+
+        Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
+        return joinMember.toDTO();
+    }
+
+    @Override
+    public MemberDTO findByUsername(String username) {
+       
+        MemberDTO NewMemberDTO = memberRepository.findByUsername(username).get().toDTO();
+        return NewMemberDTO;
+    }
+
+    @Override
+    public MemberDTO updateUserNickname(String userNickname, MemberDTO memberDTO) {
+
+        MemberDTO NewMemberDTO = memberRepository.findByUsername(memberDTO.getUsername()).get().toDTO();
+        NewMemberDTO.setUserNickname(userNickname);
+
+        Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
+        return joinMember.toDTO();
+    }
+
+    @Override
+    public MemberDTO wannabeTeacher(MemberDTO memberDTO) {
+        MemberDTO NewMemberDTO = memberRepository.findByUsername(memberDTO.getUsername()).get().toDTO();
+        NewMemberDTO.setWannabeTeacher(true);
+        Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
+        return joinMember.toDTO();
+    }
+
+    @Override
+    public String getProfileImageUrl(String noticeWriter) {
+        String profileImageUrl = memberRepository.findByUserNickname(noticeWriter).get().getProfileFile();
+        return profileImageUrl;
+    }
 }
