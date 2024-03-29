@@ -19,7 +19,7 @@ public class InquiryCommentLike {
     private long inquiryCommentLikeId;
 
     @ManyToOne
-    @JoinColumn(name = "inquiry_comment_id", referencedColumnName = "inquiry_comment_id")
+    @JoinColumn(name = "inquiry_comment_id")
     private InquiryComment inquiryComment;
 
 }

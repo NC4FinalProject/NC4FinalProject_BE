@@ -3,7 +3,6 @@ package com.bit.envdev.repository.Impl;
 import com.bit.envdev.entity.Notice;
 import com.bit.envdev.repository.NoticeRepositoryCustom;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -36,6 +35,7 @@ public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom {
                 .fetchOne();
         return new PageImpl<>(noticeList, pageable, totalCnt);
     }
+
 
     private BooleanBuilder getSearch(String searchCondition, String searchKeyword) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();

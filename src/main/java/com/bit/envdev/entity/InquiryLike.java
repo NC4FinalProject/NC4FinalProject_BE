@@ -19,6 +19,6 @@ public class InquiryLike {
     private long inquiryLikeId;
 
     @ManyToOne
-    @JoinColumn(name="review_id", referencedColumnName = "review_id")
+    @JoinColumn(name="review_id")
     private Inquiry inquiry;
 }
