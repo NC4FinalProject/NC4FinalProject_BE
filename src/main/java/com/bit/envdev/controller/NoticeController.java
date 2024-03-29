@@ -1,6 +1,5 @@
 package com.bit.envdev.controller;
 
-import com.bit.envdev.common.CKEditorImage;
 import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.FileDTO;
 import com.bit.envdev.dto.NoticeDTO;
@@ -25,7 +24,6 @@ public class NoticeController {
     private final NoticeService noticeService;
     private final FileUtils fileUtils;
     private final MemberService memberService;
-    private final CKEditorImage ckEditorImage;
     private List<String> temporaryImage = new ArrayList<>();
 
     @GetMapping("/notice-list")
