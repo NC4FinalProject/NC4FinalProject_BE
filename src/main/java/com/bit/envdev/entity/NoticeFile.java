@@ -1,6 +1,7 @@
 package com.bit.envdev.entity;
 
 import com.bit.envdev.dto.FileDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,7 @@ public class NoticeFile {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notice_id")
+    @JsonBackReference
     private Notice notice;
 
     public FileDTO toDTO() {
