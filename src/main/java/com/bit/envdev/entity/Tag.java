@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Builder
@@ -24,7 +22,7 @@ public class Tag {
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name="inquiry_id", referencedColumnName = "inquiry_id")
+    @JoinColumn(name="inquiry_id")
     private Inquiry inquiry;
 
 }
