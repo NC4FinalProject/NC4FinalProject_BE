@@ -1,6 +1,5 @@
 package com.bit.envdev.dto;
 
-import com.bit.envdev.entity.Member;
 import com.bit.envdev.entity.Notice;
 import lombok.*;
 
@@ -20,12 +19,11 @@ public class NoticeDTO {
     private String noticeWriter;
     private LocalDateTime noticeDate;
     private int view;
-    private long likeCnt;
     private List<FileDTO> noticeFileDTOList;
     private String searchCondition;
     private String searchKeyword;
     private String profileImageUrl;
-
+    private boolean likeNoticeByUser;
     public Notice toEntity() {
         return Notice.builder()
                 .id(this.id)
@@ -33,8 +31,8 @@ public class NoticeDTO {
                 .noticeContent(this.noticeContent)
                 .noticeWriter(this.noticeWriter)
                 .noticeDate(this.noticeDate)
+                .noticeFileList(new ArrayList<>())
                 .view(this.view)
-                .likeCnt(this.likeCnt)
                 .build();
     }
 
