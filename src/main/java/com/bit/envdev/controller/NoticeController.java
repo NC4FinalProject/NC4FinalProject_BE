@@ -1,22 +1,31 @@
 package com.bit.envdev.controller;
 
-import com.bit.envdev.common.CKEditorImage;
+
 import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.FileDTO;
 import com.bit.envdev.dto.NoticeDTO;
 import com.bit.envdev.dto.ResponseDTO;
+import com.bit.envdev.entity.CustomUserDetails;
 import com.bit.envdev.service.MemberService;
+import com.bit.envdev.service.NoticeLikeService;
 import com.bit.envdev.service.NoticeService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +34,8 @@ public class NoticeController {
     private final NoticeService noticeService;
     private final FileUtils fileUtils;
     private final MemberService memberService;
-    private final CKEditorImage ckEditorImage;
+ 
+    private final NoticeLikeService noticeLIkeService;
     private List<String> temporaryImage = new ArrayList<>();
 
     @GetMapping("/notice-list")
@@ -64,7 +74,6 @@ public class NoticeController {
 
             noticeService.post(noticeDTO);
             temporaryImage.clear();
-            // 페이지네이션된 모든 글 불러오기
             Page<NoticeDTO> noticeDTOPage = noticeService.searchAll(pageable, "all", "");
 
             responseDTO.setPageItems(noticeDTOPage);
@@ -82,14 +91,128 @@ public class NoticeController {
 
 
     @GetMapping("/notice/{noticeNo}")
-    public ResponseEntity<?> getNotice(@PathVariable("noticeNo") Long noticeNo) {
+    public ResponseEntity<?> getNotice(@PathVariable("noticeNo") Long noticeNo, HttpServletRequest request, HttpServletResponse response) {
         ResponseDTO<NoticeDTO> responseDTO = new ResponseDTO<>();
         try {
+            HttpSession session = request.getSession();
+
             NoticeDTO noticeDTO = noticeService.findById(noticeNo);
+            noticeService.updateView(noticeNo, request, response);
             String profileImageUrl = memberService.getProfileImageUrl(noticeDTO.getNoticeWriter());
             noticeDTO.setProfileImageUrl(profileImageUrl);
 
             responseDTO.setItem(noticeDTO);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setErrorCode(404);
+            responseDTO.setErrorMessage("Notice not found: " + e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+        }
+    }
+    @GetMapping("/likeget/{noticeNo}")
+    public ResponseEntity<?>  getLikeCnt(@PathVariable("noticeNo") Long noticeNo, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        Map<String, String> result = new HashMap<>();
+        try {
+            long noticeLikeCnt = noticeLIkeService.findByNoticeId(noticeNo);
+            long noticeCnt = noticeLIkeService.addOrdown(customUserDetails.getMember().getId(), noticeNo);
+            result.put("check", String.valueOf(noticeCnt));
+            result.put("likeCnt", String.valueOf(noticeLikeCnt));
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            result.put("check", "error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+    }
+
+    @PostMapping("/like/{noticeNo}")
+    public ResponseEntity<?> getLike(@PathVariable("noticeNo") Long noticeNo, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        Map<String, String> result = new HashMap<>();
+        try {
+
+            noticeLIkeService.insertLike(customUserDetails.getMember(), noticeNo);
+            long noticeCnt = noticeLIkeService.addOrdown(customUserDetails.getMember().getId(), noticeNo);
+            long noticeLikeCnt = noticeLIkeService.findByNoticeId(noticeNo);
+
+            result.put("check", String.valueOf(noticeCnt));
+            result.put("likeCnt", String.valueOf(noticeLikeCnt));
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            result.put("check", "error");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+    }
+
+
+    @GetMapping("/{noticeNo}")
+    public ResponseEntity<?> getNotice(@PathVariable("noticeNo") Long noticeNo) {
+        ResponseDTO<NoticeDTO> responseDTO = new ResponseDTO<>();
+        try {
+            NoticeDTO noticeDTO = noticeService.findById(noticeNo);
+
+            responseDTO.setItem(noticeDTO);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setErrorCode(404);
+            responseDTO.setErrorMessage("Notice not found: " + e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+        }
+    }
+
+    @DeleteMapping("/delete/{noticeNo}")
+    public  ResponseEntity<?> delete(@PathVariable("noticeNo") Long noticeNo) {
+        ResponseDTO<NoticeDTO> responseDTO = new ResponseDTO<>();
+        try {
+            noticeService.deleteById(noticeNo);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setErrorCode(404);
+            responseDTO.setErrorMessage("Notice not found: " + e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+        }
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateNoticeInfo(MultipartFile upload, @RequestPart("noticeDTO") NoticeDTO noticeDTO,
+                                                                    @RequestPart(value = "fileDTOList", required = false) List<FileDTO> noticeFileDTOList) {
+        ResponseDTO<List<Long>> responseDTO = new ResponseDTO<>();
+        try {
+            List<Long> modifyNoticeFileLIst = noticeService.modifyNoticeFileList(noticeDTO);
+            noticeService.modifyNoticeFile(modifyNoticeFileLIst);
+            temporaryImage.clear();
+
+           responseDTO.setStatusCode(HttpStatus.OK.value());
+            responseDTO.setItem(modifyNoticeFileLIst);
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setErrorCode(404);
+            responseDTO.setErrorMessage("Notice not found: " + e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+        }
+    }
+
+    @PutMapping("/updateProc")
+    public ResponseEntity<?> updateNotice(MultipartFile upload, @RequestPart("noticeDTO") NoticeDTO noticeDTO,
+                                          @RequestPart("modifyFiles") List<Long> modifyFiles,
+                                              @RequestPart(value = "fileDTOList", required = false) List<FileDTO> noticeFileDTOList) {
+        ResponseDTO<NoticeDTO> responseDTO = new ResponseDTO<>();
+        try {
+            noticeDTO.setNoticeFileDTOList(noticeFileDTOList);
+            noticeService.modifyNoticeFile(modifyFiles);
+            noticeService.modify(noticeDTO);
             responseDTO.setStatusCode(HttpStatus.OK.value());
 
             return ResponseEntity.ok(responseDTO);
