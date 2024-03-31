@@ -37,7 +37,6 @@ public class Inquiry {
     @Column(nullable = true)
     private String content;
 
-    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="contentsId")
     private Contents contents;

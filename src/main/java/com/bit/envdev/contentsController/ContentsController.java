@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bit.envdev.contentsDTO.ContentsDTO;
 import com.bit.envdev.dto.BoardDTO;
 import com.bit.envdev.dto.ResponseDTO;
 import com.bit.envdev.entity.CustomUserDetails;
@@ -25,7 +26,7 @@ public class ContentsController {
     // 컨텐츠 전체 보기
     @GetMapping("/listAll")
     public ResponseEntity<?> readAll () {
-        ResponseDTO<BoardDTO> responseDTO = new ResponseDTO<>();
+        ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
         // 서비스 로직
         System.out.println("일단 호출만 하자");
         return ResponseEntity.ok(responseDTO);

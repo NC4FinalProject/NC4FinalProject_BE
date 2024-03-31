@@ -39,15 +39,15 @@ public class Contents {
     @JoinColumn(name="id")
     private Member member;
 
-    // private String category;
+    private String category;
 
-    // private String introduce;
+    private String introduce;
 
-    // private String price;
+    private String price;
 
-    // private DateTime regDate;
+    private DateTime regDate;
 
-    // private DateTime modDate;
+    private DateTime modDate;
 
     public ContentsDTO toDTO() {
         return ContentsDTO.builder()

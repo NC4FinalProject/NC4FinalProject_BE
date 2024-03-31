@@ -54,6 +54,7 @@ public class SecurityConfiguration {
                     authorizationManagerRequestMatcherRegistry.requestMatchers(AUTH_PATH).permitAll();
                     // anyRequest()에 대한 모든 권한 permitAll() 설정
                     // 각 요청에 대한 권한 설정 필요
+                    // authorizationManagerRequestMatcherRegistry.requestMatchers("/contents/**").authenticated();
                     authorizationManagerRequestMatcherRegistry.requestMatchers("/board/**").hasAnyRole("ADMIN", "USER");
                     authorizationManagerRequestMatcherRegistry.requestMatchers("/review/**").hasAnyRole("ADMIN", "USER");
                     authorizationManagerRequestMatcherRegistry.requestMatchers("/mypage/**").authenticated();

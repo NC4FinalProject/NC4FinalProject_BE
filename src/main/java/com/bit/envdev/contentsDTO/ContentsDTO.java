@@ -27,11 +27,11 @@ public class ContentsDTO {
     
     private String contentsTitle;
 
-    // private String category;
+    private String category;
 
-    // private String introduce;
+    private String introduce;
 
-    // private String price;
+    private String price;
 
     // private DateTime regDate;
 
