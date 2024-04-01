@@ -5,6 +5,7 @@ import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.dto.PointDTO;
 import com.bit.envdev.dto.PointHistoryDTO;
 import com.bit.envdev.dto.ResponseDTO;
+import com.bit.envdev.entity.CustomUserDetails;
 import com.bit.envdev.service.MemberService;
 import com.bit.envdev.service.PointHistoryService;
 import com.bit.envdev.service.PointService;
@@ -15,9 +16,13 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -110,6 +115,28 @@ public class MemberController {
                 responseDTO.setErrorMessage(e.getMessage());
             }
 
+            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+
+    @DeleteMapping("/resign")
+    public ResponseEntity<?> resign(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails)principal;
+        String username = userDetails.getUsername();
+
+        try {
+            memberService.resign(username);
+
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            responseDTO.setErrorCode(202);
+            responseDTO.setErrorMessage(e.getMessage());
             responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.badRequest().body(responseDTO);
         }

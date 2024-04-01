@@ -12,5 +12,7 @@ public interface PointHistoryService {
 
     List<PointHistory> getPointHistory(String username);
 
+    void pointHistoryRemove(String username);
+
 //    List<PointHistoryDTO> findByUsername(String username);
 }
