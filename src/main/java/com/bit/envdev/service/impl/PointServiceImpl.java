@@ -34,4 +34,10 @@ public class PointServiceImpl implements PointService {
         pointRepository.pointCharge(point, username);
     }
 
+    @Override
+    public void pointRemove(String username) {
+        
+        pointRepository.deleteByUsername(username);
+    }
+
 }

@@ -21,5 +21,6 @@ public interface PointHistoryRepository extends JpaRepository<PointHistory, Long
 //    @Query(value = "select P from PointHistory P where P.username = :username ")
 //    List<PointHistory> findByMemberUsername(String username);
 
-
+    @Transactional
+    void deleteByUsername(String username);
 }

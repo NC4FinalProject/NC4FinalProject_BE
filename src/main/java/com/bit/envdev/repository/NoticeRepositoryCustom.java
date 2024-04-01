@@ -6,4 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface NoticeRepositoryCustom {
     Page<Notice> searchAll(Pageable pageable, String searchCondition, String searchKeyword);
+
 }
