@@ -46,4 +46,8 @@ public class Inquiry {
     @OneToMany(mappedBy = "inquiry", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Tag> tagMappingList;
+
+    @OneToMany(mappedBy = "inquiry", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<InquiryFile> inquiryFileList;
 }
