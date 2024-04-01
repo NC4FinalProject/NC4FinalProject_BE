@@ -2,19 +2,17 @@ package com.bit.envdev.service.impl;
 
 
 import com.bit.envdev.dto.MemberDTO;
-import com.bit.envdev.dto.ResponseDTO;
 import com.bit.envdev.entity.Member;
 import com.bit.envdev.jwt.JwtTokenProvider;
 import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -121,5 +119,13 @@ public class MemberServiceImpl implements MemberService {
     public String getProfileImageUrl(String noticeWriter) {
         String profileImageUrl = memberRepository.findByUserNickname(noticeWriter).get().getProfileFile();
         return profileImageUrl;
+    }
+
+    @Override
+    public List<MemberDTO> findAll() {
+        List<Member> members = memberRepository.findTop4ByOrderByIdDesc();
+        return members.stream()
+                .map(Member::toDTO)
+                .collect(Collectors.toList());
     }
 }

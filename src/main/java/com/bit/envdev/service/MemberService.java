@@ -2,6 +2,8 @@ package com.bit.envdev.service;
 
 import com.bit.envdev.dto.MemberDTO;
 
+import java.util.List;
+
 public interface MemberService {
     MemberDTO join(MemberDTO memberDTO);
 
@@ -20,4 +22,6 @@ public interface MemberService {
     MemberDTO wannabeTeacher(MemberDTO memberDTO);
 
     String getProfileImageUrl(String noticeWriter);
+
+    List<MemberDTO> findAll();
 }
