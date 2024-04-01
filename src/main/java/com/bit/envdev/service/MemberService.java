@@ -2,10 +2,15 @@ package com.bit.envdev.service;
 
 import com.bit.envdev.dto.MemberDTO;
 
+import jakarta.transaction.Transactional;
+
 public interface MemberService {
     MemberDTO join(MemberDTO memberDTO);
 
     MemberDTO login(MemberDTO memberDTO);
+
+    @Transactional
+    void resign(String memberDTO);
 
     MemberDTO emailCheck(MemberDTO memberDTO);
 

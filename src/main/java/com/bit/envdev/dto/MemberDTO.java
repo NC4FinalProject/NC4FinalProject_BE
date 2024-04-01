@@ -1,6 +1,5 @@
 package com.bit.envdev.dto;
-
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 
 import com.bit.envdev.entity.Member;
 import lombok.*;
@@ -9,6 +8,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 public class MemberDTO {
     private long id;
