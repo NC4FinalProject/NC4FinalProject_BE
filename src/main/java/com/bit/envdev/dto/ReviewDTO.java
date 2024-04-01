@@ -1,8 +1,10 @@
 package com.bit.envdev.dto;
 
-import com.bit.envdev.entity.Member;
+import com.bit.envdev.entity.CartLecture;
 import com.bit.envdev.entity.Review;
 import lombok.*;
+
+import java.util.Date;
 
 @Getter
 @Setter
@@ -11,19 +13,18 @@ import lombok.*;
 @Builder
 public class ReviewDTO {
     private long reviewId;
-    private String userNickname;
     private String reviewContent;
-    private String reviewRegdate;
-    private String reviewModidate;
-    private String reviewRating;
+    private Date reviewCrtDate;
+    private Date reviewUdtDate;
+    private int reviewRating;
 
-    public Review toEntity(Member member) {
+
+    public Review toEntity() {
         return Review.builder()
                 .reviewId(this.reviewId)
-                .member(member)
                 .reviewContent(this.reviewContent)
-                .reviewRegdate(this.reviewRegdate)
-                .reviewModidate(this.reviewModidate)
+                .reviewCrtDate(this.reviewCrtDate)
+                .reviewUdtDate(this.reviewUdtDate)
                 .reviewRating(this.reviewRating)
                 .build();
     }
