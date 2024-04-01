@@ -1,5 +1,7 @@
 package com.bit.envdev.dto;
 
+import org.joda.time.LocalDateTime;
+
 import com.bit.envdev.entity.Member;
 import lombok.*;
 
@@ -17,6 +19,9 @@ public class MemberDTO {
     private String token;
     private String profileFile;
     private boolean wannabeTeacher;
+    private String createdAt;
+    private String modifiedAt;
+
 
     public Member toEntity() {
         return Member.builder()
@@ -27,6 +32,8 @@ public class MemberDTO {
                 .role(this.role)
                 .profileFile(this.profileFile)
                 .wannabeTeacher(this.wannabeTeacher)
+                .createdAt(LocalDateTime.parse(this.createdAt))
+                .modifiedAt(LocalDateTime.parse(this.modifiedAt))
                 .build();
     }
 

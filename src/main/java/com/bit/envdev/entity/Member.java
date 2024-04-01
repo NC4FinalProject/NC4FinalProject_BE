@@ -1,5 +1,8 @@
 package com.bit.envdev.entity;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.joda.time.LocalDateTime;
+
 import com.bit.envdev.dto.MemberDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,8 +35,14 @@ public class Member {
     @Column
     private String profileFile;
 
-    @Column
+    @ColumnDefault("false")
     private boolean wannabeTeacher;
+
+    @Column
+    private LocalDateTime createdAt;
+
+    @Column
+    private LocalDateTime modifiedAt;
 
     public MemberDTO toDTO() {
         return MemberDTO.builder()
@@ -44,6 +53,8 @@ public class Member {
                 .role(this.role)
                 .profileFile(this.profileFile)
                 .wannabeTeacher(this.wannabeTeacher)
+                .createdAt(this.createdAt.toString())
+                .modifiedAt(this.modifiedAt.toString())
                 .build();
     }
 }
