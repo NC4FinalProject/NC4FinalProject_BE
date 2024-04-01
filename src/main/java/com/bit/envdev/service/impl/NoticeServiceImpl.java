@@ -102,6 +102,15 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
+    public List<NoticeDTO> findAll() {
+        List<Notice> notices = noticeRepository.findTop4ByOrderByNoticeDateDesc();
+        return notices.stream()
+                .map(Notice::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
     public void removeImage(List<String> temporaryImage) {
         if (temporaryImage != null || temporaryImage.size() > 0) {
             temporaryImage.forEach(image -> {

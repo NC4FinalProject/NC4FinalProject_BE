@@ -26,4 +26,6 @@ public interface NoticeService {
     void updateView(Long noticeNo, HttpServletRequest request, HttpServletResponse response);
 
     void modifyNoticeFile(List<Long> modifyNoticeFileLIst);
+
+    List<NoticeDTO> findAll();
 }

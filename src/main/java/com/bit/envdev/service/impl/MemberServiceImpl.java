@@ -2,19 +2,19 @@ package com.bit.envdev.service.impl;
 
 
 import com.bit.envdev.dto.MemberDTO;
-import com.bit.envdev.dto.ResponseDTO;
 import com.bit.envdev.entity.Member;
 import com.bit.envdev.jwt.JwtTokenProvider;
 import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import java.time.LocalDateTime;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,11 +22,13 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PointServiceImpl pointService;
+    private final PointHistoryServiceImpl pointHistoryService;
 
     @Override
     public MemberDTO join(MemberDTO memberDTO) {
         //유효성 검사
-        if(memberDTO == null || memberDTO.getUsername() == null || memberDTO.getPassword() == null) {
+        if(memberDTO.getUsername() == null || memberDTO.getPassword() == null) {
             throw new RuntimeException("Invalid Argument");
         }
 
@@ -35,6 +37,8 @@ public class MemberServiceImpl implements MemberService {
             throw new RuntimeException("already exist username");
         }
 
+        memberDTO.setCreatedAt(LocalDateTime.now().toString());
+        memberDTO.setModifiedAt(LocalDateTime.now().toString());
         Member joinMember = memberRepository.save(memberDTO.toEntity());
 
         return joinMember.toDTO();
@@ -61,6 +65,20 @@ public class MemberServiceImpl implements MemberService {
 
         return loginMemberDTO;
     }
+
+    @Override
+    public void resign(String username) {
+        // username으로 조회
+        // Optional<Member> resignMember = memberRepository.findByUsername(username);
+
+        pointService.pointRemove(username);
+        pointHistoryService.pointHistoryRemove(username);
+        // MemberDTO resignMemberDTO = resignMember.get().toDTO();
+        memberRepository.deleteByUsername(username);
+
+        // return resignMemberDTO;
+    }
+
 
     @Override
     public MemberDTO emailCheck(MemberDTO memberDTO) {
@@ -121,5 +139,13 @@ public class MemberServiceImpl implements MemberService {
     public String getProfileImageUrl(String noticeWriter) {
         String profileImageUrl = memberRepository.findByUserNickname(noticeWriter).get().getProfileFile();
         return profileImageUrl;
+    }
+
+    @Override
+    public List<MemberDTO> findAll() {
+        List<Member> members = memberRepository.findTop4ByOrderByIdDesc();
+        return members.stream()
+                .map(Member::toDTO)
+                .collect(Collectors.toList());
     }
 }
