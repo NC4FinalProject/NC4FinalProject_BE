@@ -8,21 +8,20 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 
-public class InquiryLike {
-
+public class InquiryFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long inquiryLikeId;
+    private int inquiryFileId;
 
     @ManyToOne
-    @JoinColumn(name="review_id")
+    @JoinColumn(name = "inquiry_id", referencedColumnName = "inquiryId")
     private Inquiry inquiry;
 
-    @ManyToOne
-    @JoinColumn(name="id", referencedColumnName = "id")
-    private Member member;
+    private String inquiryFileName;
+    private String inquiryFilePath;
+    private String inquiryFileOrigin;
 }

@@ -7,11 +7,14 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.bit.envdev.dto.MemberDTO;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -60,6 +63,14 @@ public class Member {
     public void preUpdate() {
         this.modifiedAt = LocalDateTime.now();
     }
+
+    @OneToOne (mappedBy = "member", cascade = CascadeType.ALL)
+    private Cart cart;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Lecture> lectureList;
+
 
     public MemberDTO toDTO() {
         return MemberDTO.builder()
