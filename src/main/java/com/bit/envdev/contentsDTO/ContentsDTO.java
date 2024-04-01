@@ -1,5 +1,7 @@
 package com.bit.envdev.contentsDTO;
 
+import java.time.LocalDate;
+
 import org.joda.time.DateTime;
 
 import com.bit.envdev.contentsEntity.Contents;
@@ -23,6 +25,9 @@ import lombok.ToString;
 @ToString
 public class ContentsDTO {
 
+
+    private String username;
+
     private int contentsId;
     
     private String contentsTitle;
@@ -31,20 +36,16 @@ public class ContentsDTO {
 
     private String introduce;
 
-    private String price;
-
-    // private DateTime regDate;
-
-    // private DateTime modDate;
-
-    private String username;
-
+    private String price;    
 
     public Contents toEntity(Member member) {
         return Contents.builder()
                 .contentsId(this.contentsId)
                 .contentsTitle(this.contentsTitle)
                 .member(member)
+                .category(this.category)
+                .introduce(this.introduce)
+                .price(this.price)
                 .build();
     }
 

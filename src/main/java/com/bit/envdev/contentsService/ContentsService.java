@@ -3,11 +3,11 @@ package com.bit.envdev.contentsService;
 import java.util.List;
 
 import com.bit.envdev.contentsDTO.ContentsDTO;
-import com.bit.envdev.dto.BoardDTO;
+import com.bit.envdev.contentsEntity.Contents;
 
 public interface ContentsService {
         
-    void insert(ContentsDTO contentsDTO);
+    Contents createContents(ContentsDTO contentsDTO, Long id);
 
     List<ContentsDTO> findByContents(int contentsId);
 
