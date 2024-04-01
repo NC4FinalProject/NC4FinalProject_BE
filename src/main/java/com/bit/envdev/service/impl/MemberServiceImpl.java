@@ -116,4 +116,10 @@ public class MemberServiceImpl implements MemberService {
         Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
         return joinMember.toDTO();
     }
+
+    @Override
+    public String getProfileImageUrl(String noticeWriter) {
+        String profileImageUrl = memberRepository.findByUserNickname(noticeWriter).get().getProfileFile();
+        return profileImageUrl;
+    }
 }

@@ -1,0 +1,2 @@
+insert ignore into member (password, role, user_nickname, username, wannabe_teacher) values
+    ('$2a$12$anLXoztRzTwiDhxX9ZMrs.1Y/dusENJGAjHWDdFwfmI6w0omaGa12', 'ADMIN', 'admin', 'admin@mail.com', false);

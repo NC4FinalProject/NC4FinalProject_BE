@@ -98,6 +98,7 @@ public class MemberController {
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             if(e.getMessage().equalsIgnoreCase("not exist username")) {
                 responseDTO.setErrorCode(200);
                 responseDTO.setErrorMessage(e.getMessage());

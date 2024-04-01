@@ -18,5 +18,6 @@ public interface MemberService {
     MemberDTO updateUserNickname(String userNickname, MemberDTO memberDTO);
 
     MemberDTO wannabeTeacher(MemberDTO memberDTO);
-    
+
+    String getProfileImageUrl(String noticeWriter);
 }
