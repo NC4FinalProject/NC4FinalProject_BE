@@ -7,4 +7,6 @@ public interface PointService {
     PointDTO getPoint(String username);
 
     void pointCharge(int point, String username);
+
+    void pointRemove(String username);
 }
