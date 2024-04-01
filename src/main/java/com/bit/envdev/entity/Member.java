@@ -1,11 +1,14 @@
 package com.bit.envdev.entity;
 
 import com.bit.envdev.dto.MemberDTO;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -35,6 +38,13 @@ public class Member {
     @Column
     private boolean wannabeTeacher;
 
+    @OneToOne (mappedBy = "member", cascade = CascadeType.ALL)
+    private Cart cart;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Lecture> lectureList;
+
     public MemberDTO toDTO() {
         return MemberDTO.builder()
                 .id(this.id)
@@ -44,6 +54,7 @@ public class Member {
                 .role(this.role)
                 .profileFile(this.profileFile)
                 .wannabeTeacher(this.wannabeTeacher)
+                // cart 객체 추가예정
                 .build();
     }
 }
