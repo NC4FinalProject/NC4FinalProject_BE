@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 @Entity
@@ -65,12 +66,9 @@ public class Member {
         this.modifiedAt = LocalDateTime.now();
     }
 
-    @OneToOne (mappedBy = "member", cascade = CascadeType.ALL)
-    private Cart cart;
-
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Lecture> lectureList;
+    private List<Contents> contentsList;
 
     public MemberDTO toDTO() {
         return MemberDTO.builder()

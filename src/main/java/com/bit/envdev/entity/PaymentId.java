@@ -13,5 +13,5 @@ public class PaymentId implements Serializable {
     @EqualsAndHashCode.Include
     private long paymentId;
     @EqualsAndHashCode.Include
-    private CartLectureId cartLecture;
+    private CartContentsId cartContents;
 }
