@@ -22,4 +22,7 @@ public class InquiryCommentLike {
     @JoinColumn(name = "inquiry_comment_id")
     private InquiryComment inquiryComment;
 
+    @ManyToOne
+    @JoinColumn(name="id", referencedColumnName = "id")
+    private Member member;
 }

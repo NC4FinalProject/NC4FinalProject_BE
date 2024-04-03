@@ -27,13 +27,18 @@ public class CustomUserDetails implements UserDetails {
                 new GrantedAuthority() {
                     @Override
                     public String getAuthority() {
-                        return member.getRole();
+                        return member.getRole().getRoles();
                     }
                 }
         );
 
         return auths;
     }
+
+    public Long getId() {
+        return member.getId();
+    }
+
 
     @Override
     public String getPassword() {

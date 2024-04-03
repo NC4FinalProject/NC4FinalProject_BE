@@ -21,4 +21,8 @@ public class InquiryLike {
     @ManyToOne
     @JoinColumn(name="review_id")
     private Inquiry inquiry;
+
+    @ManyToOne
+    @JoinColumn(name="id", referencedColumnName = "id")
+    private Member member;
 }
