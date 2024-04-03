@@ -1,21 +1,16 @@
-package com.bit.envdev.contentsDTO;
+package com.bit.envdev.dto;
 
-import java.time.LocalDate;
-
-import org.joda.time.DateTime;
-
-import com.bit.envdev.contentsEntity.Contents;
-import com.bit.envdev.dto.MemberDTO;
+import com.bit.envdev.entity.Contents;
 import com.bit.envdev.entity.Member;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,7 +19,6 @@ import lombok.ToString;
 @Builder
 @ToString
 public class ContentsDTO {
-
 
     private String username;
 
@@ -36,7 +30,11 @@ public class ContentsDTO {
 
     private String introduce;
 
-    private String price;    
+    private String price;
+
+    private String priceType;
+
+    private List<SectionDTO> sectionDTOList;
 
     public Contents toEntity(Member member) {
         return Contents.builder()

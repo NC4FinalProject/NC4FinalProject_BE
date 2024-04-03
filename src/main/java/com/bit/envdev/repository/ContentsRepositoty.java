@@ -1,9 +1,11 @@
-package com.bit.envdev.contentsRepository;
+package com.bit.envdev.repository;
+
 
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.bit.envdev.entity.Contents;
 import org.springframework.stereotype.Repository;
 
-import com.bit.envdev.contentsEntity.Contents;
 
 @Repository
 public interface ContentsRepositoty extends JpaRepository<Contents, Integer>{

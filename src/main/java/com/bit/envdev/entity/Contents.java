@@ -1,29 +1,19 @@
-package com.bit.envdev.contentsEntity;
+package com.bit.envdev.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import com.bit.envdev.contentsDTO.ContentsDTO;
+import com.bit.envdev.dto.ContentsDTO;
 import com.bit.envdev.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,14 +26,26 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Builder
+@SequenceGenerator(
+        name = "ContentsSeqGenerator",
+        sequenceName = "T_Contents_SEQ",
+        initialValue = 1,
+        allocationSize = 1
+)
 public class Contents {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "ContnetsSeqGenerator"
+    )
     private int contentsId;
     
     @Column(nullable=true, length=100, unique = true)
     private String contentsTitle;
+
+    @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Section> sectionList;
 
     // @JsonIgnoreProperties
     // @ManyToOne(fetch = FetchType.LAZY)
@@ -91,9 +93,10 @@ public class Contents {
         return ContentsDTO.builder()
                 .username(this.member.getUsername())
                 .contentsId(this.contentsId)
-                .contentsTitle(this.contentsTitle)        
+                .contentsTitle(this.contentsTitle)
                 .category(this.category)
                 .price(this.price)
+                .sectionDTOList(this.sectionList != null ? this.sectionList.stream().map(Section::toDTO).toList() : null)
                 .build();
     }
 
