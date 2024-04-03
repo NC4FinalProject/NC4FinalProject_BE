@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.bit.envdev.constant.Role;
 import com.bit.envdev.dto.MemberDTO;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -36,8 +37,9 @@ public class Member {
     @Column(unique = true)
     private String userNickname;
 
+    @Enumerated(EnumType.STRING)
     @Column
-    private String role;
+    private Role role;
 
     @Column
     private String profileFile;
@@ -64,13 +66,9 @@ public class Member {
         this.modifiedAt = LocalDateTime.now();
     }
 
-    @OneToOne (mappedBy = "member", cascade = CascadeType.ALL)
-    private Cart cart;
-
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Lecture> lectureList;
-
+    private List<Contents> contentsList;
 
     public MemberDTO toDTO() {
         return MemberDTO.builder()

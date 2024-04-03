@@ -42,7 +42,8 @@ public class NoticeController {
     @GetMapping("/notice-list")
     public ResponseEntity<?> getBoardList(@PageableDefault(page = 0, size = 15) Pageable pageable,
                                           @RequestParam("searchCondition") String searchCondition,
-                                          @RequestParam("searchKeyword") String searchKeyword) {
+                                          @RequestParam("searchKeyword") String searchKeyword,
+                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<NoticeDTO> responseDTO = new ResponseDTO<>();
 
         try {
