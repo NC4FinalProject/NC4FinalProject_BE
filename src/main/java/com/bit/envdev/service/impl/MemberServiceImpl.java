@@ -1,20 +1,25 @@
 package com.bit.envdev.service.impl;
 
 
+import com.bit.envdev.constant.Role;
 import com.bit.envdev.dto.MemberDTO;
-import com.bit.envdev.dto.ResponseDTO;
+import com.bit.envdev.dto.MemberGraphDTO;
 import com.bit.envdev.entity.Member;
+import com.bit.envdev.entity.MemberGraph;
 import com.bit.envdev.jwt.JwtTokenProvider;
+import com.bit.envdev.repository.MemberGraphRepository;
 import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,11 +27,14 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PointServiceImpl pointService;
+    private final PointHistoryServiceImpl pointHistoryService;
+    private final MemberGraphRepository memberGraphRepository;
 
     @Override
     public MemberDTO join(MemberDTO memberDTO) {
         //유효성 검사
-        if(memberDTO == null || memberDTO.getUsername() == null || memberDTO.getPassword() == null) {
+        if(memberDTO.getUsername() == null || memberDTO.getPassword() == null) {
             throw new RuntimeException("Invalid Argument");
         }
 
@@ -35,6 +43,8 @@ public class MemberServiceImpl implements MemberService {
             throw new RuntimeException("already exist username");
         }
 
+        memberDTO.setCreatedAt(LocalDateTime.now().toString());
+        memberDTO.setModifiedAt(LocalDateTime.now().toString());
         Member joinMember = memberRepository.save(memberDTO.toEntity());
 
         return joinMember.toDTO();
@@ -53,7 +63,10 @@ public class MemberServiceImpl implements MemberService {
         if(!passwordEncoder.matches(memberDTO.getPassword(), loginMember.get().getPassword())) {
             throw new RuntimeException("wrong password");
         }
-
+    
+        if (loginMember.get().getRole().equals(Role.RESIGNED)) {
+            throw new RuntimeException("탈퇴한 유저입니다.");
+        }
         MemberDTO loginMemberDTO = loginMember.get().toDTO();
 
         // JWT 토큰 생성후 DTO에 세팅
@@ -63,8 +76,22 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public void resign(String username) {
+        // username으로 조회
+        // Optional<Member> resignMember = memberRepository.findByUsername(username);
+
+        pointService.pointRemove(username);
+        pointHistoryService.pointHistoryRemove(username);
+        // MemberDTO resignMemberDTO = resignMember.get().toDTO();
+        memberRepository.deleteByUsername(username);
+
+        // return resignMemberDTO;
+    }
+
+
+    @Override
     public MemberDTO emailCheck(MemberDTO memberDTO) {
-        
+
         if(!memberRepository.findByUsername(memberDTO.getUsername()).isEmpty()) {
             throw new RuntimeException("already exist username");
         }
@@ -94,7 +121,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberDTO findByUsername(String username) {
-       
+
         MemberDTO NewMemberDTO = memberRepository.findByUsername(username).get().toDTO();
         return NewMemberDTO;
     }
@@ -122,4 +149,59 @@ public class MemberServiceImpl implements MemberService {
         String profileImageUrl = memberRepository.findByUserNickname(noticeWriter).get().getProfileFile();
         return profileImageUrl;
     }
+
+    @Override
+    public List<MemberDTO> find4User() {
+        List<Member> members = memberRepository.findTop4ByOrderByIdDesc();
+        return members.stream()
+                .map(Member::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MemberGraphDTO> getRegistrationCount() {
+        List<MemberGraph> memberGraphDTOList = memberGraphRepository.findMemberGraph();
+        return memberGraphDTOList.stream()
+                .map(MemberGraph::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MemberGraphDTO> getTotalUserCount() {
+        List<MemberGraph> memberGraphDTOList = memberGraphRepository.findTotalUserCount();
+        return  memberGraphDTOList.stream()
+                .map(MemberGraph::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MemberGraphDTO> getMonthTotalUserCount() {
+        List<MemberGraph> memberGraphDTOList = memberGraphRepository.findMonthTotalUserCount();
+        return   memberGraphDTOList.stream()
+                .map(MemberGraph::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MemberGraphDTO> getMonthlyUserCount() {
+        List<MemberGraph> memberGraphDTOList = memberGraphRepository.findMonthUserCount();
+        return memberGraphDTOList.stream()
+                .map(MemberGraph::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<MemberDTO> searchAll(Pageable pageable, String searchKeyword, String searchCondition) {
+        Page<Member> memberList = memberRepository.findAll(pageable);
+        if (searchKeyword.equals("")) {
+            memberList = memberRepository.findByUserNicknameContaining(pageable, searchCondition);
+            Page<MemberDTO> memberPageList = memberList.map(Member::toDTO);
+            return memberPageList;
+        } else {
+            memberList = memberRepository.findByRoleContainingAndUserNicknameContaining(pageable, searchCondition, searchKeyword);
+            Page<MemberDTO> memberPageList = memberList.map(Member::toDTO);
+            return memberPageList;
+        }
+    }
+
 }

@@ -32,6 +32,11 @@ public class PointHistoryServiceImpl implements PointHistoryService {
         return pointHistoryRepository.getPointHistory(username);
     }
 
+    @Override
+    public void pointHistoryRemove(String username) {
+        pointHistoryRepository.deleteByUsername(username);
+    }
+
 //    @Override
 //    public List<PointHistoryDTO> findByUsername(String username) {
 //        List<PointHistory> PointHistoryList = pointHistoryRepository.findByMemberUsername(username);

@@ -1,6 +1,5 @@
 package com.bit.envdev.controller;
 
-
 import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.FileDTO;
 import com.bit.envdev.dto.NoticeDTO;
@@ -34,14 +33,17 @@ public class NoticeController {
     private final NoticeService noticeService;
     private final FileUtils fileUtils;
     private final MemberService memberService;
+
  
     private final NoticeLikeService noticeLIkeService;
+
     private List<String> temporaryImage = new ArrayList<>();
 
     @GetMapping("/notice-list")
     public ResponseEntity<?> getBoardList(@PageableDefault(page = 0, size = 15) Pageable pageable,
                                           @RequestParam("searchCondition") String searchCondition,
-                                          @RequestParam("searchKeyword") String searchKeyword) {
+                                          @RequestParam("searchKeyword") String searchKeyword,
+                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<NoticeDTO> responseDTO = new ResponseDTO<>();
 
         try {

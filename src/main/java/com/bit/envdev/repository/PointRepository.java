@@ -23,4 +23,7 @@ public interface PointRepository extends JpaRepository<Point, Long> {
 //        @Query("update Point P set P.point = P.point - :point  where P.username = :username ")
 //        void pointWithdraw(int point , String username);
 
+        @Transactional
+        void deleteByUsername(String username);
+
 }

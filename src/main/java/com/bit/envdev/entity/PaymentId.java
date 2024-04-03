@@ -8,9 +8,10 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-public class CartLectureId implements Serializable {
+
+public class PaymentId implements Serializable {
     @EqualsAndHashCode.Include
-    private long cart;
+    private long paymentId;
     @EqualsAndHashCode.Include
-    private long lecture;
+    private CartContentsId cartContents;
 }
