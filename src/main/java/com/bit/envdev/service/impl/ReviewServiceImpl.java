@@ -51,7 +51,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewDTO> delete(long reviewId, long contentsId, CustomUserDetails customUserDetails) {
+    public List<ReviewDTO> delete(long reviewId, int contentsId, CustomUserDetails customUserDetails) {
 
         reviewRepository.deleteById(reviewId);
 
@@ -61,7 +61,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewDTO> getReviewList(long contentsId) {
+    public List<ReviewDTO> getReviewList(int contentsId) {
 
         return reviewRepository.findByPayment_CartContents_Contents_ContentsId(contentsId).stream()
                 .map(Review::toDTO)

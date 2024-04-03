@@ -19,7 +19,7 @@ public class ReviewDTO {
     private double reviewRating;
     private long paymentId;
     private long cartId;
-    private long contentsId;
+    private int contentsId;
     private MemberDTO memberDTO;
 
 

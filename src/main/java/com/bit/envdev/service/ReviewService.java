@@ -12,9 +12,9 @@ public interface ReviewService {
 
     List<ReviewDTO> modify(ReviewDTO reviewDTO, CustomUserDetails customUserDetails);
 
-    List<ReviewDTO> delete(long reviewId, long contentsId, CustomUserDetails customUserDetails);
+    List<ReviewDTO> delete(long reviewId, int contentsId, CustomUserDetails customUserDetails);
 
-    List<ReviewDTO> getReviewList(long contentsId);
+    List<ReviewDTO> getReviewList(int contentsId);
 
 
 }

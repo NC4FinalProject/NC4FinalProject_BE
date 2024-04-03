@@ -16,7 +16,7 @@ public class PaymentDTO {
     private Date paymentDate;
     private String paymentUniqueNo;
     private long cartId;
-    private long contentsId;
+    private int contentsId;
     private long memberId;
 
     public Payment toEntity() {
