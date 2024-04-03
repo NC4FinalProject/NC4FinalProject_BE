@@ -1,9 +1,9 @@
 package com.bit.envdev.repository;
 
 import com.bit.envdev.entity.Member;
-
 import jakarta.transaction.Transactional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -21,4 +21,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     void deleteByUsername(String username);
 
     List<Member> findTop4ByOrderByIdDesc();
+
+    Page<Member> findByRoleContainingAndUserNicknameContaining(Pageable pageable, String searchCondition, String searchKeyword);
+
+    Page<Member> findByUserNicknameContaining(Pageable pageable, String searchCondition);
 }

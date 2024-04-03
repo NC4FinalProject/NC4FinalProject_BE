@@ -12,5 +12,5 @@ public class CartContentsId implements Serializable {
     @EqualsAndHashCode.Include
     private long cart;
     @EqualsAndHashCode.Include
-    private long contents;
+    private int contents;
 }

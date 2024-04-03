@@ -1,6 +1,5 @@
 package com.bit.envdev.controller;
 
-
 import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.dto.PointDTO;
 import com.bit.envdev.dto.PointHistoryDTO;
@@ -55,7 +54,7 @@ public class MemberController {
                 memberDTO.setUserNickname(memberDTO.getUsername());
             }
 
-            memberDTO.setRole("ROLE_USER");
+            memberDTO.setRole(com.bit.envdev.constant.Role.USER);
             MemberDTO joinMemberDTO = memberService.join(memberDTO);
             joinMemberDTO.setPassword("");
             responseDTO.setItem(joinMemberDTO);
@@ -110,8 +109,11 @@ public class MemberController {
             } else if(e.getMessage().equalsIgnoreCase("wrong password")) {
                 responseDTO.setErrorCode(201);
                 responseDTO.setErrorMessage(e.getMessage());
-            } else {
+            } else if(e.getMessage().equalsIgnoreCase("탈퇴한 유저입니다.")){
                 responseDTO.setErrorCode(202);
+                responseDTO.setErrorMessage(e.getMessage());
+            } else {
+                responseDTO.setErrorCode(203);
                 responseDTO.setErrorMessage(e.getMessage());
             }
 

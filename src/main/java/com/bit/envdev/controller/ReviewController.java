@@ -26,7 +26,7 @@ public class ReviewController {
     private final PaymentService paymentService;
 
     @GetMapping("/review")
-    public ResponseEntity<?> getReviewList(@RequestParam("contentsId") long contentsId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> getReviewList(@RequestParam("contentsId") int contentsId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         String loginMemberNickname = null;
         long loginMemberId = 0;
@@ -103,7 +103,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/review/{reviewId}")
-    public ResponseEntity<?> delete(@PathVariable("reviewId") long reviewId, @RequestParam("contentsId") long contentsId, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public ResponseEntity<?> delete(@PathVariable("reviewId") long reviewId, @RequestParam("contentsId") int contentsId, @AuthenticationPrincipal CustomUserDetails customUserDetails){
 
         ResponseDTO<ReviewDTO> responseDTO = new ResponseDTO<>();
         try {
