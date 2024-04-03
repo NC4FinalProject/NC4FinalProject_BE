@@ -15,21 +15,21 @@ public class PaymentDTO {
     private long totalPrice;
     private Date paymentDate;
     private String paymentUniqueNo;
-    private long reviewId;
     private long cartId;
-    private long lectureId;
+    private long contentsId;
+    private long memberId;
 
     public Payment toEntity() {
         return Payment.builder()
                 .paymentId(this.paymentId)
-                .review(Review.builder().reviewId(this.reviewId).build())
-                .cartLecture(CartLecture.builder()
+                .cartContents(CartContents.builder()
                         .cart(Cart.builder().cartId(this.cartId).build())
-                        .lecture(Lecture.builder().lectureId(this.lectureId).build())
+                        .contents(Contents.builder().contentsId(this.contentsId).build())
                         .build())
                 .totalPrice(this.totalPrice)
                 .paymentDate(this.paymentDate)
                 .paymentUniqueNo(this.paymentUniqueNo)
+                .member(Member.builder().id(this.memberId).build())
                 .build();
     }
 }

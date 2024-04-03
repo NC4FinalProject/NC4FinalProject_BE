@@ -15,20 +15,25 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
+@SequenceGenerator(
+        name = "cartSeqGenerator",
+        sequenceName = "T_CART_SEQ",
+        initialValue = 1,
+        allocationSize = 1
+)
 public class Cart {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "cartSeqGenerator")
     private long cartId;
 
     @OneToOne
     @JoinColumn(name = "id", referencedColumnName = "Id")
     private Member member;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<CartLecture> cartLectureList;
+    private List<CartContents> cartContentsList;
 
     @Column(columnDefinition = "boolean default false")
     private boolean isPaid;

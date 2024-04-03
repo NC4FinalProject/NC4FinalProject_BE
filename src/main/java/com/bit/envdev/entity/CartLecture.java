@@ -13,21 +13,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@IdClass(CartLectureId.class)
-public class CartLecture {
+@IdClass(CartContentsId.class)
+public class CartContents {
     @Id
     @JoinColumn(name = "cart_id")
     @ManyToOne
-    @JsonBackReference
     private Cart cart;
 
     @Id
-    @JoinColumn(name = "lecture_id")
+    @JoinColumn(name = "contents_id")
     @ManyToOne
-    private Lecture lecture;
-
-    @OneToOne(mappedBy = "cartLecture", cascade = CascadeType.ALL)
-    private Payment payment;
+    private Contents contents;
 
     @Column(columnDefinition = "boolean default false")
     private boolean isPaid;
