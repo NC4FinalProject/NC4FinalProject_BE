@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.bit.envdev.constant.Role;
 import com.bit.envdev.dto.MemberDTO;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -13,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 @Entity
@@ -36,8 +36,9 @@ public class Member {
     @Column(unique = true)
     private String userNickname;
 
+    @Enumerated(EnumType.STRING)
     @Column
-    private String role;
+    private Role role;
 
     @Column
     private String profileFile;
@@ -70,7 +71,6 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Lecture> lectureList;
-
 
     public MemberDTO toDTO() {
         return MemberDTO.builder()

@@ -1,6 +1,7 @@
 package com.bit.envdev.service.impl;
 
 
+import com.bit.envdev.constant.Role;
 import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.entity.Member;
 import com.bit.envdev.jwt.JwtTokenProvider;
@@ -57,7 +58,10 @@ public class MemberServiceImpl implements MemberService {
         if(!passwordEncoder.matches(memberDTO.getPassword(), loginMember.get().getPassword())) {
             throw new RuntimeException("wrong password");
         }
-
+    
+        if (loginMember.get().getRole().equals(Role.RESIGNED)) {
+            throw new RuntimeException("탈퇴한 유저입니다.");
+        }
         MemberDTO loginMemberDTO = loginMember.get().toDTO();
 
         // JWT 토큰 생성후 DTO에 세팅
