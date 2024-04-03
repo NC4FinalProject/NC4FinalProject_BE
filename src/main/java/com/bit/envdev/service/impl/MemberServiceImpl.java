@@ -77,13 +77,16 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void resign(String username) {
-        // username으로 조회
-        // Optional<Member> resignMember = memberRepository.findByUsername(username);
+        // 삭제하는 로직
+        // pointService.pointRemove(username);
+        // pointHistoryService.pointHistoryRemove(username);
+        // memberRepository.deleteByUsername(username);
 
-        pointService.pointRemove(username);
-        pointHistoryService.pointHistoryRemove(username);
-        // MemberDTO resignMemberDTO = resignMember.get().toDTO();
-        memberRepository.deleteByUsername(username);
+        // 탈퇴한 회원정보 롤 변경
+        Optional<Member> resignMember = memberRepository.findByUsername(username);
+        MemberDTO resignMemberDTO = resignMember.get().toDTO();
+        resignMemberDTO.setRole(Role.RESIGNED);
+        memberRepository.save(resignMemberDTO.toEntity());
 
         // return resignMemberDTO;
     }
