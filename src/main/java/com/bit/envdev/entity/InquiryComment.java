@@ -35,4 +35,8 @@ public class InquiryComment  {
 
     @Column(nullable = false)
     private String InquiryCommentContent;
+
+    @ManyToOne
+    @JoinColumn(name="id", referencedColumnName = "id")
+    private Member member;
 }
