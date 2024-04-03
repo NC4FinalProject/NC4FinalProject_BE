@@ -1,8 +1,11 @@
 package com.bit.envdev.dto;
-import java.time.LocalDateTime;
 
+import com.bit.envdev.constant.Role;
 import com.bit.envdev.entity.Member;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,7 +18,9 @@ public class MemberDTO {
     private String username;
     private String password;
     private String userNickname;
-    private String role;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
     private String token;
     private String profileFile;
     private boolean wannabeTeacher;

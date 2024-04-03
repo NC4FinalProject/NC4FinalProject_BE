@@ -39,9 +39,9 @@ public class Payment {
     @OneToOne
     @JoinColumns({
             @JoinColumn(name = "cart_id", referencedColumnName = "cart_id"),
-            @JoinColumn(name = "lecture_id", referencedColumnName = "lecture_id")
+            @JoinColumn(name = "contents_id", referencedColumnName = "contents_id")
     })
-    private CartLecture cartLecture;
+    private CartContents cartContents;
 
     @Column
     private long totalPrice;
@@ -55,18 +55,19 @@ public class Payment {
     @Column
     private String paymentUniqueNo;
 
-    @OneToOne(mappedBy = "payment", cascade = CascadeType.ALL)
-    private Review review;
+    @ManyToOne
+    @JoinColumn(name = "id", referencedColumnName = "Id")
+    private Member member;
 
     public PaymentDTO toDTO() {
         return PaymentDTO.builder()
                 .paymentId(this.paymentId)
-                .cartId(this.cartLecture.getCart().getCartId())
-                .lectureId(this.cartLecture.getLecture().getLectureId())
+                .cartId(this.cartContents.getCart().getCartId())
+                .contentsId(this.cartContents.getContents().getContentsId())
                 .totalPrice(this.totalPrice)
                 .paymentDate(this.paymentDate)
                 .paymentUniqueNo(this.paymentUniqueNo)
-                .reviewId(this.review.getReviewId())
+                .memberId(this.member.getId())
                 .build();
     }
 }

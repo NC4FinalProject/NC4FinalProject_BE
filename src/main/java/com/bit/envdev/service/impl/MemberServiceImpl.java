@@ -1,17 +1,22 @@
 package com.bit.envdev.service.impl;
 
 
+import com.bit.envdev.constant.Role;
 import com.bit.envdev.dto.MemberDTO;
+import com.bit.envdev.dto.MemberGraphDTO;
 import com.bit.envdev.entity.Member;
+import com.bit.envdev.entity.MemberGraph;
 import com.bit.envdev.jwt.JwtTokenProvider;
+import com.bit.envdev.repository.MemberGraphRepository;
 import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import java.time.LocalDateTime;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +29,7 @@ public class MemberServiceImpl implements MemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PointServiceImpl pointService;
     private final PointHistoryServiceImpl pointHistoryService;
+    private final MemberGraphRepository memberGraphRepository;
 
     @Override
     public MemberDTO join(MemberDTO memberDTO) {
@@ -57,7 +63,10 @@ public class MemberServiceImpl implements MemberService {
         if(!passwordEncoder.matches(memberDTO.getPassword(), loginMember.get().getPassword())) {
             throw new RuntimeException("wrong password");
         }
-
+    
+        if (loginMember.get().getRole().equals(Role.RESIGNED)) {
+            throw new RuntimeException("탈퇴한 유저입니다.");
+        }
         MemberDTO loginMemberDTO = loginMember.get().toDTO();
 
         // JWT 토큰 생성후 DTO에 세팅
@@ -82,7 +91,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberDTO emailCheck(MemberDTO memberDTO) {
-        
+
         if(!memberRepository.findByUsername(memberDTO.getUsername()).isEmpty()) {
             throw new RuntimeException("already exist username");
         }
@@ -112,7 +121,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberDTO findByUsername(String username) {
-       
+
         MemberDTO NewMemberDTO = memberRepository.findByUsername(username).get().toDTO();
         return NewMemberDTO;
     }
@@ -142,10 +151,57 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<MemberDTO> findAll() {
+    public List<MemberDTO> find4User() {
         List<Member> members = memberRepository.findTop4ByOrderByIdDesc();
         return members.stream()
                 .map(Member::toDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<MemberGraphDTO> getRegistrationCount() {
+        List<MemberGraph> memberGraphDTOList = memberGraphRepository.findMemberGraph();
+        return memberGraphDTOList.stream()
+                .map(MemberGraph::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MemberGraphDTO> getTotalUserCount() {
+        List<MemberGraph> memberGraphDTOList = memberGraphRepository.findTotalUserCount();
+        return  memberGraphDTOList.stream()
+                .map(MemberGraph::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MemberGraphDTO> getMonthTotalUserCount() {
+        List<MemberGraph> memberGraphDTOList = memberGraphRepository.findMonthTotalUserCount();
+        return   memberGraphDTOList.stream()
+                .map(MemberGraph::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MemberGraphDTO> getMonthlyUserCount() {
+        List<MemberGraph> memberGraphDTOList = memberGraphRepository.findMonthUserCount();
+        return memberGraphDTOList.stream()
+                .map(MemberGraph::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<MemberDTO> searchAll(Pageable pageable, String searchKeyword, String searchCondition) {
+        Page<Member> memberList = memberRepository.findAll(pageable);
+        if (searchKeyword.equals("")) {
+            memberList = memberRepository.findByUserNicknameContaining(pageable, searchCondition);
+            Page<MemberDTO> memberPageList = memberList.map(Member::toDTO);
+            return memberPageList;
+        } else {
+            memberList = memberRepository.findByRoleContainingAndUserNicknameContaining(pageable, searchCondition, searchKeyword);
+            Page<MemberDTO> memberPageList = memberList.map(Member::toDTO);
+            return memberPageList;
+        }
+    }
+
 }
