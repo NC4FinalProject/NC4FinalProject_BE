@@ -142,7 +142,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO wannabeTeacher(MemberDTO memberDTO) {
         MemberDTO NewMemberDTO = memberRepository.findByUsername(memberDTO.getUsername()).get().toDTO();
-        NewMemberDTO.setWannabeTeacher(true);
+        NewMemberDTO.setRole(Role.PRETEACHER);
         Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
         return joinMember.toDTO();
     }
