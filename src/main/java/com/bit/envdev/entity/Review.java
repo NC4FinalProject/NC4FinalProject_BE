@@ -39,7 +39,7 @@ public class Review {
     @Column(nullable = false)
     private double reviewRating;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumns({
             @JoinColumn(name = "payment_id"),
             @JoinColumn(name = "cart_id"),
