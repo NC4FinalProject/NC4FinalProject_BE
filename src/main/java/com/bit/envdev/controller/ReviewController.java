@@ -1,5 +1,6 @@
 package com.bit.envdev.controller;
 
+import com.bit.envdev.constant.Role;
 import com.bit.envdev.dto.PaymentDTO;
 import com.bit.envdev.dto.ResponseDTO;
 import com.bit.envdev.dto.ReviewDTO;
@@ -13,9 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,10 +30,12 @@ public class ReviewController {
         String loginMemberNickname = null;
         long loginMemberId = 0;
         List<PaymentDTO> paymentDTOList = null;
+        Role loginMemberRole = null;
 
         if (customUserDetails != null && customUserDetails.getMember() != null) {
             loginMemberNickname = customUserDetails.getMember().getUserNickname();
             loginMemberId = customUserDetails.getId();
+            loginMemberRole = customUserDetails.getMember().getRole();
             paymentDTOList = paymentService.getPaymentList(loginMemberId);
         }
 
@@ -45,6 +46,7 @@ public class ReviewController {
             responseData.put("reviewList", reviewDTOList);
             responseData.put("loginMemberId",loginMemberId);
             responseData.put("loginMemberNickname", loginMemberNickname);
+            responseData.put("loginMemberRole", loginMemberRole);
             responseData.put("paymentList", paymentDTOList);
 
             return ResponseEntity.ok(responseData);
@@ -80,11 +82,6 @@ public class ReviewController {
 
     @PutMapping("/review")
     public ResponseEntity<?> modify(@RequestBody ReviewDTO reviewDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails){
-
-
-        System.out.println("여기까진 오냐?");
-        System.out.println(reviewDTO);
-        System.out.println(reviewDTO.getReviewContent());
 
         ResponseDTO<ReviewDTO> responseDTO = new ResponseDTO<>();
         try {
