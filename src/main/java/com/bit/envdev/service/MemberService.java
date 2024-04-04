@@ -41,4 +41,6 @@ public interface MemberService {
     List<MemberGraphDTO> getMonthlyUserCount();
 
     Page<MemberDTO> searchAll(Pageable pageable, String searchKeyword, String searchCondition);
+
+    MemberDTO emailVerification(MemberDTO memberDTO);
 }
