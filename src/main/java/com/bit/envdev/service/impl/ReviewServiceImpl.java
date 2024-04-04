@@ -25,7 +25,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         reviewRepository.post(reviewDTO.toEntity());
 
-        return reviewRepository.findByPayment_CartContents_Contents_ContentsId(reviewDTO.getContentsId()).stream()
+        return reviewRepository.findByPaymentCartContentsContentsContentsIdOrderByReviewUdtDateDesc(reviewDTO.getContentsId()).stream()
                 .map(Review::toDTO)
                 .collect(Collectors.toList());
 
@@ -45,7 +45,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         reviewRepository.save(modifyReviewDTO.toEntity());
 
-        return reviewRepository.findByPayment_CartContents_Contents_ContentsId(modifyReviewDTO.getContentsId()).stream()
+        return reviewRepository.findByPaymentCartContentsContentsContentsIdOrderByReviewUdtDateDesc(modifyReviewDTO.getContentsId()).stream()
                 .map(Review::toDTO)
                 .collect(Collectors.toList());
     }
@@ -55,7 +55,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         reviewRepository.deleteById(reviewId);
 
-        return reviewRepository.findByPayment_CartContents_Contents_ContentsId(contentsId).stream()
+        return reviewRepository.findByPaymentCartContentsContentsContentsIdOrderByReviewUdtDateDesc(contentsId).stream()
                 .map(Review::toDTO)
                 .collect(Collectors.toList());
     }
@@ -63,7 +63,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<ReviewDTO> getReviewList(int contentsId) {
 
-        return reviewRepository.findByPayment_CartContents_Contents_ContentsId(contentsId).stream()
+        return reviewRepository.findByPaymentCartContentsContentsContentsIdOrderByReviewUdtDateDesc(contentsId).stream()
                 .map(Review::toDTO)
                 .collect(Collectors.toList());
     }
