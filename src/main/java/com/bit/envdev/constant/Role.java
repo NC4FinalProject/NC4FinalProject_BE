@@ -11,7 +11,8 @@ public enum Role {
     TEACHER ("ROLE_TEACHER,ROLE_USER"),
     RESIGNED ("ROLE_USER,ROLE_USER_RESIGNED"),
     PRETEACHER ("ROLE_USER,PRE_TEACHER"),
-    BLACKLIST ("ROLE_USER,ROLE_USER_BLACKLIST");
+    BLACKLIST ("ROLE_USER,ROLE_USER_BLACKLIST"),
+    REPORTED ("ROLE_USER,ROLE_USER_REPORTED");
 
     private final String roles;
     public static String getIncludingRoles(String role){
