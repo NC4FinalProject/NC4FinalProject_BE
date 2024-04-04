@@ -1,5 +1,6 @@
 package com.bit.envdev.service;
 
+import com.bit.envdev.constant.Role;
 import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.dto.MemberGraphDTO;
 import jakarta.transaction.Transactional;
@@ -33,12 +34,22 @@ public interface MemberService {
     List<MemberDTO> find4User();
 
     List<MemberGraphDTO> getRegistrationCount();
-
-    List<MemberGraphDTO> getTotalUserCount();
-
+    
     List<MemberGraphDTO> getMonthTotalUserCount();
 
     List<MemberGraphDTO> getMonthlyUserCount();
 
-    Page<MemberDTO> searchAll(Pageable pageable, String searchKeyword, String searchCondition);
+    Page<MemberDTO> searchAll(Pageable pageable, String searchKeyword, Role role);
+
+    Page<MemberDTO> searchData(Pageable pageable, String searchKeyword);
+
+    void updateUserMemo(MemberDTO memberDTO);
+
+    long getPreTeacherCount();
+
+    List<MemberGraphDTO> getDailyOutUserCount();
+
+    List<MemberGraphDTO> getMonthlyOutUserCount();
+
+    List<MemberDTO> findByRole();
 }

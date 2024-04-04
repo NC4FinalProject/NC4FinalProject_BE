@@ -34,12 +34,12 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO join(MemberDTO memberDTO) {
         //유효성 검사
-        if(memberDTO.getUsername() == null || memberDTO.getPassword() == null) {
+        if (memberDTO.getUsername() == null || memberDTO.getPassword() == null) {
             throw new RuntimeException("Invalid Argument");
         }
 
         //username 중복 체크
-        if(memberRepository.existsByUsername(memberDTO.getUsername())) {
+        if (memberRepository.existsByUsername(memberDTO.getUsername())) {
             throw new RuntimeException("already exist username");
         }
 
@@ -55,15 +55,15 @@ public class MemberServiceImpl implements MemberService {
         // username으로 조회
         Optional<Member> loginMember = memberRepository.findByUsername(memberDTO.getUsername());
 
-        if(loginMember.isEmpty()) {
+        if (loginMember.isEmpty()) {
             throw new RuntimeException("not exist username");
         }
 
         // 암호화되어 있는 비밀번호와 사용자가 입력한 비밀번호 비교
-        if(!passwordEncoder.matches(memberDTO.getPassword(), loginMember.get().getPassword())) {
+        if (!passwordEncoder.matches(memberDTO.getPassword(), loginMember.get().getPassword())) {
             throw new RuntimeException("wrong password");
         }
-    
+
         if (loginMember.get().getRole().equals(Role.RESIGNED)) {
             throw new RuntimeException("탈퇴한 유저입니다.");
         }
@@ -77,13 +77,16 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void resign(String username) {
-        // username으로 조회
-        // Optional<Member> resignMember = memberRepository.findByUsername(username);
+        // 삭제하는 로직
+        // pointService.pointRemove(username);
+        // pointHistoryService.pointHistoryRemove(username);
+        // memberRepository.deleteByUsername(username);
 
-        pointService.pointRemove(username);
-        pointHistoryService.pointHistoryRemove(username);
-        // MemberDTO resignMemberDTO = resignMember.get().toDTO();
-        memberRepository.deleteByUsername(username);
+        // 탈퇴한 회원정보 롤 변경
+        Optional<Member> resignMember = memberRepository.findByUsername(username);
+        MemberDTO resignMemberDTO = resignMember.get().toDTO();
+        resignMemberDTO.setRole(Role.RESIGNED);
+        memberRepository.save(resignMemberDTO.toEntity());
 
         // return resignMemberDTO;
     }
@@ -92,7 +95,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO emailCheck(MemberDTO memberDTO) {
 
-        if(!memberRepository.findByUsername(memberDTO.getUsername()).isEmpty()) {
+        if (!memberRepository.findByUsername(memberDTO.getUsername()).isEmpty()) {
             throw new RuntimeException("already exist username");
         }
 
@@ -102,7 +105,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO nicknameCheck(MemberDTO memberDTO) {
 
-        if(!memberRepository.findByUserNickname(memberDTO.getUserNickname()).isEmpty()) {
+        if (!memberRepository.findByUserNickname(memberDTO.getUserNickname()).isEmpty()) {
             throw new RuntimeException("already exist userNickname");
         }
 
@@ -167,17 +170,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<MemberGraphDTO> getTotalUserCount() {
-        List<MemberGraph> memberGraphDTOList = memberGraphRepository.findTotalUserCount();
-        return  memberGraphDTOList.stream()
-                .map(MemberGraph::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<MemberGraphDTO> getMonthTotalUserCount() {
         List<MemberGraph> memberGraphDTOList = memberGraphRepository.findMonthTotalUserCount();
-        return   memberGraphDTOList.stream()
+        return memberGraphDTOList.stream()
                 .map(MemberGraph::toDTO)
                 .collect(Collectors.toList());
     }
@@ -191,17 +186,55 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Page<MemberDTO> searchAll(Pageable pageable, String searchKeyword, String searchCondition) {
+    public Page<MemberDTO> searchAll(Pageable pageable, String searchKeyword, Role role) {
         Page<Member> memberList = memberRepository.findAll(pageable);
-        if (searchKeyword.equals("")) {
-            memberList = memberRepository.findByUserNicknameContaining(pageable, searchCondition);
-            Page<MemberDTO> memberPageList = memberList.map(Member::toDTO);
-            return memberPageList;
-        } else {
-            memberList = memberRepository.findByRoleContainingAndUserNicknameContaining(pageable, searchCondition, searchKeyword);
-            Page<MemberDTO> memberPageList = memberList.map(Member::toDTO);
-            return memberPageList;
-        }
+        memberList = memberRepository.findByRoleAndUserNicknameContaining(pageable, role,searchKeyword);
+            return memberList.map(Member::toDTO);
+
     }
 
+    @Override
+    public Page<MemberDTO> searchData(Pageable pageable, String searchKeyword) {
+        Page<Member> memberList = memberRepository.findAll(pageable);
+        memberList = memberRepository.findByUserNicknameContaining(pageable, searchKeyword);
+        return memberList.map(Member::toDTO);
+    }
+
+    @Override
+    public void updateUserMemo(MemberDTO memberDTO) {
+        MemberDTO NewMemberDTO = memberRepository.findById(memberDTO.getId()).get().toDTO();
+        NewMemberDTO.setMemo(memberDTO.getMemo());
+        memberRepository.save(NewMemberDTO.toEntity());
+    }
+
+    @Override
+    public long getPreTeacherCount() {
+        Role role = Role.PRETEACHER;
+        return memberRepository.countByRole(role);
+    }
+
+    @Override
+    public List<MemberGraphDTO> getDailyOutUserCount() {
+        List<MemberGraph> dailyOutUserCount = memberGraphRepository.findDailyOutUserCount();
+        return dailyOutUserCount.stream()
+                .map(MemberGraph::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MemberGraphDTO> getMonthlyOutUserCount() {
+        List<MemberGraph> MonthlyOutUserCount = memberGraphRepository.findMonthlyOutUserCount();
+        return MonthlyOutUserCount.stream()
+                .map(MemberGraph::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MemberDTO> findByRole() {
+        Role role = Role.PRETEACHER;
+        List<Member> members = memberRepository.findTop4ByRole(role);
+        return members.stream()
+                .map(Member::toDTO)
+                .collect(Collectors.toList());
+    }
 }

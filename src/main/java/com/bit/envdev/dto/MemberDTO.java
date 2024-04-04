@@ -26,6 +26,7 @@ public class MemberDTO {
     private boolean wannabeTeacher;
     private String createdAt;
     private String modifiedAt;
+    private String memo;
 
 
     public Member toEntity() {
@@ -39,6 +40,7 @@ public class MemberDTO {
                 .wannabeTeacher(this.wannabeTeacher)
                 .createdAt(LocalDateTime.parse(this.createdAt))
                 .modifiedAt(LocalDateTime.parse(this.modifiedAt))
+                .memo(this.memo)
                 .build();
     }
 
