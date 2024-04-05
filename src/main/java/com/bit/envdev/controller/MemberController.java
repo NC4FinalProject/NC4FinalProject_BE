@@ -1,6 +1,7 @@
 package com.bit.envdev.controller;
 
 import com.bit.envdev.dto.MemberDTO;
+import com.bit.envdev.dto.MessageDTO;
 import com.bit.envdev.dto.PointDTO;
 import com.bit.envdev.dto.PointHistoryDTO;
 import com.bit.envdev.dto.ResponseDTO;
@@ -8,6 +9,8 @@ import com.bit.envdev.entity.CustomUserDetails;
 import com.bit.envdev.service.MemberService;
 import com.bit.envdev.service.PointHistoryService;
 import com.bit.envdev.service.PointService;
+import com.bit.envdev.service.impl.SendEmailServiceImpl;
+
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
@@ -33,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final SendEmailServiceImpl sendEmailService;
     private final PointService pointService;
     private final PointHistoryService pointHistoryService;
     private final PasswordEncoder passwordEncoder;
@@ -139,6 +143,45 @@ public class MemberController {
             System.out.println(e.getMessage());
             responseDTO.setErrorCode(202);
             responseDTO.setErrorMessage(e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+
+    @GetMapping("/email-verification")
+    public ResponseEntity<?> emailVerification(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
+        System.out.println("이메일 인증 시도");
+        
+
+        try {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails userDetails = (UserDetails)principal;
+            String username = userDetails.getUsername();
+            MemberDTO memberDTO = memberService.findByUsername(username);
+
+            MemberDTO CheckMemberDTO = memberService.emailVerification(memberDTO);
+            
+            MessageDTO messageDTO = sendEmailService.createMail(CheckMemberDTO);
+
+            System.out.println("이메일 인증 성공");
+            System.out.println("messageDTO" + messageDTO.toString());
+
+            responseDTO.setItem(CheckMemberDTO);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            if(e.getMessage().equalsIgnoreCase("Invalid Argument")) {
+                responseDTO.setErrorCode(200);
+                responseDTO.setErrorMessage(e.getMessage());
+            } else if(e.getMessage().equalsIgnoreCase("already exist username")) {
+                responseDTO.setErrorCode(201);
+                responseDTO.setErrorMessage(e.getMessage());
+            } else {
+                responseDTO.setErrorCode(202);
+                responseDTO.setErrorMessage(e.getMessage());
+            }
+
             responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.badRequest().body(responseDTO);
         }

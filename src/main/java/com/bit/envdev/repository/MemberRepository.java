@@ -1,5 +1,6 @@
 package com.bit.envdev.repository;
 
+import com.bit.envdev.constant.Role;
 import com.bit.envdev.entity.Member;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     List<Member> findTop4ByOrderByIdDesc();
 
-    Page<Member> findByRoleContainingAndUserNicknameContaining(Pageable pageable, String searchCondition, String searchKeyword);
+    Page<Member> findByRoleAndUserNicknameContaining(Pageable pageable, Role role, String searchKeyword);
 
-    Page<Member> findByUserNicknameContaining(Pageable pageable, String searchCondition);
+    Page<Member> findByUserNicknameContaining(Pageable pageable, String searchKeyword);
+
+    long countByRole(Role role);
+
+    List<Member> findTop4ByRole(Role role);
 }
