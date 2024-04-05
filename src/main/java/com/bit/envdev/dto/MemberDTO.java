@@ -23,9 +23,10 @@ public class MemberDTO {
     private Role role;
     private String token;
     private String profileFile;
-    private boolean wannabeTeacher;
+    private boolean emailVerification;
     private String createdAt;
     private String modifiedAt;
+    private String memo;
 
 
     public Member toEntity() {
@@ -36,9 +37,10 @@ public class MemberDTO {
                 .userNickname(this.userNickname)
                 .role(this.role)
                 .profileFile(this.profileFile)
-                .wannabeTeacher(this.wannabeTeacher)
+                .emailVerification(this.emailVerification)
                 .createdAt(LocalDateTime.parse(this.createdAt))
                 .modifiedAt(LocalDateTime.parse(this.modifiedAt))
+                .memo(this.memo)
                 .build();
     }
 

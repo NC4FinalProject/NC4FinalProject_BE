@@ -1,5 +1,6 @@
 package com.bit.envdev.controller;
 
+import com.bit.envdev.constant.Role;
 import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.dto.MemberGraphDTO;
 import com.bit.envdev.dto.NoticeDTO;
@@ -12,10 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,17 +33,22 @@ public class AdminController {
             List<MemberDTO> recentUsers = memberService.find4User();
             List<MemberGraphDTO> registrationCounts = memberService.getRegistrationCount();
             List<MemberGraphDTO> monthlyCounts = memberService.getMonthlyUserCount();
-            List<MemberGraphDTO> dailytotalUserCount = memberService.getTotalUserCount();
             List<MemberGraphDTO> monthlytotalUserCount = memberService.getMonthTotalUserCount();
+            long preTeacherCount = memberService.getPreTeacherCount();
+            List<MemberDTO> preTeachers = memberService.findByRole();
+            List<MemberGraphDTO>  daliyOutUserCount = memberService.getDailyOutUserCount();
+            List<MemberGraphDTO>  monthlyOutUserCount = memberService.getMonthlyOutUserCount();
 
             Map<String, Object> responseData = new HashMap<>();
             responseData.put("notices", notices);
             responseData.put("recentUsers", recentUsers);
             responseData.put("registrationCounts", registrationCounts);
-            responseData.put("dailytotalUserCount", dailytotalUserCount);
             responseData.put("monthlytotalUserCount", monthlytotalUserCount);
             responseData.put("monthlyCounts", monthlyCounts);
-
+            responseData.put("preTeacherCount", preTeacherCount);
+            responseData.put("daliyOutUserCount", daliyOutUserCount);
+            responseData.put("monthlyOutUserCount", monthlyOutUserCount);
+            responseData.put("preTeachers", preTeachers);
             return ResponseEntity.ok(responseData);
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
@@ -57,19 +60,36 @@ public class AdminController {
     }
     @GetMapping("/user")
     private ResponseEntity<?> getUserList(@PageableDefault(page = 0, size = 15) Pageable pageable,
-                                          @RequestParam(name = "searchCondition", required = false) String searchCondition,
+                                          @RequestParam(name = "searchCondition", required = false) String  searchCondition,
                                           @RequestParam(name = "searchKeyword", required = false) String searchKeyword) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
         try {
-            if (searchKeyword ==null) {
-                searchKeyword = "";
-                Page<MemberDTO> usersPage = memberService.searchAll(pageable,  searchKeyword, searchCondition);
+            if (searchCondition.equals("all")) {
+                Page<MemberDTO> allUsers = memberService.searchData(pageable, searchKeyword);
+                responseDTO.setPageItems(allUsers);
+                responseDTO.setStatusCode(HttpStatus.OK.value());
+                return ResponseEntity.ok(allUsers);
             }
-            Page<MemberDTO> usersPage = memberService.searchAll(pageable,  searchKeyword, searchCondition);
-
+            Role role = Role.valueOf(searchCondition);
+            Page<MemberDTO> usersPage = memberService.searchAll(pageable, searchKeyword, role);
             responseDTO.setPageItems(usersPage);
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(usersPage);
+
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("errorCode", 101);
+            errorResponse.put("errorMessage", e.getMessage());
+            errorResponse.put("statusCode", HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
+    @PostMapping("/user/memo")
+    private ResponseEntity<?> updateMemo(@RequestBody MemberDTO memberDTO) {
+        try {
+            memberService.updateUserMemo(memberDTO);
+
+            return ResponseEntity.ok(null);
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("errorCode", 101);

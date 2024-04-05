@@ -40,14 +40,25 @@ public class ContentsController {
         sectionDTOList.forEach(sectionDTO -> {contentsService.createSection(sectionDTO, createdContents);});
         return null;
     }
-    @GetMapping("/detail/{contentsId}")
-    public ResponseEntity<?> Detail(@PathVariable("contentsId") int contentsId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+//    @GetMapping("/detail/{contentsId}")
+//    public ResponseEntity<?> Detail(@PathVariable("contentsId") int contentsId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+//        ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
+//
+//        ContentsDTO contentsDTO = contentsService.findById(contentsId);
+//
+//        responseDTO.setItem(contentsDTO);
+//
+//        return ResponseEntity.ok(responseDTO);
+//    }
+
+    @GetMapping("/detail")
+    public ResponseEntity<?> Detail(@RequestParam(name = "contentsId") int contentsId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
+        System.out.println("여기 오시나유?");
 
         ContentsDTO contentsDTO = contentsService.findById(contentsId);
 
         responseDTO.setItem(contentsDTO);
-
 
         return ResponseEntity.ok(responseDTO);
     }
