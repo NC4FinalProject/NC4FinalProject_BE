@@ -41,7 +41,7 @@ public class Contents {
     )
     private int contentsId;
     
-    @Column(nullable=true, length=100, unique = true)
+    @Column(nullable=true, length=100)
     private String contentsTitle;
 
     @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL, orphanRemoval = true)
