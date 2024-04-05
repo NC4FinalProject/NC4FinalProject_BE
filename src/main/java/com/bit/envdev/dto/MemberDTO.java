@@ -26,6 +26,7 @@ public class MemberDTO {
     private boolean emailVerification;
     private String createdAt;
     private String modifiedAt;
+    private String memo;
 
 
     public Member toEntity() {
@@ -39,6 +40,7 @@ public class MemberDTO {
                 .emailVerification(this.emailVerification)
                 .createdAt(LocalDateTime.parse(this.createdAt))
                 .modifiedAt(LocalDateTime.parse(this.modifiedAt))
+                .memo(this.memo)
                 .build();
     }
 
