@@ -2,13 +2,11 @@ package com.bit.envdev.controller;
 
 import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.dto.MessageDTO;
-import com.bit.envdev.dto.PointDTO;
-import com.bit.envdev.dto.PointHistoryDTO;
 import com.bit.envdev.dto.ResponseDTO;
 import com.bit.envdev.entity.CustomUserDetails;
+import com.bit.envdev.entity.Member;
 import com.bit.envdev.service.MemberService;
-import com.bit.envdev.service.PointHistoryService;
-import com.bit.envdev.service.PointService;
+import com.bit.envdev.service.impl.PointServiceImpl;
 import com.bit.envdev.service.impl.SendEmailServiceImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -23,7 +21,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,16 +34,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
     private final MemberService memberService;
     private final SendEmailServiceImpl sendEmailService;
-    private final PointService pointService;
-    private final PointHistoryService pointHistoryService;
+    private final PointServiceImpl pointService;
     private final PasswordEncoder passwordEncoder;
+    private MessageDTO messageDTO;
 
     // 기존 form submit이나 ajax에서는 전송하는 데이터 타입이 x-www-form-urlencoded 형식이어서
     // @ModelAttribute나 @RequestParam으로 데이터를 받을 수 있었다
     // axios나 fetch에서는 전송하는 데이터 타입이 application/json
     // @RequestBody로 데이터를 받아준다.
     @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody MemberDTO memberDTO, PointDTO pointDTO, PointHistoryDTO pointHistoryDTO) {
+    public ResponseEntity<?> join(@RequestBody MemberDTO memberDTO) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
 
         try {
@@ -59,21 +56,13 @@ public class MemberController {
             }
 
             memberDTO.setRole(com.bit.envdev.constant.Role.USER);
-            MemberDTO joinMemberDTO = memberService.join(memberDTO);
-            joinMemberDTO.setPassword("");
-            responseDTO.setItem(joinMemberDTO);
+            Member newMember = memberService.join(memberDTO);
+            
+            // 회원가입시 포인트 지급
+            pointService.pointJoinWithBuilder(newMember, 3000,  "회원가입 축하 포인트 지급");
+
+            responseDTO.setItem(memberDTO);
             responseDTO.setStatusCode(HttpStatus.OK.value());
-
-
-            //포인트 로직
-            pointDTO.setUsername(memberDTO.getUsername());
-            pointDTO.setTotalPoint(3000);
-            pointService.pointJoin(pointDTO);
-            pointHistoryDTO.setUsername(memberDTO.getUsername());
-            pointHistoryDTO.setPoint(3000);
-            pointHistoryDTO.setPointCategory("NRU");
-            pointHistoryService.pointHistoryJoin(pointHistoryDTO);
-
             return ResponseEntity.ok(responseDTO);
 
         } catch(Exception e) {
@@ -153,21 +142,14 @@ public class MemberController {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
         System.out.println("이메일 인증 시도");
         
-
         try {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             UserDetails userDetails = (UserDetails)principal;
             String username = userDetails.getUsername();
             MemberDTO memberDTO = memberService.findByUsername(username);
+            MessageDTO messageDTO = sendEmailService.createMail(memberDTO);
 
-            MemberDTO CheckMemberDTO = memberService.emailVerification(memberDTO);
-            
-            MessageDTO messageDTO = sendEmailService.createMail(CheckMemberDTO);
-
-            System.out.println("이메일 인증 성공");
-            System.out.println("messageDTO" + messageDTO.toString());
-
-            responseDTO.setItem(CheckMemberDTO);
+            responseDTO.setItem(memberDTO);
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
@@ -195,6 +177,48 @@ public class MemberController {
             MemberDTO CheckMemberDTO = memberService.emailCheck(memberDTO);
 
             responseDTO.setItem(CheckMemberDTO);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            if(e.getMessage().equalsIgnoreCase("Invalid Argument")) {
+                responseDTO.setErrorCode(200);
+                responseDTO.setErrorMessage(e.getMessage());
+            } else if(e.getMessage().equalsIgnoreCase("already exist username")) {
+                responseDTO.setErrorCode(201);
+                responseDTO.setErrorMessage(e.getMessage());
+            } else {
+                responseDTO.setErrorCode(202);
+                responseDTO.setErrorMessage(e.getMessage());
+            }
+
+            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+
+    @PostMapping("/code-check")
+    public ResponseEntity<?> emailCheck(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody String code) {
+        ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
+
+        try {
+            System.out.println("이메일 인증번호 확인 시도");
+            System.out.println("messageDTO" + messageDTO);
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails userDetails = (UserDetails)principal;
+            String username = userDetails.getUsername();
+            MemberDTO memberDTO = memberService.findByUsername(username);
+
+            if(messageDTO.getCode().equals(code)) {
+                memberService.codeVerification(memberDTO);
+            } else {
+                throw new RuntimeException("인증번호가 일치하지 않습니다.");
+            }
+
+            System.out.println("이메일 인증 성공");
+            System.out.println("messageDTO" + messageDTO.toString());
+
+
+            responseDTO.setItem(memberDTO);
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {

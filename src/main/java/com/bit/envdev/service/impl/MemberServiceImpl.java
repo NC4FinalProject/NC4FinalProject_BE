@@ -27,12 +27,10 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final PointServiceImpl pointService;
-    private final PointHistoryServiceImpl pointHistoryService;
     private final MemberGraphRepository memberGraphRepository;
 
     @Override
-    public MemberDTO join(MemberDTO memberDTO) {
+    public Member join(MemberDTO memberDTO) {
         //유효성 검사
         if (memberDTO.getUsername() == null || memberDTO.getPassword() == null) {
             throw new RuntimeException("Invalid Argument");
@@ -42,12 +40,17 @@ public class MemberServiceImpl implements MemberService {
         if (memberRepository.existsByUsername(memberDTO.getUsername())) {
             throw new RuntimeException("already exist username");
         }
-
         memberDTO.setCreatedAt(LocalDateTime.now().toString());
         memberDTO.setModifiedAt(LocalDateTime.now().toString());
-        Member joinMember = memberRepository.save(memberDTO.toEntity());
 
-        return joinMember.toDTO();
+        try {
+            Member joinMember = memberRepository.save(memberDTO.toEntity());
+            return joinMember;
+        } catch (Exception e) {
+            System.out.println("회원가입 실패" + e.getMessage());
+        }
+
+        return memberDTO.toEntity();
     }
 
     @Override
@@ -148,11 +151,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberDTO emailVerification(MemberDTO memberDTO) {
+    public void codeVerification(MemberDTO memberDTO) {
         MemberDTO NewMemberDTO = memberRepository.findByUsername(memberDTO.getUsername()).get().toDTO();
         NewMemberDTO.setEmailVerification(true);
         Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
-        return joinMember.toDTO();
     }
 
     @Override
@@ -244,5 +246,11 @@ public class MemberServiceImpl implements MemberService {
         return members.stream()
                 .map(Member::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MemberDTO emailVerification(MemberDTO memberDTO) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'emailVerification'");
     }
 }

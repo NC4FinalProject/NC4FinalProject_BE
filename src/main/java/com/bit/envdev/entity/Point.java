@@ -1,7 +1,11 @@
 package com.bit.envdev.entity;
 
 import com.bit.envdev.dto.PointDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,11 +19,15 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "point")
 public class Point {
     @Id
@@ -27,19 +35,23 @@ public class Point {
     private Long pointId;
 
     @ManyToOne
-    @JoinColumn(name = "username", referencedColumnName = "username", insertable=false, updatable=false)
+    @JoinColumn(name = "id")
+    @JsonBackReference
     private Member member;
 
-    private int totalPoint;
+    private int value;
+    private String reason;
 
-    private LocalDate pointModifiedDate;
+    @CreatedDate
+    @Column(updatable = false, nullable = false)
+    private LocalDate createdAt;
 
-    private String username;
     public PointDTO toDTO() {
         return PointDTO.builder()
-                .username(member.getUsername())
-                .totalPoint(totalPoint)
-                .pointModifiedDate(pointModifiedDate)
+                .member(this.member)
+                .value(this.value)
+                .reason(this.reason)
+                .createdAt(this.createdAt.toString())
                 .build();
     }
 }
