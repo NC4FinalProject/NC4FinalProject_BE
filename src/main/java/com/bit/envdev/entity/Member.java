@@ -44,7 +44,7 @@ public class Member {
     private String profileFile;
 
     @ColumnDefault("false")
-    private boolean wannabeTeacher;
+    private boolean emailVerification;
 
     @CreatedDate
     @Column(updatable = false, nullable = false)
@@ -80,7 +80,7 @@ public class Member {
                 .userNickname(this.userNickname)
                 .role(this.role)
                 .profileFile(this.profileFile)
-                .wannabeTeacher(this.wannabeTeacher)
+                .emailVerification(this.emailVerification)
                 .createdAt(this.createdAt.toString())
                 .modifiedAt(this.modifiedAt.toString())
                 .memo(this.memo)

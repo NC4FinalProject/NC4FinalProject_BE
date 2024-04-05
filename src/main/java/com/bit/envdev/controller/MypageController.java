@@ -127,7 +127,6 @@ public class MypageController {
 
         ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
         
-        System.out.println("컨트롤러 호출");
         try {
             
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -135,9 +134,7 @@ public class MypageController {
             String username = userDetails.getUsername();
             MemberDTO memberDTO = memberService.findByUsername(username);
             
-            System.out.println("memberDTO : 변경전 나와라" + memberDTO.isWannabeTeacher());
             memberService.wannabeTeacher(memberDTO);
-            System.out.println("memberDTO : 변경후 나와라" + memberDTO.isWannabeTeacher());
             Map<String, String> msgMap = new HashMap<>();
             
                     msgMap.put("msg", "정상적으로 입력되었습니다.");

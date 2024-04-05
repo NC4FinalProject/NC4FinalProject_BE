@@ -34,10 +34,12 @@ public interface MemberService {
     List<MemberDTO> find4User();
 
     List<MemberGraphDTO> getRegistrationCount();
-    
+
     List<MemberGraphDTO> getMonthTotalUserCount();
 
     List<MemberGraphDTO> getMonthlyUserCount();
+
+    MemberDTO emailVerification(MemberDTO memberDTO);
 
     Page<MemberDTO> searchAll(Pageable pageable, String searchKeyword, Role role);
 
