@@ -40,8 +40,6 @@ public interface MemberService {
 
     List<MemberGraphDTO> getMonthlyUserCount();
 
-    MemberDTO emailVerification(MemberDTO memberDTO);
-
     Page<MemberDTO> searchAll(Pageable pageable, String searchKeyword, Role role);
 
     Page<MemberDTO> searchData(Pageable pageable, String searchKeyword);
@@ -56,5 +54,5 @@ public interface MemberService {
 
     List<MemberDTO> findByRole();
 
-    void codeVerification(MemberDTO memberDTO);
+    void codeVerification(MemberDTO memberDTO, String code);
 }

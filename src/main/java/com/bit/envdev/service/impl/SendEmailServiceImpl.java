@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.dto.MessageDTO;
+import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.service.SendEmailService;
 
 import lombok.RequiredArgsConstructor;
@@ -16,11 +17,12 @@ import org.springframework.beans.factory.annotation.Value;
 public class SendEmailServiceImpl implements SendEmailService {
     
     private final JavaMailSender mailSend;
+    private final MemberRepository memberRepository;
 
     @Value("${FROM_ADDRESS}")
     private String FROM_ADDRESS ;
 
-    public MessageDTO createMail(MemberDTO memberDTO) {
+    public void createMail(MemberDTO memberDTO) {
         String code  = getTempPassword();
         MessageDTO messageDTO = new MessageDTO();
         String username = memberDTO.getUsername();
@@ -33,8 +35,10 @@ public class SendEmailServiceImpl implements SendEmailService {
                                 + code + " 입니다.");
         messageDTO.setCode(code);
 
+        memberDTO.setEmailVerification(code);
+        memberRepository.save(memberDTO.toEntity());
+
         mailSend(messageDTO);
-        return messageDTO;
     }
 
 

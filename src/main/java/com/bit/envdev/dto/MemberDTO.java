@@ -27,7 +27,7 @@ public class MemberDTO {
     private Role role;
     private String token;
     private String profileFile;
-    private boolean emailVerification;
+    private String emailVerification;
     private String createdAt;
     private String modifiedAt;
     private String memo;

@@ -1,11 +1,10 @@
 package com.bit.envdev.controller;
 
 import com.bit.envdev.dto.MemberDTO;
-import com.bit.envdev.dto.MessageDTO;
 import com.bit.envdev.dto.ResponseDTO;
 import com.bit.envdev.entity.CustomUserDetails;
 import com.bit.envdev.entity.Member;
-import com.bit.envdev.service.MemberService;
+import com.bit.envdev.service.impl.MemberServiceImpl;
 import com.bit.envdev.service.impl.PointServiceImpl;
 import com.bit.envdev.service.impl.SendEmailServiceImpl;
 
@@ -32,11 +31,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
-    private final MemberService memberService;
+    private final MemberServiceImpl memberService;
     private final SendEmailServiceImpl sendEmailService;
     private final PointServiceImpl pointService;
     private final PasswordEncoder passwordEncoder;
-    private MessageDTO messageDTO;
 
     // 기존 form submit이나 ajax에서는 전송하는 데이터 타입이 x-www-form-urlencoded 형식이어서
     // @ModelAttribute나 @RequestParam으로 데이터를 받을 수 있었다
@@ -140,30 +138,27 @@ public class MemberController {
     @GetMapping("/email-verification")
     public ResponseEntity<?> emailVerification(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
-        System.out.println("이메일 인증 시도");
         
         try {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             UserDetails userDetails = (UserDetails)principal;
             String username = userDetails.getUsername();
             MemberDTO memberDTO = memberService.findByUsername(username);
-            MessageDTO messageDTO = sendEmailService.createMail(memberDTO);
 
-            responseDTO.setItem(memberDTO);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            return ResponseEntity.ok(responseDTO);
+                if ("verified".equals(memberDTO.getEmailVerification())) {
+                    responseDTO.setErrorCode(201);
+                    responseDTO.setErrorMessage("이미 인증된 이메일 입니다.");
+                    responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                    return ResponseEntity.badRequest().body(responseDTO);
+                } else {
+                    sendEmailService.createMail(memberDTO);
+                    responseDTO.setItem(memberDTO);
+                    responseDTO.setStatusCode(HttpStatus.OK.value());
+                    return ResponseEntity.ok(responseDTO); 
+                }
         } catch (Exception e) {
-            if(e.getMessage().equalsIgnoreCase("Invalid Argument")) {
-                responseDTO.setErrorCode(200);
-                responseDTO.setErrorMessage(e.getMessage());
-            } else if(e.getMessage().equalsIgnoreCase("already exist username")) {
-                responseDTO.setErrorCode(201);
-                responseDTO.setErrorMessage(e.getMessage());
-            } else {
-                responseDTO.setErrorCode(202);
-                responseDTO.setErrorMessage(e.getMessage());
-            }
-
+            responseDTO.setErrorCode(200);
+            responseDTO.setErrorMessage(e.getMessage());
             responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.badRequest().body(responseDTO);
         }
@@ -175,7 +170,6 @@ public class MemberController {
 
         try {
             MemberDTO CheckMemberDTO = memberService.emailCheck(memberDTO);
-
             responseDTO.setItem(CheckMemberDTO);
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(responseDTO);
@@ -197,45 +191,36 @@ public class MemberController {
     }
 
     @PostMapping("/code-check")
-    public ResponseEntity<?> emailCheck(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody String code) {
+    public ResponseEntity<?> emailCheck(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody Object codeObject) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
+    try {
 
-        try {
-            System.out.println("이메일 인증번호 확인 시도");
-            System.out.println("messageDTO" + messageDTO);
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             UserDetails userDetails = (UserDetails)principal;
             String username = userDetails.getUsername();
             MemberDTO memberDTO = memberService.findByUsername(username);
+            
+            Map<String, Object> map = (Map<String, Object>) codeObject;
+            String value = map.get("code").toString();
 
-            if(messageDTO.getCode().equals(code)) {
-                memberService.codeVerification(memberDTO);
-            } else {
-                throw new RuntimeException("인증번호가 일치하지 않습니다.");
-            }
-
-            System.out.println("이메일 인증 성공");
-            System.out.println("messageDTO" + messageDTO.toString());
-
-
-            responseDTO.setItem(memberDTO);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            return ResponseEntity.ok(responseDTO);
-        } catch (Exception e) {
-            if(e.getMessage().equalsIgnoreCase("Invalid Argument")) {
-                responseDTO.setErrorCode(200);
-                responseDTO.setErrorMessage(e.getMessage());
-            } else if(e.getMessage().equalsIgnoreCase("already exist username")) {
+            memberService.codeVerification(memberDTO, value);
+            MemberDTO newMemberDTO = memberService.findByUsername(username);
+            
+                if ("verified".equals(newMemberDTO.getEmailVerification())) {
+                    responseDTO.setItem(memberDTO);
+                    responseDTO.setStatusCode(HttpStatus.OK.value());
+                    return ResponseEntity.ok(responseDTO);
+                } else {
+                    responseDTO.setErrorCode(200);
+                    responseDTO.setErrorMessage("인증번호가 일치하지 않습니다.");
+                }
+            } catch (Exception e) {
                 responseDTO.setErrorCode(201);
                 responseDTO.setErrorMessage(e.getMessage());
-            } else {
-                responseDTO.setErrorCode(202);
-                responseDTO.setErrorMessage(e.getMessage());
             }
 
-            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
-            return ResponseEntity.badRequest().body(responseDTO);
-        }
+        responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.badRequest().body(responseDTO);
     }
 
     @PostMapping("/nickname-check")

@@ -42,8 +42,8 @@ public class Member {
     @Column
     private String profileFile;
 
-    @ColumnDefault("false")
-    private boolean emailVerification;
+    @Column
+    private String emailVerification;
 
     @OrderBy("createdAt DESC")
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
@@ -60,17 +60,6 @@ public class Member {
 
     @Column(length = 350)
     private String memo;
-
-    // @PrePersist // 엔티티가 저장되기 전에 실행될 메서드
-    // public void prePersist() {
-    //     this.createdAt = LocalDateTime.now();
-    //     this.modifiedAt = LocalDateTime.now();
-    // }
-
-    // @PreUpdate // 엔티티가 업데이트되기 전에 실행될 메서드
-    // public void preUpdate() {
-    //     this.modifiedAt = LocalDateTime.now();
-    // }
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     @JsonManagedReference

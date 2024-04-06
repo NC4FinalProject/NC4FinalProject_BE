@@ -151,10 +151,18 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void codeVerification(MemberDTO memberDTO) {
-        MemberDTO NewMemberDTO = memberRepository.findByUsername(memberDTO.getUsername()).get().toDTO();
-        NewMemberDTO.setEmailVerification(true);
-        Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
+    public void codeVerification(MemberDTO memberDTO, String code) {
+        
+        if("verified".equals(memberDTO.getEmailVerification())) {
+            throw new RuntimeException("이미 인증 완료한 계정입니다.");
+        } else {
+            if(code.equals(memberDTO.getEmailVerification())) {
+                memberDTO.setEmailVerification("verified");
+                memberRepository.save(memberDTO.toEntity());
+            } else {
+                throw new RuntimeException("인증번호가 일치하지 않습니다.");
+            }
+        }
     }
 
     @Override
@@ -246,11 +254,5 @@ public class MemberServiceImpl implements MemberService {
         return members.stream()
                 .map(Member::toDTO)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public MemberDTO emailVerification(MemberDTO memberDTO) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'emailVerification'");
     }
 }
