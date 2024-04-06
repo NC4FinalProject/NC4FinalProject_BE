@@ -2,7 +2,6 @@ package com.bit.envdev.controller;
 
 import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.dto.ResponseDTO;
-import com.bit.envdev.entity.CustomUserDetails;
 import com.bit.envdev.entity.Member;
 import com.bit.envdev.service.impl.MemberServiceImpl;
 import com.bit.envdev.service.impl.PointServiceImpl;
@@ -16,10 +15,8 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,38 +28,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
+    
     private final MemberServiceImpl memberService;
     private final SendEmailServiceImpl sendEmailService;
     private final PointServiceImpl pointService;
-    private final PasswordEncoder passwordEncoder;
 
-    // 기존 form submit이나 ajax에서는 전송하는 데이터 타입이 x-www-form-urlencoded 형식이어서
-    // @ModelAttribute나 @RequestParam으로 데이터를 받을 수 있었다
-    // axios나 fetch에서는 전송하는 데이터 타입이 application/json
-    // @RequestBody로 데이터를 받아준다.
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody MemberDTO memberDTO) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
 
         try {
-
-            //회원가입 로직
-            memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
-
-            if(memberDTO.getUserNickname() == null) {
-                memberDTO.setUserNickname(memberDTO.getUsername());
-            }
-
-            memberDTO.setRole(com.bit.envdev.constant.Role.USER);
             Member newMember = memberService.join(memberDTO);
-            
-            // 회원가입시 포인트 지급
             pointService.pointJoinWithBuilder(newMember, 3000,  "회원가입 축하 포인트 지급");
 
-            responseDTO.setItem(memberDTO);
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(responseDTO);
-
+            
         } catch(Exception e) {
             if(e.getMessage().equalsIgnoreCase("Invalid Argument")) {
                 responseDTO.setErrorCode(100);
@@ -114,11 +95,8 @@ public class MemberController {
     }
 
     @DeleteMapping("/resign")
-    public ResponseEntity<?> resign(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> resign(@AuthenticationPrincipal UserDetails userDetails) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDetails userDetails = (UserDetails)principal;
         String username = userDetails.getUsername();
 
         try {
@@ -136,12 +114,10 @@ public class MemberController {
     }
 
     @GetMapping("/email-verification")
-    public ResponseEntity<?> emailVerification(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> emailVerification(@AuthenticationPrincipal UserDetails userDetails) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
         
         try {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserDetails userDetails = (UserDetails)principal;
             String username = userDetails.getUsername();
             MemberDTO memberDTO = memberService.findByUsername(username);
 
@@ -191,12 +167,10 @@ public class MemberController {
     }
 
     @PostMapping("/code-check")
-    public ResponseEntity<?> emailCheck(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody Object codeObject) {
+    public ResponseEntity<?> emailCheck(@AuthenticationPrincipal UserDetails userDetails, @RequestBody Object codeObject) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
-    try {
 
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserDetails userDetails = (UserDetails)principal;
+    try {
             String username = userDetails.getUsername();
             MemberDTO memberDTO = memberService.findByUsername(username);
             
@@ -253,28 +227,21 @@ public class MemberController {
     @GetMapping("/logout")
     public ResponseEntity<?> logout() {
         ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
-        System.out.println("로그아웃 시도");
+
         try {
-            SecurityContext securityContext = SecurityContextHolder.getContext();
-            securityContext.setAuthentication(null);
-            SecurityContextHolder.setContext(securityContext);
+            SecurityContextHolder.clearContext();
 
             Map<String, String> msgMap = new HashMap<>();
-
             msgMap.put("logoutMsg", "logout success");
 
             responseDTO.setItem(msgMap);
             responseDTO.setStatusCode(HttpStatus.OK.value());
-            System.out.println("로그아웃 성공");
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
-            System.out.println("로그아웃 실패");
             responseDTO.setErrorMessage(e.getMessage());
             responseDTO.setErrorCode(202);
             responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.badRequest().body(responseDTO);
         }
     }
-
-
 }

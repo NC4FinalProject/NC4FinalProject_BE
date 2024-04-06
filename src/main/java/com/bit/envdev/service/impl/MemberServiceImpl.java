@@ -31,6 +31,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member join(MemberDTO memberDTO) {
+        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
+
+        if(memberDTO.getUserNickname() == null) {
+            memberDTO.setUserNickname(memberDTO.getUsername());
+        }
+
         //유효성 검사
         if (memberDTO.getUsername() == null || memberDTO.getPassword() == null) {
             throw new RuntimeException("Invalid Argument");
@@ -40,8 +46,10 @@ public class MemberServiceImpl implements MemberService {
         if (memberRepository.existsByUsername(memberDTO.getUsername())) {
             throw new RuntimeException("already exist username");
         }
+        
         memberDTO.setCreatedAt(LocalDateTime.now().toString());
         memberDTO.setModifiedAt(LocalDateTime.now().toString());
+        memberDTO.setRole(com.bit.envdev.constant.Role.USER);
 
         try {
             Member joinMember = memberRepository.save(memberDTO.toEntity());
@@ -152,7 +160,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void codeVerification(MemberDTO memberDTO, String code) {
-        
         if("verified".equals(memberDTO.getEmailVerification())) {
             throw new RuntimeException("이미 인증 완료한 계정입니다.");
         } else {
