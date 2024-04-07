@@ -12,6 +12,6 @@ import java.util.List;
 @ToString
 public class InsertRequestDTO {
     private ContentsDTO contentsDTO;
+    private List<VideoDTO> videoDTO;
     private List<SectionDTO> sectionDTO;
-
 }
