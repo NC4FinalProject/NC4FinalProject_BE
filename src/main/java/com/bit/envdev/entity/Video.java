@@ -1,10 +1,13 @@
 package com.bit.envdev.entity;
 
-import com.bit.envdev.dto.VideoReplyDTO;
+
+import com.bit.envdev.dto.VideoDTO;
+
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+
 
 @Getter
 @Setter
@@ -28,9 +31,35 @@ public class Video {
     private String videoTitle;
 
     @Column
+    private String videoTime;
+
+    @Column
+    private String videoStorageId;
+
+    @Column
     private String videoPath;
 
+
     @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VideoReply> ReplyList;
+    private List<VideoReply> videoReplyList;
+
+    public VideoDTO toDTO() {
+        return VideoDTO.builder()
+                .contentsId(this.contents.getContentsId())
+                .videoId(this.videoId)
+                .videoTitle(this.videoTitle)
+                .videoTime(this.videoTime)
+                .videoStorageId(this.videoStorageId)
+                .videoPath(this.videoPath)
+                .videoReplyList(this.videoReplyList != null ? this.videoReplyList.stream().map(VideoReply::toDTO).toList() : null) // 변환된 리스트 추가
+                .build();
+    }
+
+
+    public void addVideoReplyList(VideoReply videoReply) {
+        this.videoReplyList.add(videoReply);
+    }
+
+
 
 }

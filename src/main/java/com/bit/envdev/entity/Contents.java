@@ -37,7 +37,7 @@ public class Contents {
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "ContnetsSeqGenerator"
+            generator = "ContentsSeqGenerator"
     )
     private int contentsId;
     
@@ -69,6 +69,9 @@ public class Contents {
 
     @Column(nullable=true)
     private String price;
+
+    @Column
+    private String thumbnail;
     
     // private LocalDateTime mokDate;
     // private Timestamp mokDate;
@@ -87,15 +90,15 @@ public class Contents {
     // // 데이터 관련 CLOB, BLOB
     // @Lob
     // private int stockNumber;
-    
 
     public ContentsDTO toDTO() {
         return ContentsDTO.builder()
-                .username(this.member.getUsername())
+                .memberId(this.member.getUsername())
                 .contentsId(this.contentsId)
                 .contentsTitle(this.contentsTitle)
                 .category(this.category)
                 .price(this.price)
+                .thumbnail(this.thumbnail)
                 .sectionDTOList(this.sectionList != null ? this.sectionList.stream().map(Section::toDTO).toList() : null)
                 .build();
     }
