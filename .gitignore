@@ -390,7 +390,7 @@ $RECYCLE.BIN/
 *.lnk
 
 #application properties
-application.properties
+application-local.properties
 
 #log files
 *.log
