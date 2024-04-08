@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Transactional
 public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewRepositoryCustom {
-    List<Review> findByPaymentCartContentsContentsContentsIdOrderByReviewUdtDateDesc(int contentsId);
+    List<Review> findByContentsContentsIdOrderByReviewUdtDateDesc(int contentsId);
 
 }
 

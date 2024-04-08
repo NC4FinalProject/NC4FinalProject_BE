@@ -39,17 +39,13 @@ public class Review {
     @Column(nullable = false)
     private double reviewRating;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumns({
-            @JoinColumn(name = "payment_id"),
-            @JoinColumn(name = "cart_id"),
-            @JoinColumn(name = "contents_id")
-    })
-    private Payment payment;
-
     @ManyToOne
-    @JoinColumn(name = "id", referencedColumnName = "Id")
+    @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToOne
+    @JoinColumn(name = "contents_id", referencedColumnName = "contentsId")
+    private Contents contents;
 
     public ReviewDTO toDTO() {
         return ReviewDTO.builder()
@@ -58,10 +54,8 @@ public class Review {
                 .reviewCrtDate(this.reviewCrtDate)
                 .reviewUdtDate(this.reviewUdtDate)
                 .reviewRating(this.reviewRating)
-                .paymentId(this.payment.getPaymentId())
-                .cartId(this.payment.getCartContents().getCart().getCartId())
-                .contentsId(this.payment.getCartContents().getContents().getContentsId())
                 .memberDTO(this.member.toDTO())
+                .contentsId(this.contents.getContentsId())
                 .build();
     }
 }
