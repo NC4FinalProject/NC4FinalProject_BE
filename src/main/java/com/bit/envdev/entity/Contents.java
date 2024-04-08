@@ -3,6 +3,7 @@ package com.bit.envdev.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -47,9 +48,12 @@ public class Contents {
     @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Section> sectionList;
 
+    @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Video> videoList;
+
     // @JsonIgnoreProperties
     // @ManyToOne(fetch = FetchType.LAZY)
-    @ManyToOne(fetch = FetchType.EAGER) // 한명의 유저는 여러개의 게시글을 갖을 수 있다, 여러개의 게시글의 유저는 한명이다.
+    @ManyToOne(fetch = FetchType.LAZY) // 한명의 유저는 여러개의 게시글을 갖을 수 있다, 여러개의 게시글의 유저는 한명이다.
     @JoinColumn(name="id") // JPA(ORM)을 사용하여 오브젝트 자체를 저장 할 수 있고 이를 Foreign Key로 사용 가능
     private Member member;
 
@@ -99,8 +103,12 @@ public class Contents {
                 .category(this.category)
                 .price(this.price)
                 .thumbnail(this.thumbnail)
-                .sectionDTOList(this.sectionList != null ? this.sectionList.stream().map(Section::toDTO).toList() : null)
+                .sectionList(this.sectionList != null ? this.sectionList.stream().map(Section::toDTO).toList() : null)
+                .videoList(this.videoList != null ? this.videoList.stream().map(Video::toDTO).toList() : null)
                 .build();
     }
 
+    public void addVideoFile(Video video) {
+        this.videoList.add(video);
+    }
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.*;
 import com.bit.envdev.entity.Contents;
+import com.bit.envdev.entity.Video;
 import com.bit.envdev.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -32,93 +33,41 @@ import org.springframework.web.multipart.MultipartFile;
 public class ContentsController {
 
     private final ContentsService contentsService;
-    private final MemberService memberService;
-    private final FileUtils fileUtils;
-
     // 컨텐츠 등록 하기
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestPart("insertRequestDTO") InsertRequestDTO insertRequestDTO,
                                     @RequestPart("thumbnail") MultipartFile thumbnail,
-                                    @RequestPart("videoFile") List<MultipartFile> videoFile,
+                                    @RequestPart("videoFile") MultipartFile[] videoFile,
                                     @AuthenticationPrincipal CustomUserDetails customUserDetails) throws IOException {
-
+        ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
         Long memberId = customUserDetails.getId();
-//        ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
-        ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
-
         // 가져온 정보 나눠담기
         ContentsDTO contentsDTO = insertRequestDTO.getContentsDTO();
         List<SectionDTO> sectionDTOList = insertRequestDTO.getSectionDTO();
         List<VideoDTO> videoDTOList = insertRequestDTO.getVideoDTO();
-        /////////////////////////////////////////////////////////////////
-        log.info("contentsDTO : {}",contentsDTO);
-        log.info("sectionDTO : {}",sectionDTOList);
-        log.info("videoDTO : {}",videoDTOList);
+        // 기본 정보 밀어넣기, 썸네일 파일 밀어넣기
+        Contents createdContents = contentsService.createContents(contentsDTO, memberId, thumbnail );
+        // 비디오 정보 밀어넣기, 동영상 파일 밀어 넣기
+        for (int i = 0; i < videoDTOList.size(); i++) {
+            contentsService.createVideo(videoDTOList.get(i), createdContents, memberId, videoFile[i]);
+            // 현재 처리되는 비디오 파일에 대한 정보 출력
+            MultipartFile file = videoFile[i];
+            System.out.println("파일 이름: " + file.getOriginalFilename());
+            System.out.println("파일 크기: " + file.getSize() + " bytes");
+            System.out.println("파일 타입: " + file.getContentType());
+            System.out.println("-------------------------------");
 
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        // 객체를 JSON 문자열로 변환하여 로깅
-        String json = objectMapper.writeValueAsString(insertRequestDTO);
-        log.info(json);
-        /////////////////////////////////////////////////////////////////
-        String fileString = null;
-        if (thumbnail.getOriginalFilename() != null && !thumbnail.getOriginalFilename().isEmpty()) {
-            FileDTO fileDTO = fileUtils.uploadThumbnail(thumbnail, "board/");  // 오브젝트 스토리지에 업로드하면서 만들어진 디티오를 파일 디티오에 담음
-            fileString = (fileDTO.getItemFilePath()+fileDTO.getItemFileName()); // 파일 디티오에 경로와 파일 디티오에 파일 네임을 담은 fileString에 담음
-            System.out.println("컨트롤러? 오나요?");
-            System.out.println(fileString);
         }
-
-        // 기본 정보 밀어넣기
-        Contents createdContents = contentsService.createContents(contentsDTO, memberId, fileString);
-        // 비디오 정보 밀어넣기
-        videoDTOList.forEach(videoDTO -> {contentsService.createVideo(videoDTO, createdContents, memberId);});
         // 섹션 정보 밀어넣기
         sectionDTOList.forEach(sectionDTO -> {contentsService.createSection(sectionDTO, createdContents);});
-        // 썸네일 정보 밀어넣기
-
         return null;
     }
-
-
-
     // // 컨텐츠 상세 보기
     @GetMapping("/detail/{contentsId}")
     public ResponseEntity<?> Detail(@PathVariable(name = "contentsId") int contentsId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
-        System.out.println("여기 오시나유?");
-
         ContentsDTO contentsDTO = contentsService.findById(contentsId);
-//        SectionDTO sectionDTO = contentsService.findById(sectionId);
-//        VideoDTO videoDTO = contentsService.findById(videoId);
-
         responseDTO.setItem(contentsDTO);
-
         return ResponseEntity.ok(responseDTO);
     }
-
-
-
-    // // 컨텐츠 전체 보기
-    // @GetMapping("/listAll")
-    // public ResponseEntity<?> readAll () {
-    //     ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
-    //     // 서비스 로직
-    //     System.out.println("일단 호출만 하자");
-    //     return ResponseEntity.ok(responseDTO);
-    // }
-
-    // 컨텐츠 수정 하기
-    // @PostMapping("/update/{id}")
-    // public ResponseEntity<?> update () {
-    //     ResponseDTO<BoardDTO> responseDTO = new ResponseDTO<>();
-    //     return ResponseEntity.ok(responseDTO);
-    // }
-
-    // 컨텐츠 삭제 하기
-    // @DeleteMapping("/delete/{id}")
-    // public ResponseEntity<?> delete () {
-    //     ResponseDTO<> responseDTO = new ResponseDTO<>();
-    // }
-
 }

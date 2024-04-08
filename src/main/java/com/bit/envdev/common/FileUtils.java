@@ -123,7 +123,7 @@ public class FileUtils {
         s3.deleteObject(new DeleteObjectRequest(bucketName, image));
     }
 
-    public FileDTO uploadThumbnail(MultipartFile multipartFile, String directory) {
+    public FileDTO uploadFile(MultipartFile multipartFile, String directory) {
         //버킷 이름
         String bucketName = "bitcamp-bucket-121";
 
@@ -162,17 +162,11 @@ public class FileUtils {
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
-
         // 리턴될 DTO에 값들 세팅
         fileDTO.setItemFileName(fileName);
         fileDTO.setItemFilePath(filePath);
         fileDTO.setItemFileOrigin(fileOrigin);
         System.out.println(fileDTO);
-
         return fileDTO;
     }
-
-
-
-
 }
