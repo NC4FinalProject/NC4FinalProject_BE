@@ -1,5 +1,6 @@
 package com.bit.envdev.dto;
 
+import com.bit.envdev.entity.Member;
 import com.bit.envdev.entity.Point;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,18 +14,20 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class PointDTO {
-    private String username;
-    private int totalPoint;
-    private LocalDate pointModifiedDate;
+
+    private Member member;
+    private int value;
+    private String reason;
+    private String createdAt;
 
     public Point toEntity( ){
-    return Point.builder()
-            .username(username)
-            .totalPoint(totalPoint)
-            .pointModifiedDate(LocalDate.now())
-            .build();
-}
-
+        return Point.builder()
+                .member(this.member)
+                .value(this.value)
+                .reason(this.reason)
+                .createdAt(LocalDate.parse(this.createdAt))
+                .build();
+        }
 }
 
 

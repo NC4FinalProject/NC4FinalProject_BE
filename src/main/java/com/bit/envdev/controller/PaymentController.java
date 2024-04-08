@@ -33,7 +33,7 @@ public class PaymentController {
     public ResponseEntity<?> getPaymentList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         ResponseDTO<PaymentDTO> responseDTO = new ResponseDTO<>();
-        long loginMemberId = customUserDetails.getMember().getId();
+        long loginMemberId = customUserDetails.getMember().getMemberId();
         try {
             List<PaymentDTO> paymentDTOList = paymentService.getPaymentList(loginMemberId);
 

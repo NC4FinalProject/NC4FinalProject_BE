@@ -1,12 +1,12 @@
 package com.bit.envdev.service;
+
 import com.bit.envdev.dto.PointDTO;
+import com.bit.envdev.entity.Member;
 
 public interface PointService {
-    void pointJoin (PointDTO pointDTO);
 
-    PointDTO getPoint(String username);
+    void pointJoinWithDTO (PointDTO pointDTO);
 
-    void pointCharge(int point, String username);
+    void pointJoinWithBuilder (Member member, int point,  String reason);
 
-    void pointRemove(String username);
 }

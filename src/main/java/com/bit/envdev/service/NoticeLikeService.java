@@ -4,7 +4,7 @@ import com.bit.envdev.entity.Member;
 
 public interface NoticeLikeService {
 
-    long addOrdown(long id, Long noticeNo);
+    long addOrdown(long memberId, Long noticeNo);
 
     long findByNoticeId(Long noticeNo);
 

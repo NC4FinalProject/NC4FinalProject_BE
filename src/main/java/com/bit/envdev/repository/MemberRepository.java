@@ -21,13 +21,15 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Transactional
     void deleteByUsername(String username);
 
-    List<Member> findTop4ByOrderByIdDesc();
 
-    Page<Member> findByRoleAndUserNicknameContaining(Pageable pageable, Role role, String searchKeyword);
+    List<Member> findTop4ByOrderByMemberIdDesc();
 
-    Page<Member> findByUserNicknameContaining(Pageable pageable, String searchKeyword);
+
+    Page<Member> findByRoleAndUserNicknameContainingOrderByCreatedAtDesc(Pageable pageable, Role role, String searchKeyword);
 
     long countByRole(Role role);
 
     List<Member> findTop4ByRole(Role role);
+
+    Page<Member> findByUserNicknameContainingOrderByCreatedAtDesc(Pageable pageable, String searchKeyword);
 }
