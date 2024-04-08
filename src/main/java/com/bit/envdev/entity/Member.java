@@ -8,11 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -43,8 +41,13 @@ public class Member {
     @Column
     private String profileFile;
 
-    @ColumnDefault("false")
-    private boolean emailVerification;
+    @Column
+    private String emailVerification;
+
+    @OrderBy("createdAt DESC")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Point> pointList;
 
     @CreatedDate
     @Column(updatable = false, nullable = false)
@@ -56,17 +59,6 @@ public class Member {
 
     @Column(length = 350)
     private String memo;
-
-    @PrePersist // 엔티티가 저장되기 전에 실행될 메서드
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-        this.modifiedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate // 엔티티가 업데이트되기 전에 실행될 메서드
-    public void preUpdate() {
-        this.modifiedAt = LocalDateTime.now();
-    }
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -84,6 +76,7 @@ public class Member {
                 .createdAt(this.createdAt.toString())
                 .modifiedAt(this.modifiedAt.toString())
                 .memo(this.memo)
+                .pointDTOList(this.pointList != null ? this.pointList.stream().map(Point::toDTO).toList() : null)
                 .build();
     }
 

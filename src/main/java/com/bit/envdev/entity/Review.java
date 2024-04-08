@@ -40,7 +40,9 @@ public class Review {
     private double reviewRating;
 
     @ManyToOne
+
     @JoinColumn(name = "member_id")
+
     private Member member;
 
     @OneToOne

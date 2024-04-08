@@ -2,10 +2,14 @@ package com.bit.envdev.dto;
 
 import com.bit.envdev.constant.Role;
 import com.bit.envdev.entity.Member;
+
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import org.apache.commons.lang3.builder.ToStringExclude;
 
 @Getter
 @Setter
@@ -23,10 +27,13 @@ public class MemberDTO {
     private Role role;
     private String token;
     private String profileFile;
-    private boolean emailVerification;
+    private String emailVerification;
     private String createdAt;
     private String modifiedAt;
     private String memo;
+
+    @ToStringExclude
+    private List<PointDTO> pointDTOList;
 
 
     public Member toEntity() {
@@ -41,7 +48,7 @@ public class MemberDTO {
                 .createdAt(LocalDateTime.parse(this.createdAt))
                 .modifiedAt(LocalDateTime.parse(this.modifiedAt))
                 .memo(this.memo)
+                .pointList(this.pointDTOList != null ? this.pointDTOList.stream().map(PointDTO::toEntity).toList() : null)
                 .build();
     }
-
 }

@@ -3,6 +3,7 @@ package com.bit.envdev.service;
 import com.bit.envdev.constant.Role;
 import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.dto.MemberGraphDTO;
+import com.bit.envdev.entity.Member;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface MemberService {
-    MemberDTO join(MemberDTO memberDTO);
+    Member join(MemberDTO memberDTO);
 
     MemberDTO login(MemberDTO memberDTO);
 
@@ -39,8 +40,6 @@ public interface MemberService {
 
     List<MemberGraphDTO> getMonthlyUserCount();
 
-    MemberDTO emailVerification(MemberDTO memberDTO);
-
     Page<MemberDTO> searchAll(Pageable pageable, String searchKeyword, Role role);
 
     Page<MemberDTO> searchData(Pageable pageable, String searchKeyword);
@@ -54,4 +53,8 @@ public interface MemberService {
     List<MemberGraphDTO> getMonthlyOutUserCount();
 
     List<MemberDTO> findByRole();
+
+    void codeVerification(MemberDTO memberDTO, String code);
+
+    MemberDTO findById(long id);
 }

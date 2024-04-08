@@ -37,7 +37,9 @@ public class Payment {
     private String paymentUniqueNo;
 
     @ManyToOne
-    @JoinColumn(name = "member_id", referencedColumnName = "memberId")
+
+    @JoinColumn(name = "member_id")
+
     private Member member;
 
     private Long contentsId; // 서비스단에서 수동으로 set하기
@@ -48,7 +50,9 @@ public class Payment {
                 .totalPrice(this.totalPrice)
                 .paymentDate(this.paymentDate)
                 .paymentUniqueNo(this.paymentUniqueNo)
+
                 .memberDTO(this.member.toDTO())
+
                 .build();
     }
 }

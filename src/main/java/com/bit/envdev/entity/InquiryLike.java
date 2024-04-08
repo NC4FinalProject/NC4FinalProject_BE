@@ -18,9 +18,11 @@ public class InquiryLike {
     @JoinColumn(name="inquiry_id")
     private Inquiry inquiry;
 
+
     @Id
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="member_id")
+
     private Member member;
 
     public InquiryLikeDTO toDTO() {

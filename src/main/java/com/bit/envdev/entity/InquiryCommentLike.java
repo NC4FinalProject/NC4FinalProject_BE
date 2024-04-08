@@ -20,8 +20,10 @@ public class InquiryCommentLike {
     @JoinColumn(name = "inquiry_comment_id")
     private InquiryComment inquiryComment;
 
+
     @Id
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="member_id")
+
     private Member member;
 }

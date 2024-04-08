@@ -1,14 +1,10 @@
 package com.bit.envdev.controller;
 
 import com.bit.envdev.dto.MemberDTO;
-import com.bit.envdev.dto.MessageDTO;
-import com.bit.envdev.dto.PointDTO;
-import com.bit.envdev.dto.PointHistoryDTO;
 import com.bit.envdev.dto.ResponseDTO;
-import com.bit.envdev.entity.CustomUserDetails;
-import com.bit.envdev.service.MemberService;
-import com.bit.envdev.service.PointHistoryService;
-import com.bit.envdev.service.PointService;
+import com.bit.envdev.entity.Member;
+import com.bit.envdev.service.impl.MemberServiceImpl;
+import com.bit.envdev.service.impl.PointServiceImpl;
 import com.bit.envdev.service.impl.SendEmailServiceImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -19,11 +15,8 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,47 +28,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
-    private final MemberService memberService;
+    
+    private final MemberServiceImpl memberService;
     private final SendEmailServiceImpl sendEmailService;
-    private final PointService pointService;
-    private final PointHistoryService pointHistoryService;
-    private final PasswordEncoder passwordEncoder;
+    private final PointServiceImpl pointService;
 
-    // 기존 form submit이나 ajax에서는 전송하는 데이터 타입이 x-www-form-urlencoded 형식이어서
-    // @ModelAttribute나 @RequestParam으로 데이터를 받을 수 있었다
-    // axios나 fetch에서는 전송하는 데이터 타입이 application/json
-    // @RequestBody로 데이터를 받아준다.
     @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody MemberDTO memberDTO, PointDTO pointDTO, PointHistoryDTO pointHistoryDTO) {
+    public ResponseEntity<?> join(@RequestBody MemberDTO memberDTO) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
 
         try {
+            Member newMember = memberService.join(memberDTO);
+            pointService.pointJoinWithBuilder(newMember, 3000,  "회원가입 축하 포인트 지급");
 
-            //회원가입 로직
-            memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
-
-            if(memberDTO.getUserNickname() == null) {
-                memberDTO.setUserNickname(memberDTO.getUsername());
-            }
-
-            memberDTO.setRole(com.bit.envdev.constant.Role.USER);
-            MemberDTO joinMemberDTO = memberService.join(memberDTO);
-            joinMemberDTO.setPassword("");
-            responseDTO.setItem(joinMemberDTO);
             responseDTO.setStatusCode(HttpStatus.OK.value());
-
-
-            //포인트 로직
-            pointDTO.setUsername(memberDTO.getUsername());
-            pointDTO.setTotalPoint(3000);
-            pointService.pointJoin(pointDTO);
-            pointHistoryDTO.setUsername(memberDTO.getUsername());
-            pointHistoryDTO.setPoint(3000);
-            pointHistoryDTO.setPointCategory("NRU");
-            pointHistoryService.pointHistoryJoin(pointHistoryDTO);
-
             return ResponseEntity.ok(responseDTO);
-
+            
         } catch(Exception e) {
             if(e.getMessage().equalsIgnoreCase("Invalid Argument")) {
                 responseDTO.setErrorCode(100);
@@ -127,11 +95,8 @@ public class MemberController {
     }
 
     @DeleteMapping("/resign")
-    public ResponseEntity<?> resign(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> resign(@AuthenticationPrincipal UserDetails userDetails) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
-
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDetails userDetails = (UserDetails)principal;
         String username = userDetails.getUsername();
 
         try {
@@ -149,24 +114,38 @@ public class MemberController {
     }
 
     @GetMapping("/email-verification")
-    public ResponseEntity<?> emailVerification(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> emailVerification(@AuthenticationPrincipal UserDetails userDetails) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
-        System.out.println("이메일 인증 시도");
         
-
         try {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserDetails userDetails = (UserDetails)principal;
             String username = userDetails.getUsername();
             MemberDTO memberDTO = memberService.findByUsername(username);
 
-            MemberDTO CheckMemberDTO = memberService.emailVerification(memberDTO);
-            
-            MessageDTO messageDTO = sendEmailService.createMail(CheckMemberDTO);
+                if ("verified".equals(memberDTO.getEmailVerification())) {
+                    responseDTO.setErrorCode(201);
+                    responseDTO.setErrorMessage("이미 인증된 이메일 입니다.");
+                    responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                    return ResponseEntity.badRequest().body(responseDTO);
+                } else {
+                    sendEmailService.createMail(memberDTO);
+                    responseDTO.setItem(memberDTO);
+                    responseDTO.setStatusCode(HttpStatus.OK.value());
+                    return ResponseEntity.ok(responseDTO); 
+                }
+        } catch (Exception e) {
+            responseDTO.setErrorCode(200);
+            responseDTO.setErrorMessage(e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
 
-            System.out.println("이메일 인증 성공");
-            System.out.println("messageDTO" + messageDTO.toString());
+    @PostMapping("/email-check")
+    public ResponseEntity<?> emailCheck(@RequestBody MemberDTO memberDTO) {
+        ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
 
+        try {
+            MemberDTO CheckMemberDTO = memberService.emailCheck(memberDTO);
             responseDTO.setItem(CheckMemberDTO);
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(responseDTO);
@@ -187,31 +166,35 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/email-check")
-    public ResponseEntity<?> emailCheck(@RequestBody MemberDTO memberDTO) {
+    @PostMapping("/code-check")
+    public ResponseEntity<?> emailCheck(@AuthenticationPrincipal UserDetails userDetails, @RequestBody Object codeObject) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
 
-        try {
-            MemberDTO CheckMemberDTO = memberService.emailCheck(memberDTO);
+    try {
+            String username = userDetails.getUsername();
+            MemberDTO memberDTO = memberService.findByUsername(username);
+            
+            Map<String, Object> map = (Map<String, Object>) codeObject;
+            String value = map.get("code").toString();
 
-            responseDTO.setItem(CheckMemberDTO);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            return ResponseEntity.ok(responseDTO);
-        } catch (Exception e) {
-            if(e.getMessage().equalsIgnoreCase("Invalid Argument")) {
-                responseDTO.setErrorCode(200);
-                responseDTO.setErrorMessage(e.getMessage());
-            } else if(e.getMessage().equalsIgnoreCase("already exist username")) {
+            memberService.codeVerification(memberDTO, value);
+            MemberDTO newMemberDTO = memberService.findByUsername(username);
+            
+                if ("verified".equals(newMemberDTO.getEmailVerification())) {
+                    responseDTO.setItem(memberDTO);
+                    responseDTO.setStatusCode(HttpStatus.OK.value());
+                    return ResponseEntity.ok(responseDTO);
+                } else {
+                    responseDTO.setErrorCode(200);
+                    responseDTO.setErrorMessage("인증번호가 일치하지 않습니다.");
+                }
+            } catch (Exception e) {
                 responseDTO.setErrorCode(201);
-                responseDTO.setErrorMessage(e.getMessage());
-            } else {
-                responseDTO.setErrorCode(202);
                 responseDTO.setErrorMessage(e.getMessage());
             }
 
-            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
-            return ResponseEntity.badRequest().body(responseDTO);
-        }
+        responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.badRequest().body(responseDTO);
     }
 
     @PostMapping("/nickname-check")
@@ -244,28 +227,21 @@ public class MemberController {
     @GetMapping("/logout")
     public ResponseEntity<?> logout() {
         ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
-        System.out.println("로그아웃 시도");
+
         try {
-            SecurityContext securityContext = SecurityContextHolder.getContext();
-            securityContext.setAuthentication(null);
-            SecurityContextHolder.setContext(securityContext);
+            SecurityContextHolder.clearContext();
 
             Map<String, String> msgMap = new HashMap<>();
-
             msgMap.put("logoutMsg", "logout success");
 
             responseDTO.setItem(msgMap);
             responseDTO.setStatusCode(HttpStatus.OK.value());
-            System.out.println("로그아웃 성공");
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
-            System.out.println("로그아웃 실패");
             responseDTO.setErrorMessage(e.getMessage());
             responseDTO.setErrorCode(202);
             responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
             return ResponseEntity.badRequest().body(responseDTO);
         }
     }
-
-
 }
