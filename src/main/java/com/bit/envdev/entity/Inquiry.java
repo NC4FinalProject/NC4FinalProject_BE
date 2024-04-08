@@ -1,0 +1,90 @@
+package com.bit.envdev.entity;
+
+import com.bit.envdev.dto.InquiryDTO;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.util.Date;
+import java.util.List;
+
+@Getter
+@Builder
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+
+public class Inquiry {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "inquiryId")
+    private long inquiryId;
+
+    @Column(nullable = false)
+    private String inquiryTitle;
+    @Column(nullable = false)
+    private String inquiryContent;
+
+    @Column
+    @Temporal(TemporalType.DATE)
+    @CreationTimestamp
+    private Date inquiryCrtDT;
+
+    @Column
+    @Temporal(TemporalType.DATE)
+    @UpdateTimestamp
+    private Date inquiryUdtDT;
+
+    @Column(columnDefinition = "boolean default false")
+    private boolean isPrivate;
+
+    @Column(columnDefinition = "boolean default false")
+    private boolean isSolved;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tag> tagList;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InquiryFile> inquiryFileList;
+
+    @Column(nullable = false)
+    @Builder.Default()
+    private int inquiryView = 0;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    // 수동으로 setting
+    private Long contentsId;
+
+    @OneToMany(mappedBy = "inquiry", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<InquiryComment> inquiryCommentList;
+
+    @Transient
+    private String searchCondition;
+    @Transient
+    private String searchKeyword;
+
+    public InquiryDTO toDTO() {
+        return InquiryDTO.builder()
+                .inquiryId(this.inquiryId)
+                .memberDTO(this.member.toDTO())
+                .inquiryTitle(this.inquiryTitle)
+                .inquiryContent(this.inquiryContent)
+                .inquiryCrtDT(this.inquiryCrtDT)
+                .inquiryUdtDT(this.inquiryUdtDT)
+                .isPrivate(this.isPrivate)
+                .isSolved(this.isSolved)
+                .inquiryView(this.inquiryView)
+                .inquiryFileDTOList(this.inquiryFileList.stream().map(InquiryFile::toDTO).toList())
+                .tagDTOList(this.tagList.stream().map(Tag::toDTO).toList())
+                .build();
+    }
+}

@@ -1,30 +1,36 @@
 package com.bit.envdev.dto;
 
-import com.bit.envdev.entity.Member;
-import com.bit.envdev.entity.Review;
+import com.bit.envdev.entity.*;
 import lombok.*;
+
+import java.util.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class ReviewDTO {
     private long reviewId;
-    private String userNickname;
     private String reviewContent;
-    private String reviewRegdate;
-    private String reviewModidate;
-    private String reviewRating;
+    private Date reviewCrtDate;
+    private Date reviewUdtDate;
+    private double reviewRating;
+    private int contentsId;
+    private MemberDTO memberDTO;
 
-    public Review toEntity(Member member) {
+
+
+    public Review toEntity(Contents contents) {
         return Review.builder()
                 .reviewId(this.reviewId)
-                .member(member)
                 .reviewContent(this.reviewContent)
-                .reviewRegdate(this.reviewRegdate)
-                .reviewModidate(this.reviewModidate)
+                .reviewCrtDate(this.reviewCrtDate)
+                .reviewUdtDate(this.reviewUdtDate)
                 .reviewRating(this.reviewRating)
+                .member(this.memberDTO.toEntity())
+                .contents(contents)
                 .build();
     }
 
