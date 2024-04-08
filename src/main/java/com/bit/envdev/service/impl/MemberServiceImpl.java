@@ -27,12 +27,16 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final PointServiceImpl pointService;
-    private final PointHistoryServiceImpl pointHistoryService;
     private final MemberGraphRepository memberGraphRepository;
 
     @Override
-    public MemberDTO join(MemberDTO memberDTO) {
+    public Member join(MemberDTO memberDTO) {
+        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
+
+        if(memberDTO.getUserNickname() == null) {
+            memberDTO.setUserNickname(memberDTO.getUsername());
+        }
+
         //유효성 검사
         if (memberDTO.getUsername() == null || memberDTO.getPassword() == null) {
             throw new RuntimeException("Invalid Argument");
@@ -42,12 +46,19 @@ public class MemberServiceImpl implements MemberService {
         if (memberRepository.existsByUsername(memberDTO.getUsername())) {
             throw new RuntimeException("already exist username");
         }
-
+        
         memberDTO.setCreatedAt(LocalDateTime.now().toString());
         memberDTO.setModifiedAt(LocalDateTime.now().toString());
-        Member joinMember = memberRepository.save(memberDTO.toEntity());
+        memberDTO.setRole(com.bit.envdev.constant.Role.USER);
 
-        return joinMember.toDTO();
+        try {
+            Member joinMember = memberRepository.save(memberDTO.toEntity());
+            return joinMember;
+        } catch (Exception e) {
+            System.out.println("회원가입 실패" + e.getMessage());
+        }
+
+        return memberDTO.toEntity();
     }
 
     @Override
@@ -148,11 +159,17 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberDTO emailVerification(MemberDTO memberDTO) {
-        MemberDTO NewMemberDTO = memberRepository.findByUsername(memberDTO.getUsername()).get().toDTO();
-        NewMemberDTO.setEmailVerification(true);
-        Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
-        return joinMember.toDTO();
+    public void codeVerification(MemberDTO memberDTO, String code) {
+        if("verified".equals(memberDTO.getEmailVerification())) {
+            throw new RuntimeException("이미 인증 완료한 계정입니다.");
+        } else {
+            if(code.equals(memberDTO.getEmailVerification())) {
+                memberDTO.setEmailVerification("verified");
+                memberRepository.save(memberDTO.toEntity());
+            } else {
+                throw new RuntimeException("인증번호가 일치하지 않습니다.");
+            }
+        }
     }
 
     @Override
@@ -163,7 +180,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<MemberDTO> find4User() {
-        List<Member> members = memberRepository.findTop4ByOrderByIdDesc();
+
+        List<Member> members = memberRepository.findTop4ByOrderByMemberIdDesc();
+
         return members.stream()
                 .map(Member::toDTO)
                 .collect(Collectors.toList());
@@ -196,7 +215,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Page<MemberDTO> searchAll(Pageable pageable, String searchKeyword, Role role) {
         Page<Member> memberList = memberRepository.findAll(pageable);
-        memberList = memberRepository.findByRoleAndUserNicknameContaining(pageable, role,searchKeyword);
+        memberList = memberRepository.findByRoleAndUserNicknameContainingOrderByCreatedAtDesc(pageable, role,searchKeyword);
             return memberList.map(Member::toDTO);
 
     }
@@ -204,13 +223,13 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Page<MemberDTO> searchData(Pageable pageable, String searchKeyword) {
         Page<Member> memberList = memberRepository.findAll(pageable);
-        memberList = memberRepository.findByUserNicknameContaining(pageable, searchKeyword);
+        memberList = memberRepository.findByUserNicknameContainingOrderByCreatedAtDesc(pageable, searchKeyword);
         return memberList.map(Member::toDTO);
     }
 
     @Override
     public void updateUserMemo(MemberDTO memberDTO) {
-        MemberDTO NewMemberDTO = memberRepository.findById(memberDTO.getId()).get().toDTO();
+        MemberDTO NewMemberDTO = memberRepository.findById(memberDTO.getMemberId()).get().toDTO();
         NewMemberDTO.setMemo(memberDTO.getMemo());
         memberRepository.save(NewMemberDTO.toEntity());
     }
@@ -244,5 +263,11 @@ public class MemberServiceImpl implements MemberService {
         return members.stream()
                 .map(Member::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MemberDTO findById(long id) {
+        Member member = memberRepository.findById(id).orElseThrow();
+        return member.toDTO();
     }
 }

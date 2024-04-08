@@ -21,7 +21,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         System.out.println("loginMemberId = " + loginMemberId);
 
-        List<Payment> paymentList = paymentRepository.findByMemberId(loginMemberId);
+        List<Payment> paymentList = paymentRepository.findByMemberMemberId(loginMemberId);
 
         return paymentList.stream()
                 .map(Payment::toDTO)

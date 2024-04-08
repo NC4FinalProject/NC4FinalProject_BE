@@ -21,13 +21,13 @@ public class NoticeLike {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     public NoticeLikeDTO toDTO() {
         return NoticeLikeDTO.builder()
                 .noticeId(this.notice.getId())
-                .member(this.member.getId())
+                .member(this.member.getMemberId())
                 .build();
     }
 }
