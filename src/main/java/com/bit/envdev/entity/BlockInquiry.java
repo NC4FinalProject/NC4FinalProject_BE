@@ -1,6 +1,7 @@
 package com.bit.envdev.entity;
 
 import com.bit.envdev.constant.BlockState;
+import com.bit.envdev.converter.BlockStateConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +32,7 @@ public class BlockInquiry {
     private LocalDateTime blockPeriod = LocalDateTime.now();
 
     @Column
-    @Convert(converter = BlockState.class)
+    @Convert(converter = BlockStateConverter.class)
     @Builder.Default
     private BlockState state = BlockState.BLOCKING;
 }

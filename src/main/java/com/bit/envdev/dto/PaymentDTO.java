@@ -29,7 +29,7 @@ public class PaymentDTO {
                 .totalPrice(this.totalPrice)
                 .paymentDate(this.paymentDate)
                 .paymentUniqueNo(this.paymentUniqueNo)
-                .member(Member.builder().id(this.memberId).build())
+                .member(Member.builder().memberId(this.memberId).build())
                 .build();
     }
 }
