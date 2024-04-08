@@ -1,28 +1,34 @@
 package com.bit.envdev.entity;
 
+import com.bit.envdev.dto.InquiryLikeDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@IdClass(InquiryLikeId.class)
 
 public class InquiryLike {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long inquiryLikeId;
-
-    @ManyToOne
-    @JoinColumn(name="review_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="inquiry_id")
     private Inquiry inquiry;
 
-    @ManyToOne
-    @JoinColumn(name="member_id", referencedColumnName = "member_id")
+
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="member_id")
+
     private Member member;
+
+    public InquiryLikeDTO toDTO() {
+        return InquiryLikeDTO.builder()
+                .inquiryId(this.inquiry.getInquiryId())
+                .member(this.member.getMemberId())
+                .build();
+    }
 }

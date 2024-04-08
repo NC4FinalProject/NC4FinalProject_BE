@@ -1,5 +1,7 @@
 package com.bit.envdev.entity;
 
+import com.bit.envdev.dto.InquiryCommentDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,9 +36,26 @@ public class InquiryComment  {
     private Date inquiryCommentUdtDT;
 
     @Column(nullable = false)
-    private String InquiryCommentContent;
+    private String inquiryCommentContent;
 
     @ManyToOne
-    @JoinColumn(name="member_id", referencedColumnName = "member_id")
+
+    @JoinColumn(name="member_id")
+
     private Member member;
+
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name="inquiry_id", referencedColumnName = "inquiryId")
+    private Inquiry inquiry;
+
+    public InquiryCommentDTO toDTO() {
+        return InquiryCommentDTO.builder()
+                .inquiryCommentId(this.inquiryCommentId)
+                .inquiryCommentCrtDT(this.inquiryCommentCrtDT)
+                .inquiryCommentUdtDT(this.inquiryCommentUdtDT)
+                .inquiryCommentContent(this.inquiryCommentContent)
+                .memberDTO(this.member.toDTO())
+                .build();
+    }
 }

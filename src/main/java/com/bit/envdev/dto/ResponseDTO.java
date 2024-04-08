@@ -3,6 +3,7 @@ package com.bit.envdev.dto;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 @Getter
@@ -14,5 +15,4 @@ public class ResponseDTO<T> {
     private int errorCode;
     private String errorMessage;
     private int statusCode;
-
 }

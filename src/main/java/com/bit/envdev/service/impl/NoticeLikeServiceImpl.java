@@ -17,7 +17,7 @@ public class NoticeLikeServiceImpl implements NoticeLikeService {
 
     @Override
     public long addOrdown(long id, Long noticeNo) {
-        return noticeLikeRepository.countByMemberIdAndNoticeId(id, noticeNo);
+        return noticeLikeRepository.countByMemberMemberIdAndNoticeId(id, noticeNo);
     }
 
     @Override
