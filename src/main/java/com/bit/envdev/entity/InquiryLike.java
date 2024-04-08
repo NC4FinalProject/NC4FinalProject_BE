@@ -23,6 +23,6 @@ public class InquiryLike {
     private Inquiry inquiry;
 
     @ManyToOne
-    @JoinColumn(name="id", referencedColumnName = "id")
+    @JoinColumn(name="member_id", referencedColumnName = "member_id")
     private Member member;
 }

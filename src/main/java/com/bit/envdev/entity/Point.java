@@ -35,7 +35,7 @@ public class Point {
     private Long pointId;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "member_id")
     @JsonBackReference
     private Member member;
 

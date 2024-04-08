@@ -56,7 +56,7 @@ public class Payment {
     private String paymentUniqueNo;
 
     @ManyToOne
-    @JoinColumn(name = "id", referencedColumnName = "Id")
+    @JoinColumn(name = "member_id", referencedColumnName = "member_id")
     private Member member;
 
     public PaymentDTO toDTO() {

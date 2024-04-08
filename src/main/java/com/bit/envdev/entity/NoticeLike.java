@@ -21,7 +21,7 @@ public class NoticeLike {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     public NoticeLikeDTO toDTO() {
