@@ -98,4 +98,18 @@ public class AdminController {
             return ResponseEntity.badRequest().body(errorResponse);
         }
     }
+    @GetMapping("/user/{id}")
+    private ResponseEntity<?> getUser(@PathVariable("id") long id) {
+        System.out.println("id = " + id);
+        try {
+            MemberDTO member = memberService.findById(id);
+            return ResponseEntity.ok(member);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("errorCode", 101);
+            errorResponse.put("errorMessage", e.getMessage());
+            errorResponse.put("statusCode", HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
 }

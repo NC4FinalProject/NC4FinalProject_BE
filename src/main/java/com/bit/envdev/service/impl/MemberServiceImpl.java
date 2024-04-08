@@ -180,7 +180,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<MemberDTO> find4User() {
-        List<Member> members = memberRepository.findTop4ByOrderByIdDesc();
+        List<Member> members = memberRepository.findTop4ByOrderByCreatedAtDesc();
         return members.stream()
                 .map(Member::toDTO)
                 .collect(Collectors.toList());
@@ -213,7 +213,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Page<MemberDTO> searchAll(Pageable pageable, String searchKeyword, Role role) {
         Page<Member> memberList = memberRepository.findAll(pageable);
-        memberList = memberRepository.findByRoleAndUserNicknameContaining(pageable, role,searchKeyword);
+        memberList = memberRepository.findByRoleAndUserNicknameContainingOrderByCreatedAtDesc(pageable, role,searchKeyword);
             return memberList.map(Member::toDTO);
 
     }
@@ -221,7 +221,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Page<MemberDTO> searchData(Pageable pageable, String searchKeyword) {
         Page<Member> memberList = memberRepository.findAll(pageable);
-        memberList = memberRepository.findByUserNicknameContaining(pageable, searchKeyword);
+        memberList = memberRepository.findByUserNicknameContainingOrderByCreatedAtDesc(pageable, searchKeyword);
         return memberList.map(Member::toDTO);
     }
 
@@ -261,5 +261,11 @@ public class MemberServiceImpl implements MemberService {
         return members.stream()
                 .map(Member::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MemberDTO findById(long id) {
+        Member member = memberRepository.findById(id).orElseThrow();
+        return member.toDTO();
     }
 }
