@@ -1,7 +1,7 @@
 package com.bit.envdev.controller;
 
 import com.bit.envdev.dto.ResponseDTO;
-import com.bit.envdev.dto.report.ReportDTO;
+import com.bit.envdev.dto.ReportDTO;
 import com.bit.envdev.service.BlockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

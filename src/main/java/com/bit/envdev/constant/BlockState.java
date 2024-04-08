@@ -10,7 +10,7 @@ public enum BlockState {
     UNBLOCKED("해지", 1);
 
     private final String desc;
-    private final int legacyCode;
+    private final Integer legacyCode;
 
     BlockState(String desc, int legacyCode) {
         this.desc = desc;

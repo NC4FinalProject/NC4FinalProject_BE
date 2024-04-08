@@ -1,8 +1,9 @@
-package com.bit.envdev.dto.report;
+package com.bit.envdev.dto;
 
 import com.bit.envdev.constant.ReportRefType;
 import com.bit.envdev.constant.ReportState;
-import com.bit.envdev.dto.InquriyDTO;
+import com.bit.envdev.dto.InquiryDTO;
+import com.bit.envdev.dto.InquiryDTO;
 import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.entity.Report;
 import lombok.*;
@@ -20,7 +21,7 @@ public class ReportDTO {
     private String text;
     private String refType;
     private Long refId;
-    private InquriyDTO refInquiry;
+    private InquiryDTO refInquiry;
     private MemberDTO refMember;
     private int state;
     private String reportDate;
