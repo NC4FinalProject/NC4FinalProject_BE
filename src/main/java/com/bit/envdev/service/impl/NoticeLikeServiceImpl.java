@@ -17,7 +17,7 @@ public class NoticeLikeServiceImpl implements NoticeLikeService {
 
     @Override
     public long addOrdown(long id, Long noticeNo) {
-        return noticeLikeRepository.countByMemberIdAndNoticeId(id, noticeNo);
+        return noticeLikeRepository.countByMemberMemberIdAndNoticeId(id, noticeNo);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class NoticeLikeServiceImpl implements NoticeLikeService {
                 .notice(Notice.builder().id(noticeNo).build())
                 .member(member)
                 .build();
-        if (addOrdown(member.getId(), noticeNo) > 0) {
+        if (addOrdown(member.getMemberId(), noticeNo) > 0) {
             noticeLikeRepository.delete(likeCnt);
             return;
         }

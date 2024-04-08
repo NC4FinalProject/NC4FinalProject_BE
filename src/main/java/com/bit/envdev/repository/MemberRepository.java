@@ -21,7 +21,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Transactional
     void deleteByUsername(String username);
 
-    List<Member> findTop4ByOrderByIdDesc();
+    List<Member> findTop4ByOrderByMemberIdDesc();
 
     Page<Member> findByRoleAndUserNicknameContaining(Pageable pageable, Role role, String searchKeyword);
 

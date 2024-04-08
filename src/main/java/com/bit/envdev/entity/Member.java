@@ -25,7 +25,7 @@ import java.util.List;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long memberId;
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;
@@ -74,7 +74,7 @@ public class Member {
 
     public MemberDTO toDTO() {
         return MemberDTO.builder()
-                .id(this.id)
+                .memberId(this.memberId)
                 .username(this.username)
                 .password(this.password)
                 .userNickname(this.userNickname)

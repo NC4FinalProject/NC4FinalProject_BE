@@ -163,7 +163,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<MemberDTO> find4User() {
-        List<Member> members = memberRepository.findTop4ByOrderByIdDesc();
+        List<Member> members = memberRepository.findTop4ByOrderByMemberIdDesc();
         return members.stream()
                 .map(Member::toDTO)
                 .collect(Collectors.toList());
@@ -210,7 +210,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateUserMemo(MemberDTO memberDTO) {
-        MemberDTO NewMemberDTO = memberRepository.findById(memberDTO.getId()).get().toDTO();
+        MemberDTO NewMemberDTO = memberRepository.findById(memberDTO.getMemberId()).get().toDTO();
         NewMemberDTO.setMemo(memberDTO.getMemo());
         memberRepository.save(NewMemberDTO.toEntity());
     }

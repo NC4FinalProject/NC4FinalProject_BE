@@ -28,7 +28,7 @@ public class Cart {
     private long cartId;
 
     @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "Id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
