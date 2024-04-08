@@ -4,7 +4,7 @@ import com.bit.envdev.constant.ReportRefType;
 import com.bit.envdev.constant.ReportState;
 import com.bit.envdev.converter.ReportRefTypeConverter;
 import com.bit.envdev.converter.ReportStateConverter;
-import com.bit.envdev.dto.report.ReportDTO;
+import com.bit.envdev.dto.ReportDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

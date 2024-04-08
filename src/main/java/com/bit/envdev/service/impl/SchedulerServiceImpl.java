@@ -66,8 +66,8 @@ public class SchedulerServiceImpl implements SchedulerService {
     @Transactional
     @Scheduled(cron = "0 0 11 * * *")
     public void unBlocking() {
-        blockMemberRepository.updateStateByBlockPeriod(LocalDateTime.now());
-        blockInquiryRepository.updateStateByBlockPeriod(LocalDateTime.now());
-        blockCommentRepository.updateStateByBlockPeriod(LocalDateTime.now());
+//        blockMemberRepository.updateStateByBlockPeriod(LocalDateTime.now());
+//        blockInquiryRepository.updateStateByBlockPeriod(LocalDateTime.now());
+//        blockCommentRepository.updateStateByBlockPeriod(LocalDateTime.now());
     }
 }

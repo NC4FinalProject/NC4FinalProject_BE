@@ -2,7 +2,7 @@ package com.bit.envdev.service.impl;
 
 import com.bit.envdev.constant.ReportRefType;
 import com.bit.envdev.dto.MemberDTO;
-import com.bit.envdev.dto.report.ReportDTO;
+import com.bit.envdev.dto.ReportDTO;
 import com.bit.envdev.entity.Report;
 import com.bit.envdev.repository.ReportRepository;
 import com.bit.envdev.service.ReportService;

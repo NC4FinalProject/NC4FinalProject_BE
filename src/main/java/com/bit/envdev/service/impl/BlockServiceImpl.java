@@ -48,17 +48,17 @@ public class BlockServiceImpl implements BlockService {
 
     @Override
     public void unblock(String refType, Long refId) {
-        ReportRefType.ofCode(refType);
-        if (refType.equals(ReportRefType.INQUIRY.getLegacyCode())) {
-            blockInquiryRepositoty.updateStateById(refId);
-        }
-
-        if (refType.equals(ReportRefType.INQUIRY_COMMENT.getLegacyCode())) {
-            blockCommentRepositoty.updateStateById(refId);
-        }
-
-        if (refType.equals(ReportRefType.MEMBER.getLegacyCode())) {
-            blockMemberRepository.updateStateById(refId);
-        }
+//        ReportRefType.ofCode(refType);
+//        if (refType.equals(ReportRefType.INQUIRY.getLegacyCode())) {
+//            blockInquiryRepositoty.updateStateById(refId);
+//        }
+//
+//        if (refType.equals(ReportRefType.INQUIRY_COMMENT.getLegacyCode())) {
+//            blockCommentRepositoty.updateStateById(refId);
+//        }
+//
+//        if (refType.equals(ReportRefType.MEMBER.getLegacyCode())) {
+//            blockMemberRepository.updateStateById(refId);
+//        }
     }
 }
