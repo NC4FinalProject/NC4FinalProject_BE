@@ -54,4 +54,6 @@ public interface MemberService {
     List<MemberGraphDTO> getMonthlyOutUserCount();
 
     List<MemberDTO> findByRole();
+
+    MemberDTO findById(long id);
 }
