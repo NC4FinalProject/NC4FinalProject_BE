@@ -9,7 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -20,7 +22,7 @@ import java.util.List;
 @ToString
 public class ContentsDTO {
 
-    private String username;
+    private String memberId;
 
     private int contentsId;
     
@@ -34,7 +36,10 @@ public class ContentsDTO {
 
     private String priceType;
 
-    private List<SectionDTO> sectionDTOList;
+    private String thumbnail;
+
+    private List<SectionDTO> sectionList;
+    private List<VideoDTO> videoList;
 
     public Contents toEntity(Member member) {
         return Contents.builder()
@@ -42,7 +47,9 @@ public class ContentsDTO {
                 .contentsTitle(this.contentsTitle)
                 .member(member)
                 .category(this.category)
+                .thumbnail(this.thumbnail)
                 .introduce(this.introduce)
+                .videoList(new ArrayList<>())
                 .price(this.price)
                 .build();
     }
