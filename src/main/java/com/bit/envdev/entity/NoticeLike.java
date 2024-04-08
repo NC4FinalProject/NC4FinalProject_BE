@@ -27,7 +27,7 @@ public class NoticeLike {
     public NoticeLikeDTO toDTO() {
         return NoticeLikeDTO.builder()
                 .noticeId(this.notice.getId())
-                .member(this.member.getId())
+                .member(this.member.getMemberId())
                 .build();
     }
 }

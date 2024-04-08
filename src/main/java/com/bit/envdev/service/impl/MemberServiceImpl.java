@@ -227,7 +227,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateUserMemo(MemberDTO memberDTO) {
-        MemberDTO NewMemberDTO = memberRepository.findById(memberDTO.getId()).get().toDTO();
+        MemberDTO NewMemberDTO = memberRepository.findById(memberDTO.getMemberId()).get().toDTO();
         NewMemberDTO.setMemo(memberDTO.getMemo());
         memberRepository.save(NewMemberDTO.toEntity());
     }

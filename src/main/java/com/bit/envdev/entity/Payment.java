@@ -67,7 +67,7 @@ public class Payment {
                 .totalPrice(this.totalPrice)
                 .paymentDate(this.paymentDate)
                 .paymentUniqueNo(this.paymentUniqueNo)
-                .memberId(this.member.getId())
+                .memberId(this.member.getMemberId())
                 .build();
     }
 }

@@ -32,7 +32,7 @@ public class NoticeLikeServiceImpl implements NoticeLikeService {
                 .notice(Notice.builder().id(noticeNo).build())
                 .member(member)
                 .build();
-        if (addOrdown(member.getId(), noticeNo) > 0) {
+        if (addOrdown(member.getMemberId(), noticeNo) > 0) {
             noticeLikeRepository.delete(likeCnt);
             return;
         }

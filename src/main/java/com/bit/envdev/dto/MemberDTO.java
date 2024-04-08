@@ -18,7 +18,7 @@ import org.apache.commons.lang3.builder.ToStringExclude;
 @ToString
 @Builder
 public class MemberDTO {
-    private long id;
+    private long memberId;
     private String username;
     private String password;
     private String userNickname;
@@ -38,7 +38,7 @@ public class MemberDTO {
 
     public Member toEntity() {
         return Member.builder()
-                .id(this.id)
+                .memberId(this.memberId)
                 .username(this.username)
                 .password(this.password)
                 .userNickname(this.userNickname)
