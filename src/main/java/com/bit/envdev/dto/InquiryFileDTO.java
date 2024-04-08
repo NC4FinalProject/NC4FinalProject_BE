@@ -1,34 +1,28 @@
-package com.bit.envdev.entity;
+package com.bit.envdev.dto;
 
-import com.bit.envdev.dto.InquiryFileDTO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.bit.envdev.entity.Inquiry;
+import com.bit.envdev.entity.InquiryFile;
+import lombok.*;
 
-@Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+public class InquiryFileDTO {
 
-public class InquiryFile {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long inquiryFileId;
-
     private String inquiryFileName;
     private String inquiryFilePath;
     private String inquiryFileOrigin;
 
-    public InquiryFileDTO toDTO() {
-        return InquiryFileDTO.builder()
+    public InquiryFile toEntity() {
+        return InquiryFile.builder()
                 .inquiryFileId(this.inquiryFileId)
                 .inquiryFileName(this.inquiryFileName)
                 .inquiryFilePath(this.inquiryFilePath)
                 .inquiryFileOrigin(this.inquiryFileOrigin)
                 .build();
     }
+
 }

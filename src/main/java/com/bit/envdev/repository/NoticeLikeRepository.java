@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NoticeLikeRepository extends JpaRepository<NoticeLike, NoticeLikeId> {
 
-    long countByMemberIdAndNoticeId(long id, Long noticeNo);
+    long countByMemberMemberIdAndNoticeId(long memberId, Long noticeNo);
 
     long countByNoticeId(Long noticeNo);
 }

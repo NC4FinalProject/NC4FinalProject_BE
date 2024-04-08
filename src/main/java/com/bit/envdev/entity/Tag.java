@@ -1,5 +1,6 @@
 package com.bit.envdev.entity;
 
+import com.bit.envdev.dto.TagDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,9 +22,11 @@ public class Tag {
     @Column
     private String tagContent;
 
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name="inquiry_id", referencedColumnName = "inquiryId")
-    private Inquiry inquiry;
+    public TagDTO toDTO() {
+        return TagDTO.builder()
+                .tagId(this.tagId)
+                .tagContent(this.tagContent)
+                .build();
+    }
 
 }

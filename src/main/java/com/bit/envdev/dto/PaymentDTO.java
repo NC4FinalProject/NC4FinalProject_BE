@@ -4,6 +4,7 @@ import com.bit.envdev.entity.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,25 +12,23 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class PaymentDTO {
-    private long paymentId;
-    private long totalPrice;
+    private Long paymentId;
+    private Long totalPrice;
     private Date paymentDate;
     private String paymentUniqueNo;
-    private long cartId;
-    private int contentsId;
-    private long memberId;
+    private MemberDTO memberDTO;
+    private String purchaseName; // 인풋박스로 사용자로부터 입력받기 , required
+    private List<PaymentContentDTO> contentsList; // 구매한 컨텐츠들이 담기는 리스트
+    private Long contentsId;
 
     public Payment toEntity() {
         return Payment.builder()
                 .paymentId(this.paymentId)
-                .cartContents(CartContents.builder()
-                        .cart(Cart.builder().cartId(this.cartId).build())
-                        .contents(Contents.builder().contentsId(this.contentsId).build())
-                        .build())
                 .totalPrice(this.totalPrice)
                 .paymentDate(this.paymentDate)
                 .paymentUniqueNo(this.paymentUniqueNo)
-                .member(Member.builder().memberId(this.memberId).build())
+                .member(this.memberDTO.toEntity())
+                .contentsId(this.contentsId)
                 .build();
     }
 }

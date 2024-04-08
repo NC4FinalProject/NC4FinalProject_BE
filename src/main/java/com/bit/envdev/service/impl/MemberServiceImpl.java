@@ -180,7 +180,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<MemberDTO> find4User() {
-        List<Member> members = memberRepository.findTop4ByOrderByCreatedAtDesc();
+
+        List<Member> members = memberRepository.findTop4ByOrderByMemberIdDesc();
+
         return members.stream()
                 .map(Member::toDTO)
                 .collect(Collectors.toList());
