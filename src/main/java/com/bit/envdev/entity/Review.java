@@ -48,7 +48,7 @@ public class Review {
     private Payment payment;
 
     @ManyToOne
-    @JoinColumn(name = "id", referencedColumnName = "Id")
+    @JoinColumn(name = "member_id", referencedColumnName = "member_id")
     private Member member;
 
     public ReviewDTO toDTO() {
