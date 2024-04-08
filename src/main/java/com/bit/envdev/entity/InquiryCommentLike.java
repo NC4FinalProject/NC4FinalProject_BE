@@ -11,18 +11,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@IdClass(InquiryCommentLikeId.class)
 
 public class InquiryCommentLike {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long inquiryCommentLikeId;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "inquiry_comment_id")
     private InquiryComment inquiryComment;
 
-    @ManyToOne
-    @JoinColumn(name="id", referencedColumnName = "id")
+
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="member_id")
+
     private Member member;
 }

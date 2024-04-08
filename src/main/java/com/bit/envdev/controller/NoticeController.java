@@ -120,7 +120,7 @@ public class NoticeController {
         Map<String, String> result = new HashMap<>();
         try {
             long noticeLikeCnt = noticeLIkeService.findByNoticeId(noticeNo);
-            long noticeCnt = noticeLIkeService.addOrdown(customUserDetails.getMember().getId(), noticeNo);
+            long noticeCnt = noticeLIkeService.addOrdown(customUserDetails.getMember().getMemberId(), noticeNo);
             result.put("check", String.valueOf(noticeCnt));
             result.put("likeCnt", String.valueOf(noticeLikeCnt));
             return ResponseEntity.ok(result);
@@ -136,7 +136,7 @@ public class NoticeController {
         try {
 
             noticeLIkeService.insertLike(customUserDetails.getMember(), noticeNo);
-            long noticeCnt = noticeLIkeService.addOrdown(customUserDetails.getMember().getId(), noticeNo);
+            long noticeCnt = noticeLIkeService.addOrdown(customUserDetails.getMember().getMemberId(), noticeNo);
             long noticeLikeCnt = noticeLIkeService.findByNoticeId(noticeNo);
 
             result.put("check", String.valueOf(noticeCnt));

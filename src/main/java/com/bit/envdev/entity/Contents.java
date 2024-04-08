@@ -3,6 +3,7 @@ package com.bit.envdev.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,6 +13,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import com.bit.envdev.dto.ContentsDTO;
 import com.bit.envdev.entity.Member;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -37,7 +39,7 @@ public class Contents {
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "ContnetsSeqGenerator"
+            generator = "ContentsSeqGenerator"
     )
     private int contentsId;
     
@@ -47,10 +49,15 @@ public class Contents {
     @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Section> sectionList;
 
+    @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Video> videoList;
+
     // @JsonIgnoreProperties
     // @ManyToOne(fetch = FetchType.LAZY)
-    @ManyToOne(fetch = FetchType.EAGER) // 한명의 유저는 여러개의 게시글을 갖을 수 있다, 여러개의 게시글의 유저는 한명이다.
-    @JoinColumn(name="id") // JPA(ORM)을 사용하여 오브젝트 자체를 저장 할 수 있고 이를 Foreign Key로 사용 가능
+
+    @ManyToOne(fetch = FetchType.LAZY) // 한명의 유저는 여러개의 게시글을 갖을 수 있다, 여러개의 게시글의 유저는 한명이다.
+    @JoinColumn(name="member_id") // JPA(ORM)을 사용하여 오브젝트 자체를 저장 할 수 있고 이를 Foreign Key로 사용 가능
+
     private Member member;
 
     // //JoinColumn(name="replyId")  // 하나의 컬럼은 원자성을 갖음으로 조인컬럼을 통한 참조키 불가능
@@ -69,6 +76,9 @@ public class Contents {
 
     @Column(nullable=true)
     private String price;
+
+    @Column
+    private String thumbnail;
     
     // private LocalDateTime mokDate;
     // private Timestamp mokDate;
@@ -87,17 +97,21 @@ public class Contents {
     // // 데이터 관련 CLOB, BLOB
     // @Lob
     // private int stockNumber;
-    
 
     public ContentsDTO toDTO() {
         return ContentsDTO.builder()
-                .username(this.member.getUsername())
+                .memberId(this.member.getUsername())
                 .contentsId(this.contentsId)
                 .contentsTitle(this.contentsTitle)
                 .category(this.category)
                 .price(this.price)
-                .sectionDTOList(this.sectionList != null ? this.sectionList.stream().map(Section::toDTO).toList() : null)
+                .thumbnail(this.thumbnail)
+                .sectionList(this.sectionList != null ? this.sectionList.stream().map(Section::toDTO).toList() : null)
+                .videoList(this.videoList != null ? this.videoList.stream().map(Video::toDTO).toList() : null)
                 .build();
     }
 
+    public void addVideoFile(Video video) {
+        this.videoList.add(video);
+    }
 }
