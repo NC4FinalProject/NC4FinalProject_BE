@@ -3,13 +3,17 @@ package com.bit.envdev.service.impl;
 import com.bit.envdev.dto.ReviewDTO;
 import com.bit.envdev.entity.*;
 import com.bit.envdev.repository.ContentsRepository;
+import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.repository.ReviewRepository;
 import com.bit.envdev.service.ReviewService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,45 +22,44 @@ import java.util.stream.Collectors;
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ContentsRepository contentsRepository;
+    private final MemberRepository memberRepository;
 
     @Override
-    public List<ReviewDTO> post(ReviewDTO reviewDTO, int contentsId, CustomUserDetails customUserDetails) {
+    public List<ReviewDTO> post(ReviewDTO reviewDTO, CustomUserDetails customUserDetails) {
 
-        reviewDTO.setMemberDTO(customUserDetails.getMember().toDTO());
+        reviewDTO.setMemberDTO(memberRepository.findById(customUserDetails.getMember().getMemberId()).orElseThrow().toDTO());
 
-        Contents contents = contentsRepository.findById(reviewDTO.getContentsId())
-                .orElseThrow(() -> new RuntimeException("컨텐츠가 존재하지 않습니다."));
+        Optional<Review> existingReview = reviewRepository.findByMemberAndContentsId(customUserDetails.getMember(), reviewDTO.getContentsId());
+        if (existingReview.isPresent()) {
+            throw new RuntimeException("이미 리뷰를 작성하셨습니다.");
+        }
+        reviewRepository.post(reviewDTO.toEntity());
 
-        reviewRepository.post(reviewDTO.toEntity(contents));
-
-        return reviewRepository.findByContentsContentsIdOrderByReviewUdtDateDesc(contentsId).stream()
-                .map(Review::toDTO)
+        return reviewRepository.findByContentsIdOrderByReviewUdtDateDesc(reviewDTO.getContentsId()).stream()
+                .map(review -> {
+                    ReviewDTO dto = review.toDTO();
+                    dto.getMemberDTO().setPassword("");
+                    return dto;
+                })
                 .collect(Collectors.toList());
 
     }
 
+    @Transactional
+    @Modifying
     @Override
-    public List<ReviewDTO> modify(ReviewDTO reviewDTO, int contentsId, CustomUserDetails customUserDetails) {
+    public List<ReviewDTO> modify(ReviewDTO reviewDTO, CustomUserDetails customUserDetails) {
+        reviewDTO.setMemberDTO(memberRepository.findById(customUserDetails.getMember().getMemberId()).orElseThrow().toDTO());
+        reviewRepository.save(reviewDTO.toEntity());
 
-        System.out.println("reviewDTO = " + reviewDTO);
+        reviewRepository.flush();
 
-        Review review = reviewRepository.findById(reviewDTO.getReviewId())
-                .orElseThrow(() -> new RuntimeException("리뷰가 존재하지 않습니다."));
-
-        Contents contents = contentsRepository.findById(reviewDTO.getContentsId())
-                .orElseThrow(() -> new RuntimeException("컨텐츠가 존재하지 않습니다."));
-
-        ReviewDTO modifyReviewDTO = review.toDTO();
-        modifyReviewDTO.setMemberDTO(customUserDetails.getMember().toDTO());
-        modifyReviewDTO.setReviewContent(reviewDTO.getReviewContent());
-        modifyReviewDTO.setReviewRating(reviewDTO.getReviewRating());
-
-
-
-        reviewRepository.save(modifyReviewDTO.toEntity(contents));
-
-        return reviewRepository.findByContentsContentsIdOrderByReviewUdtDateDesc(contentsId).stream()
-                .map(Review::toDTO)
+        return reviewRepository.findByContentsIdOrderByReviewUdtDateDesc(reviewDTO.getContentsId()).stream()
+                .map(modifyReview -> {
+                    ReviewDTO dto = modifyReview.toDTO();
+                    dto.getMemberDTO().setPassword(null);
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -65,16 +68,24 @@ public class ReviewServiceImpl implements ReviewService {
 
         reviewRepository.deleteById(reviewId);
 
-        return reviewRepository.findByContentsContentsIdOrderByReviewUdtDateDesc(contentsId).stream()
-                .map(Review::toDTO)
+        return reviewRepository.findByContentsIdOrderByReviewUdtDateDesc(contentsId).stream()
+                .map(review -> {
+                    ReviewDTO dto = review.toDTO();
+                    dto.getMemberDTO().setPassword("");
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ReviewDTO> getReviewList(int contentsId) {
 
-        return reviewRepository.findByContentsContentsIdOrderByReviewUdtDateDesc(contentsId).stream()
-                .map(Review::toDTO)
+        return reviewRepository.findByContentsIdOrderByReviewUdtDateDesc(contentsId).stream()
+                .map(review -> {
+                    ReviewDTO dto = review.toDTO();
+                    dto.getMemberDTO().setPassword("");
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 }

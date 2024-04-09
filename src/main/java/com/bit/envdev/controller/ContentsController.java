@@ -50,13 +50,6 @@ public class ContentsController {
         // 비디오 정보 밀어넣기, 동영상 파일 밀어 넣기
         for (int i = 0; i < videoDTOList.size(); i++) {
             contentsService.createVideo(videoDTOList.get(i), createdContents, memberId, videoFile[i]);
-            // 현재 처리되는 비디오 파일에 대한 정보 출력
-            MultipartFile file = videoFile[i];
-            System.out.println("파일 이름: " + file.getOriginalFilename());
-            System.out.println("파일 크기: " + file.getSize() + " bytes");
-            System.out.println("파일 타입: " + file.getContentType());
-            System.out.println("-------------------------------");
-
         }
         // 섹션 정보 밀어넣기
         sectionDTOList.forEach(sectionDTO -> {contentsService.createSection(sectionDTO, createdContents);});
@@ -64,7 +57,7 @@ public class ContentsController {
     }
     // // 컨텐츠 상세 보기
     @GetMapping("/detail/{contentsId}")
-    public ResponseEntity<?> Detail(@PathVariable(name = "contentsId") int contentsId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> Detail(@PathVariable(name = "contentsId") int contentsId) {
         ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
         ContentsDTO contentsDTO = contentsService.findById(contentsId);
         responseDTO.setItem(contentsDTO);

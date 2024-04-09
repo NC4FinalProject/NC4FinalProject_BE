@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface ReviewService {
 
-    List<ReviewDTO> post(ReviewDTO reviewDTO, int contentsId, CustomUserDetails customUserDetails);
+    List<ReviewDTO> post(ReviewDTO reviewDTO, CustomUserDetails customUserDetails);
 
-    List<ReviewDTO> modify(ReviewDTO reviewDTO, int contentsId, CustomUserDetails customUserDetails);
+    List<ReviewDTO> modify(ReviewDTO reviewDTO, CustomUserDetails customUserDetails);
 
     List<ReviewDTO> delete(long reviewId, int contentsId, CustomUserDetails customUserDetails);
 

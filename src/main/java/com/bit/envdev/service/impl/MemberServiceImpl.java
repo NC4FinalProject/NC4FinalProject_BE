@@ -270,4 +270,10 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(id).orElseThrow();
         return member.toDTO();
     }
+
+    @Override
+    public long getTodayUserCount() {
+        long todayUserCount = memberRepository.countTodayRegistrations();
+        return todayUserCount;
+    }
 }

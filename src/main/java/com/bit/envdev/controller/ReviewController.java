@@ -60,11 +60,11 @@ public class ReviewController {
     }
 
     @PostMapping("/review")
-    public ResponseEntity<?> post(@RequestParam("contentsId") int contentsId, @RequestBody ReviewDTO reviewDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public ResponseEntity<?> post(@RequestBody ReviewDTO reviewDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails){
 
         ResponseDTO<ReviewDTO> responseDTO = new ResponseDTO<>();
         try {
-            List<ReviewDTO> reviewDTOList = reviewService.post(reviewDTO, contentsId, customUserDetails);
+            List<ReviewDTO> reviewDTOList = reviewService.post(reviewDTO, customUserDetails);
 
             responseDTO.setItems(reviewDTOList);
             responseDTO.setStatusCode(HttpStatus.OK.value());
@@ -81,17 +81,18 @@ public class ReviewController {
     }
 
     @PutMapping("/review")
-    public ResponseEntity<?> modify(@RequestBody ReviewDTO reviewDTO, @RequestParam("contentsId") int contentsId, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public ResponseEntity<?> modify(@RequestBody ReviewDTO reviewDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails){
 
         ResponseDTO<ReviewDTO> responseDTO = new ResponseDTO<>();
         try {
-            List<ReviewDTO> reviewDTOList = reviewService.modify(reviewDTO, contentsId, customUserDetails);
+            List<ReviewDTO> reviewDTOList = reviewService.modify(reviewDTO, customUserDetails);
 
             responseDTO.setItems(reviewDTOList);
             responseDTO.setStatusCode(HttpStatus.OK.value());
 
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             responseDTO.setErrorCode(301);
             responseDTO.setErrorMessage(e.getMessage());
             responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
