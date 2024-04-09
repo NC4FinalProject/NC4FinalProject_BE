@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class InquiryDTO {
     private long inquiryId;
-    private long contentsId;
+    private int contentsId;
     private String contentsTitle;
     private String inquiryTitle;
     private String inquiryContent;
@@ -29,9 +29,11 @@ public class InquiryDTO {
     private String searchKeyword;
     private boolean isLike;
 
+
     public Inquiry toEntity() {
         return Inquiry.builder()
                 .inquiryId(this.inquiryId)
+                .contentsId(this.contentsId)
                 .inquiryTitle(this.inquiryTitle)
                 .inquiryContent(this.inquiryContent)
                 .inquiryCrtDT(this.inquiryCrtDT)
