@@ -52,5 +52,4 @@ public class VideoReply {
                 .videoId(this.video.getVideoId())
                 .build();
     }
-
 }

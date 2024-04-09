@@ -1,7 +1,8 @@
 package com.bit.envdev.controller;
 
-import com.bit.envdev.dto.ResponseDTO;
+import com.bit.envdev.constant.ReportState;
 import com.bit.envdev.dto.ReportDTO;
+import com.bit.envdev.dto.ResponseDTO;
 import com.bit.envdev.entity.CustomUserDetails;
 import com.bit.envdev.entity.Member;
 import com.bit.envdev.service.ReportService;
@@ -43,11 +44,12 @@ public class ReportController {
     }
 
     @PutMapping("/state")
-    public ResponseEntity<?> holdReport(@RequestParam(value = "reportId") Long id,
-                                        @RequestParam(value = "state") String state) {
+    public ResponseEntity<?> updateState(@RequestParam(value = "reportId") Long id,
+                                         @RequestParam(value = "state") String legacyCode) {
         ResponseDTO<ReportDTO> responseDTO = new ResponseDTO<>();
         try {
-
+            int state = ReportState.legacyCodeOfDesc(legacyCode);
+            reportService.updateState(id, state);
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
