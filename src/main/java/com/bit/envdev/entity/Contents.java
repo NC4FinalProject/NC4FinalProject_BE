@@ -44,11 +44,7 @@ public class Contents {
     // @ManyToOne(fetch = FetchType.LAZY)
 
     @ManyToOne(fetch = FetchType.LAZY) // 한명의 유저는 여러개의 게시글을 갖을 수 있다, 여러개의 게시글의 유저는 한명이다.
-<<<<<<< HEAD
-    @JoinColumn(name = "member_id") // JPA(ORM)을 사용하여 오브젝트 자체를 저장 할 수 있고 이를 Foreign Key로 사용 가능
-=======
     @JoinColumn(name="member_id") // JPA(ORM)을 사용하여 오브젝트 자체를 저장 할 수 있고 이를 Foreign Key로 사용 가능
->>>>>>> feature/mypage
     @JsonBackReference
     private Member member;
 
@@ -101,6 +97,8 @@ public class Contents {
                 .category(this.category)
                 .price(this.price)
                 .thumbnail(this.thumbnail)
+                .regDate(this.regDate)
+                .modDate(this.modDate)
                 .sectionList(this.sectionList != null ? this.sectionList.stream().map(Section::toDTO).toList() : null)
                 .videoList(this.videoList != null ? this.videoList.stream().map(Video::toDTO).toList() : null)
                 .build();
