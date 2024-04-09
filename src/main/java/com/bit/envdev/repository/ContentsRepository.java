@@ -12,7 +12,4 @@ import java.util.Optional;
 
 @Repository
 public interface ContentsRepository extends JpaRepository<Contents, Integer>{
-
-    Optional<Contents> findByContentsId(int contentsId);
-    
 }

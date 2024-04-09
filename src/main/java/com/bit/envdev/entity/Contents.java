@@ -75,7 +75,10 @@ public class Contents {
     private String introduce;
 
     @Column(nullable=true)
-    private String price;
+    private int price;
+
+    @Column(nullable=true)
+    private String priceType;
 
     @Column
     private String thumbnail;
