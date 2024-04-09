@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
-    @Query(value = "SELECT r, r.refId, COUNT(r) FROM Report r WHERE r.refType = 'MEM' GROUP BY r.refId HAVING COUNT(r) >= 5")
+    @Query(value = "SELECT r, r.refId FROM Report r WHERE r.refType = 'MEM' GROUP BY r.refId HAVING COUNT(r) >= 5 ORDER BY r.reportDate DESC LIMIT 10")
     List<Object[]> reportMember();
 
     @Modifying(clearAutomatically = true)

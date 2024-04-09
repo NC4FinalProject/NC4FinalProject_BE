@@ -21,7 +21,6 @@ public class Section {
     @Id
     @ManyToOne(fetch = FetchType.LAZY) // 한명의 유저는 여러개의 게시글을 갖을 수 있다, 여러개의 게시글의 유저는 한명이다.
     @JoinColumn(name="contents_id")
-    @JsonBackReference
     private Contents contents;
 
     @Id

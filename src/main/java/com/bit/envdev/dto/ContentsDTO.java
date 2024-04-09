@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class ContentsDTO {
 
     private String introduce;
 
-    private String price;
+    private int price;
 
     private String priceType;
 
