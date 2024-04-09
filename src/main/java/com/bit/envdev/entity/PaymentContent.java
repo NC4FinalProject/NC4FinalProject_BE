@@ -1,9 +1,7 @@
 package com.bit.envdev.entity;
 
 import com.bit.envdev.dto.PaymentContentDTO;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -13,7 +11,10 @@ import lombok.*;
 @Builder
 
 public class PaymentContent {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private int paymentContentId;
     @Column
     private String teacherName;
@@ -24,9 +25,11 @@ public class PaymentContent {
     @Column
     private int price;
     @Column
-    private int contentsId;
 
-    public PaymentContentDTO toDTO () {
+    private int contentsId; // 수동셋팅
+
+    public PaymentContentDTO toDTO() {
+
         return PaymentContentDTO.builder()
                 .paymentContentId(this.paymentContentId)
                 .teacherName(this.teacherName)
@@ -36,5 +39,4 @@ public class PaymentContent {
                 .contentsId(this.contentsId)
                 .build();
     }
-
 }

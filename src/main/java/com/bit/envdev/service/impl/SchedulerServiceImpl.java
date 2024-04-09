@@ -33,7 +33,8 @@ public class SchedulerServiceImpl implements SchedulerService {
     }
 
     private void processReport(List<Report> reportList, Long refId) {
-        Member member = memberRepository.findById(refId).orElseThrow(); // findById에서 Optional 반환하므로 예외 발생 가능
+
+        Member member = memberRepository.findById(refId).orElseThrow();
 
         List<BlockMember> blockMembers = blockMemberRepository.getAllByMemberId(refId);
         if (isUnblocked(blockMembers)) {
@@ -57,7 +58,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     private void saveMemberBlock(Member member) {
         BlockMember block = BlockMember.builder()
-                .member(member)
+                .memberId(member.getMemberId())
                 .build();
         blockMemberRepository.save(block);
     }
@@ -66,8 +67,8 @@ public class SchedulerServiceImpl implements SchedulerService {
     @Transactional
     @Scheduled(cron = "0 0 11 * * *")
     public void unBlocking() {
-//        blockMemberRepository.updateStateByBlockPeriod(LocalDateTime.now());
-//        blockInquiryRepository.updateStateByBlockPeriod(LocalDateTime.now());
-//        blockCommentRepository.updateStateByBlockPeriod(LocalDateTime.now());
+        blockMemberRepository.updateStateByBlockPeriod(LocalDateTime.now());
+        blockInquiryRepository.updateStateByBlockPeriod(LocalDateTime.now());
+        blockCommentRepository.updateStateByBlockPeriod(LocalDateTime.now());
     }
 }

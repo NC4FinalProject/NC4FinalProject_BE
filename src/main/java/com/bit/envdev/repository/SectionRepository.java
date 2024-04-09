@@ -10,6 +10,4 @@ import java.util.Optional;
 
 @Repository
 public interface SectionRepository extends JpaRepository<Section, SectionId> {
-    Optional<Section> findBySectionId(int sectionId);
-
 }

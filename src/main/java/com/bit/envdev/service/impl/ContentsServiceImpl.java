@@ -85,6 +85,7 @@ public class ContentsServiceImpl implements ContentsService {
         return section;
     }
 
+
     @Override
     public ContentsDTO findById(int contentsId) {
         return contentsRepository.findById(contentsId).orElseThrow().toDTO();
