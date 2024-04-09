@@ -23,7 +23,7 @@ public class InquiryCommentServiceImpl implements InquiryCommentService {
 
         inquiryCommentDTO.setMemberDTO(memberRepository.findById(customUserDetails.getMember().getMemberId()).orElseThrow().toDTO());
         inquiryCommentRepository.save(inquiryCommentDTO.toEntity());
-        return inquiryCommentRepository.findByInquiryIdOrderByInquiryCommentUdtDateDesc(inquiryCommentDTO.getInquiryCommentId()).stream()
+        return inquiryCommentRepository.findByInquiryInquiryIdOrderByInquiryCommentCrtDTDesc(inquiryCommentDTO.getInquiryCommentId()).stream()
                 .map(inquiryComment -> {
                     InquiryCommentDTO dto = inquiryComment.toDTO();
                     dto.getMemberDTO().setPassword("");

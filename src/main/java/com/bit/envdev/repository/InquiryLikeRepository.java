@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InquiryLikeRepository extends JpaRepository<InquiryLike, InquiryLikeId>{
-    long countByMemberMemberIdAndInquiryId(long memberId, Long inquiryId);
+    long countByMemberMemberIdAndInquiryInquiryId(long memberId, Long inquiryId);
 
-    long countByInquiryId(Long inquiryId);
+    long countByInquiryInquiryId(Long inquiryId);
 }
