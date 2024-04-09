@@ -20,8 +20,7 @@ public class BlockInquiryComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
 
-    @OneToOne
-    private InquiryComment comment;
+    private Long commentId;
 
     @Column(updatable = false, nullable = false)
     @Builder.Default

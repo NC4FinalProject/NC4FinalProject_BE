@@ -37,12 +37,12 @@ public class Payment {
     private String paymentUniqueNo;
 
     @ManyToOne
-
     @JoinColumn(name = "member_id")
-
     private Member member;
 
-    private Long contentsId; // 서비스단에서 수동으로 set하기
+    @OneToMany
+    @JoinColumn(name = "payment_id")
+    private List<PaymentContent> contentsList;
 
     public PaymentDTO toDTO() {
         return PaymentDTO.builder()
@@ -50,9 +50,8 @@ public class Payment {
                 .totalPrice(this.totalPrice)
                 .paymentDate(this.paymentDate)
                 .paymentUniqueNo(this.paymentUniqueNo)
-
+                .contentsList(this.contentsList.stream().map(PaymentContent::toDTO).toList())
                 .memberDTO(this.member.toDTO())
-
                 .build();
     }
 }

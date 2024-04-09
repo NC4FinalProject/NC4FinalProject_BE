@@ -1,26 +1,14 @@
 package com.bit.envdev.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.bit.envdev.dto.ContentsDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.joda.time.DateTime;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import com.bit.envdev.dto.ContentsDTO;
-import com.bit.envdev.entity.Member;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -74,10 +62,10 @@ public class Contents {
     @Column(nullable=true)
     private String introduce;
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     private int price;
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     private String priceType;
 
     @Column

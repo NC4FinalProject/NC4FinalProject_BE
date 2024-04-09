@@ -24,4 +24,13 @@ public enum ReportState {
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상태 코드입니다."));
     }
+
+    public static int legacyCodeOfDesc(String desc) {
+        for (ReportState state : ReportState.values()) {
+            if (state.getDesc().equals(desc)) {
+                return state.getLegacyCode();
+            }
+        }
+        throw new IllegalArgumentException("존재하지 않는 상태 설명입니다.");
+    }
 }

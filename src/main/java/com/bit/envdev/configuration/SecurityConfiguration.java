@@ -21,6 +21,7 @@ public class SecurityConfiguration {
     private final JwtAutheticationFilter jwtAutheticationFilter;
     private final String[] swaggerPath = {"/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/error"};
     private final String AUTH_PATH = "/api/auth/**";
+
     // 비밀번호 암호화 객체 bean 객체로 등록
     // 비밀번호 암호화와 UsernamePassworToken의 비밀번호와 CustomUserDetails 객체의 비밀번호를 비교하기 위한 passwordEncoder 객체 생성
     // 암호화된 비밀번호는 다시는 복호화할 수 없다.
@@ -34,16 +35,16 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                //WebMvcConfiguration에서 설정해놨기 때문에 빈 상태로 설정
+                // WebMvcConfiguration에서 설정해놨기 때문에 빈 상태로 설정
                 .cors(httpSecurityCorsConfigurer -> {
 
                 })
                 .csrf(AbstractHttpConfigurer::disable)
-                //토큰방식으로 인증처리를 하기 때문에 basic 인증방식 비활성화
+                // 토큰방식으로 인증처리를 하기 때문에 basic 인증방식 비활성화
                 .httpBasic(httpSecurityHttpBasicConfigurer -> {
                     httpSecurityHttpBasicConfigurer.disable();
                 })
-                //토큰을 사용하기 때문에 세션 비활성화
+                // 토큰을 사용하기 때문에 세션 비활성화
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> {
                     httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
@@ -58,6 +59,7 @@ public class SecurityConfiguration {
 //                    authorizationManagerRequestMatcherRegistry.requestMatchers("/review/**").hasAnyRole("ADMIN", "USER");
                     authorizationManagerRequestMatcherRegistry.requestMatchers("/mypage/**").authenticated();
 //                    authorizationManagerRequestMatcherRegistry.requestMatchers("/notice/**").authenticated();
+                    authorizationManagerRequestMatcherRegistry.requestMatchers("/report/state").hasAnyRole("ADMIN");
                     authorizationManagerRequestMatcherRegistry.anyRequest().permitAll();
                 })
                 // filter 등록

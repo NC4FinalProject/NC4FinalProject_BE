@@ -47,9 +47,11 @@ public class Inquiry {
     private boolean isSolved;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "inquiryId")
     private List<Tag> tagList;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "inquiryId")
     private List<InquiryFile> inquiryFileList;
 
     @Column(nullable = false)
