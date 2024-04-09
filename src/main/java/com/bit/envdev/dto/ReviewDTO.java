@@ -22,7 +22,7 @@ public class ReviewDTO {
 
 
 
-    public Review toEntity(Contents contents) {
+    public Review toEntity() {
         return Review.builder()
                 .reviewId(this.reviewId)
                 .reviewContent(this.reviewContent)
@@ -30,7 +30,7 @@ public class ReviewDTO {
                 .reviewUdtDate(this.reviewUdtDate)
                 .reviewRating(this.reviewRating)
                 .member(this.memberDTO.toEntity())
-                .contents(contents)
+                .contentsId(this.contentsId)
                 .build();
     }
 

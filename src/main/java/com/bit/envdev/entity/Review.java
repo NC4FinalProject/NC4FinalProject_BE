@@ -40,14 +40,11 @@ public class Review {
     private double reviewRating;
 
     @ManyToOne
-
     @JoinColumn(name = "member_id")
-
     private Member member;
 
-    @OneToOne
-    @JoinColumn(name = "contents_id", referencedColumnName = "contentsId")
-    private Contents contents;
+    @Column
+    private int contentsId;
 
     public ReviewDTO toDTO() {
         return ReviewDTO.builder()
@@ -57,7 +54,7 @@ public class Review {
                 .reviewUdtDate(this.reviewUdtDate)
                 .reviewRating(this.reviewRating)
                 .memberDTO(this.member.toDTO())
-                .contentsId(this.contents.getContentsId())
+                .contentsId(this.contentsId)
                 .build();
     }
 }

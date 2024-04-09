@@ -1,5 +1,6 @@
 package com.bit.envdev.repository;
 
+import com.bit.envdev.entity.Contents;
 import com.bit.envdev.entity.Member;
 import com.bit.envdev.entity.Review;
 import jakarta.transaction.Transactional;
@@ -10,7 +11,9 @@ import java.util.Optional;
 
 @Transactional
 public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewRepositoryCustom {
-    List<Review> findByContentsContentsIdOrderByReviewUdtDateDesc(int contentsId);
+    List<Review> findByContentsIdOrderByReviewUdtDateDesc(int contentsId);
+
+    Optional<Review> findByMemberAndContentsId(Member member, int contentsId);
 
 }
 
