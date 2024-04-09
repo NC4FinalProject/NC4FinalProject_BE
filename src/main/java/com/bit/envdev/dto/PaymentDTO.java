@@ -19,7 +19,6 @@ public class PaymentDTO {
     private MemberDTO memberDTO;
     private String purchaseName; // 인풋박스로 사용자로부터 입력받기 , required
     private List<PaymentContentDTO> contentsList; // 구매한 컨텐츠들이 담기는 리스트
-    private Long contentsId;
 
     public Payment toEntity() {
         return Payment.builder()
@@ -27,8 +26,8 @@ public class PaymentDTO {
                 .totalPrice(this.totalPrice)
                 .paymentDate(this.paymentDate)
                 .paymentUniqueNo(this.paymentUniqueNo)
+                .contentsList(this.contentsList.stream().map(PaymentContentDTO::toEntity).toList())
                 .member(this.memberDTO.toEntity())
-                .contentsId(this.contentsId)
                 .build();
     }
 }

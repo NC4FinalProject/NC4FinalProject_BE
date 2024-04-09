@@ -39,9 +39,7 @@ public class InquiryComment  {
     private String inquiryCommentContent;
 
     @ManyToOne
-
     @JoinColumn(name="member_id")
-
     private Member member;
 
     @ManyToOne

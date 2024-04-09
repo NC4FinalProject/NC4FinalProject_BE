@@ -57,4 +57,6 @@ public interface MemberService {
     void codeVerification(MemberDTO memberDTO, String code);
 
     MemberDTO findById(long id);
+
+    long getTodayUserCount();
 }

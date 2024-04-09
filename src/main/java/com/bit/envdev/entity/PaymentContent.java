@@ -9,10 +9,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class PaymentContent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private int paymentContentId;
     @Column
     private String teacherName;
@@ -23,9 +25,11 @@ public class PaymentContent {
     @Column
     private int price;
     @Column
+
     private int contentsId; // 수동셋팅
 
     public PaymentContentDTO toDTO() {
+
         return PaymentContentDTO.builder()
                 .paymentContentId(this.paymentContentId)
                 .teacherName(this.teacherName)
