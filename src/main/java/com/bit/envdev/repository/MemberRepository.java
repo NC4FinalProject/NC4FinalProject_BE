@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,4 +33,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findTop4ByRole(Role role);
 
     Page<Member> findByUserNicknameContainingOrderByCreatedAtDesc(Pageable pageable, String searchKeyword);
+
+    @Query("SELECT COUNT(m) FROM Member m WHERE DATE(m.createdAt) = CURRENT_DATE")
+    long countTodayRegistrations();
 }
