@@ -1,6 +1,6 @@
 package com.bit.envdev.dto;
 
-import com.bit.envdev.entity.Payment;
+
 import com.bit.envdev.entity.PaymentContent;
 import lombok.*;
 
