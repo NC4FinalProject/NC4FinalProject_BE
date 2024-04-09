@@ -1,29 +1,40 @@
-package com.bit.envdev.dto;
+package com.bit.envdev.entity;
 
-
-import com.bit.envdev.entity.PaymentContent;
+import com.bit.envdev.dto.PaymentContentDTO;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 
+@Entity
 @Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class PaymentContentDTO {
+
+public class PaymentContent {
+    @Id
     private int paymentContentId;
+    @Column
     private String teacherName;
+    @Column
     private String contentsTitle;
+    @Column
     private String thumbnail;
+    @Column
     private int price;
+    @Column
     private int contentsId;
 
-    public PaymentContent toEntity() {
-        return PaymentContent.builder()
+    public PaymentContentDTO toDTO () {
+        return PaymentContentDTO.builder()
                 .paymentContentId(this.paymentContentId)
                 .teacherName(this.teacherName)
                 .contentsTitle(this.contentsTitle)
                 .thumbnail(this.thumbnail)
                 .price(this.price)
+                .contentsId(this.contentsId)
                 .build();
     }
+
 }
