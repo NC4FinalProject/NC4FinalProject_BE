@@ -8,11 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 import java.time.LocalDateTime;
 
 public interface BlockInquiryCommentRepository extends JpaRepository<BlockInquiryComment, Long> {
-//    @Modifying(clearAutomatically = true)
-//    @Query(value = "update BlockInquiryComment b set b.state='UNBLOCKED' where b.reportId=:id")
-//    void updateStateById(Long id);
-//
-//    @Modifying(clearAutomatically = true)
-//    @Query(value = "update BlockInquiryComment b set b.state='UNBLOCKED' where b.blockPeriod<:now")
-//    void updateStateByBlockPeriod(LocalDateTime now);
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update BlockInquiryComment b set b.state=1 where b.reportId=:id")
+    void updateStateById(Long id);
+
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update BlockInquiryComment b set b.state=1 where b.blockPeriod<:now")
+    void updateStateByBlockPeriod(LocalDateTime now);
 }

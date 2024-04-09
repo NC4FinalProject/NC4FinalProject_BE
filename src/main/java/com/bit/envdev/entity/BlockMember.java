@@ -20,8 +20,7 @@ public class BlockMember {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
 
-    @OneToOne
-    private Member member;
+    private Long memberId;
 
     @Column(updatable = false, nullable = false)
     @Builder.Default

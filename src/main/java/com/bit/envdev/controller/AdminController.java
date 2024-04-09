@@ -38,6 +38,7 @@ public class AdminController {
             List<MemberDTO> preTeachers = memberService.findByRole();
             List<MemberGraphDTO>  daliyOutUserCount = memberService.getDailyOutUserCount();
             List<MemberGraphDTO>  monthlyOutUserCount = memberService.getMonthlyOutUserCount();
+            long todayUserCount = memberService.getTodayUserCount();
 
             Map<String, Object> responseData = new HashMap<>();
             responseData.put("notices", notices);
@@ -49,6 +50,7 @@ public class AdminController {
             responseData.put("daliyOutUserCount", daliyOutUserCount);
             responseData.put("monthlyOutUserCount", monthlyOutUserCount);
             responseData.put("preTeachers", preTeachers);
+            responseData.put("todayUserCount", todayUserCount);
             return ResponseEntity.ok(responseData);
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();

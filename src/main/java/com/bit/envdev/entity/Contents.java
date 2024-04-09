@@ -1,26 +1,14 @@
 package com.bit.envdev.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.bit.envdev.dto.ContentsDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.joda.time.DateTime;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import com.bit.envdev.dto.ContentsDTO;
-import com.bit.envdev.entity.Member;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -57,7 +45,7 @@ public class Contents {
 
     @ManyToOne(fetch = FetchType.LAZY) // 한명의 유저는 여러개의 게시글을 갖을 수 있다, 여러개의 게시글의 유저는 한명이다.
     @JoinColumn(name="member_id") // JPA(ORM)을 사용하여 오브젝트 자체를 저장 할 수 있고 이를 Foreign Key로 사용 가능
-
+    @JsonBackReference
     private Member member;
 
     // //JoinColumn(name="replyId")  // 하나의 컬럼은 원자성을 갖음으로 조인컬럼을 통한 참조키 불가능
@@ -74,8 +62,11 @@ public class Contents {
     @Column(nullable=true)
     private String introduce;
 
-    @Column(nullable=true)
-    private String price;
+    @Column(nullable = true)
+    private int price;
+
+    @Column(nullable = true)
+    private String priceType;
 
     @Column
     private String thumbnail;

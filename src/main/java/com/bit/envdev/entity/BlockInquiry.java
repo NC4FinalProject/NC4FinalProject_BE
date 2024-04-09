@@ -20,8 +20,8 @@ public class BlockInquiry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
 
-    @OneToOne
-    private Inquiry inquiry;
+    @Column
+    private Long inquiryId;
 
     @Column(updatable = false, nullable = false)
     @Builder.Default
