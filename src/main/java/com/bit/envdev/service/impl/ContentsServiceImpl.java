@@ -1,6 +1,7 @@
 package com.bit.envdev.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.*;
@@ -86,9 +87,50 @@ public class ContentsServiceImpl implements ContentsService {
     }
 
 
+    public VideoReply saveVideoReply(VideoReplyDTO videoReplyDTO) {
+        // Member 엔티티 찾기
+        Member member = memberRepository.findById(videoReplyDTO.getMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 멤버가 존재하지 않습니다. id=" + videoReplyDTO.getMemberId()));
+
+        System.out.println("contentsId: " + videoReplyDTO.getContentsId() + ", videoId: " + videoReplyDTO.getVideoId());
+
+
+        // VideoId 객체 생성
+//        VideoId videoId = new VideoId(videoReplyDTO.getContentsId(), videoReplyDTO.getVideoId());
+
+        // Video 엔티티 찾기
+//        Video video = videoRepository.findById(videoId)
+//                .orElseThrow(() -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다. id=" + videoId));
+
+        // VideoReply 엔티티 생성 및 Video 엔티티에 추가
+//        VideoReply videoReply = videoReplyDTO.toEntity(video, member);
+//        video.getVideoReplyList().add(videoReply); // Video 엔티티의 댓글 리스트에 추가
+//        videoReply.setVideo(video); // 양방향 매핑 설정
+
+        // 변경된 Video 엔티티 저장
+//        videoRepository.save(video);
+        System.out.println("올 비디오 댓글 저장 ㅊㅋ");
+//        videoReply
+        return null; // 저장된 VideoReply 반환
+    }
+
+
     @Override
     public ContentsDTO findById(int contentsId) {
         return contentsRepository.findById(contentsId).orElseThrow().toDTO();
+    }
+
+    @Override
+    public List<ContentsDTO> findAll() {
+        // Contents 엔티티의 리스트를 조회
+        List<Contents> contentsList = contentsRepository.findAll();
+
+        // 조회된 Contents 엔티티 리스트를 ContentsDTO 리스트로 변환
+        List<ContentsDTO> contentsDTOList = contentsList.stream()
+                .map(Contents::toDTO) // Contents 엔티티를 ContentsDTO로 변환
+                .collect(Collectors.toList());
+
+        return contentsDTOList;
     }
 
 }
