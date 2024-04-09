@@ -30,8 +30,8 @@ public class Contents {
             generator = "ContentsSeqGenerator"
     )
     private int contentsId;
-
-    @Column(nullable = true, length = 100)
+    
+    @Column(nullable=true, length=100)
     private String contentsTitle;
 
     @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -49,17 +49,17 @@ public class Contents {
     private Member member;
 
     // //JoinColumn(name="replyId")  // 하나의 컬럼은 원자성을 갖음으로 조인컬럼을 통한 참조키 불가능
-    // @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    // @JsonIgnoreProperties({"board"})
-    // @OrderBy("id desc")
-    // private List<Reply> replys;
+	// @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	// @JsonIgnoreProperties({"board"})
+	// @OrderBy("id desc")
+	// private List<Reply> replys;
 
     // @ColumnDefault("")
 
-    @Column(nullable = false)
+    @Column(nullable=false)
     private String category;
 
-    @Column(nullable = true)
+    @Column(nullable=true)
     private String introduce;
 
     @Column(nullable = true)
@@ -70,7 +70,7 @@ public class Contents {
 
     @Column
     private String thumbnail;
-
+    
     // private LocalDateTime mokDate;
     // private Timestamp mokDate;
 
@@ -83,7 +83,7 @@ public class Contents {
 
     // // 이넘 데이터 관련
     // @Enumerated(EnumType.STRING)
-    // private RoleType role; // USER, ADMIN // or // private ItemSellStatus itemSellSTatus;
+	// private RoleType role; // USER, ADMIN // or // private ItemSellStatus itemSellSTatus;
 
     // // 데이터 관련 CLOB, BLOB
     // @Lob
