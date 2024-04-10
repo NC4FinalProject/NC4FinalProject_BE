@@ -28,6 +28,7 @@ public class InquiryDTO {
     private String searchCondition;
     private String searchKeyword;
     private boolean isLike;
+    private long commentCount;
 
 
     public Inquiry toEntity() {

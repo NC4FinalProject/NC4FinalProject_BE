@@ -5,6 +5,7 @@ import com.bit.envdev.dto.InquiryDTO;
 import com.bit.envdev.dto.InquiryFileDTO;
 import com.bit.envdev.entity.Inquiry;
 import com.bit.envdev.entity.InquiryFile;
+import com.bit.envdev.repository.InquiryCommentRepository;
 import com.bit.envdev.repository.InquiryFileRepository;
 import com.bit.envdev.repository.InquiryRepository;
 import com.bit.envdev.service.InquiryService;
@@ -28,13 +29,19 @@ public class InquiryServiceImpl implements InquiryService {
     private final InquiryRepository inquiryRepository;
     private final FileUtils fileUtils;
     private final InquiryFileRepository inquiryFileRepository;
+    private final InquiryCommentRepository inquiryCommentRepository;
 
 
     @Override
-    public Page<InquiryDTO> searchAll(Pageable pageable, String searchCondition, String searchKeyword) {
-        Page<Inquiry> inquiryPage = inquiryRepository.searchAll(pageable, searchCondition, searchKeyword);
+    public Page<InquiryDTO> searchAll(Pageable pageable, String searchCondition, String searchKeyword, int contentsId) {
+        Page<Inquiry> inquiryPage = inquiryRepository.searchAllByContentsId(pageable, searchCondition, searchKeyword, contentsId);
 
-        return inquiryPage.map(Inquiry::toDTO);
+        return inquiryPage.map(inquiry -> {
+            InquiryDTO inquiryDTO = inquiry.toDTO();
+            long commentCount = inquiryCommentRepository.countByInquiryInquiryId(inquiry.getInquiryId());
+            inquiryDTO.setCommentCount(commentCount);
+            return inquiryDTO;
+        });
     }
 
     @Override
@@ -113,7 +120,7 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
-    public void deleteById(Long inquiryId) {
+    public void deleteById(Long inquiryId, int contentsId) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow(() -> new RuntimeException("Inquiry not found"));
         List<InquiryFile> inquiryFiles = inquiry.getInquiryFileList();
         if (inquiryFiles != null || inquiryFiles.size() > 0) {
