@@ -29,6 +29,7 @@ public class InquiryDTO {
     private String searchKeyword;
     private boolean isLike;
     private long commentCount;
+    private List<InquiryCommentDTO> inquiryCommentDTOList;
 
 
     public Inquiry toEntity() {
@@ -44,6 +45,7 @@ public class InquiryDTO {
                 .inquiryView(this.inquiryView)
                 .inquiryFileList(this.inquiryFileDTOList.stream().map(InquiryFileDTO::toEntity).toList())
                 .tagList(this.tagDTOList.stream().map(TagDTO::toEntity).toList())
+                .inquiryCommentList(this.inquiryCommentDTOList.stream().map(InquiryCommentDTO::toEntity).toList())
                 .build();
     }
 }

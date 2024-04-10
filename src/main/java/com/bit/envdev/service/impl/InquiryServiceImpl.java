@@ -5,9 +5,11 @@ import com.bit.envdev.dto.InquiryDTO;
 import com.bit.envdev.dto.InquiryFileDTO;
 import com.bit.envdev.entity.Inquiry;
 import com.bit.envdev.entity.InquiryFile;
+import com.bit.envdev.repository.ContentsRepository;
 import com.bit.envdev.repository.InquiryCommentRepository;
 import com.bit.envdev.repository.InquiryFileRepository;
 import com.bit.envdev.repository.InquiryRepository;
+import com.bit.envdev.service.ContentsService;
 import com.bit.envdev.service.InquiryService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,6 +32,7 @@ public class InquiryServiceImpl implements InquiryService {
     private final FileUtils fileUtils;
     private final InquiryFileRepository inquiryFileRepository;
     private final InquiryCommentRepository inquiryCommentRepository;
+    private final ContentsRepository contentsRepository;
 
 
     @Override
@@ -40,6 +43,8 @@ public class InquiryServiceImpl implements InquiryService {
             InquiryDTO inquiryDTO = inquiry.toDTO();
             long commentCount = inquiryCommentRepository.countByInquiryInquiryId(inquiry.getInquiryId());
             inquiryDTO.setCommentCount(commentCount);
+            String contentsTitle = contentsRepository.findById(inquiry.getContentsId()).orElseThrow().getContentsTitle();
+            inquiryDTO.setContentsTitle(contentsTitle);
             return inquiryDTO;
         });
     }

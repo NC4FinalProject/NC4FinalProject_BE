@@ -89,6 +89,7 @@ public class Inquiry {
                 .inquiryView(this.inquiryView)
                 .inquiryFileDTOList(this.inquiryFileList.stream().map(InquiryFile::toDTO).toList())
                 .tagDTOList(this.tagList.stream().map(Tag::toDTO).toList())
+                .inquiryCommentDTOList(this.inquiryCommentList.stream().map(InquiryComment::toDTO).toList())
                 .build();
     }
 }
