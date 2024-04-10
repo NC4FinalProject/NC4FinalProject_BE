@@ -18,7 +18,6 @@ public class InquiryFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long inquiryFileId;
-
     private String inquiryFileName;
     private String inquiryFilePath;
     private String inquiryFileOrigin;

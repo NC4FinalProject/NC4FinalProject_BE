@@ -13,7 +13,9 @@ import java.util.List;
 @ToString
 public class VideoReplyDTO {
 
-    private String memberId;
+    private int contentsId;
+
+    private long memberId;
 
     private int videoId;
 
