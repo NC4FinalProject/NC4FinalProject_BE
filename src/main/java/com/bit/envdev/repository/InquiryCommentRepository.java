@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface InquiryCommentRepository extends JpaRepository<InquiryComment, Long> {
 
-    List<InquiryComment> findByInquiryIdOrderByInquiryCommentUdtDateDesc(long inquiryId);
+    List<InquiryComment> findByInquiryInquiryIdOrderByInquiryCommentCrtDTDesc(long inquiryId);
 }

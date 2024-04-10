@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Repository
 public interface InquiryCommentLikeRepository extends JpaRepository<InquiryCommentLike, InquiryCommentLikeId>{
-    long countByMemberMemberIdAndInquiryCommentId(long memberId, Long inquiryCommentId);
+    long countByMemberMemberIdAndInquiryCommentInquiryCommentId(long memberId, Long inquiryCommentId);
 
-    long countByInquiryCommentId(Long inquiryCommentId);
+    long countByInquiryCommentInquiryCommentId(Long inquiryCommentId);
 }

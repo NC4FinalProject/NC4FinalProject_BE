@@ -15,12 +15,12 @@ public class InquiryLikeServiceImpl implements InquiryLikeService {
 
     @Override
     public long addOrdown(long memberId, Long inquiryId) {
-        return inquiryLikeRepository.countByMemberMemberIdAndInquiryId(memberId, inquiryId);
+        return inquiryLikeRepository.countByMemberMemberIdAndInquiryInquiryId(memberId, inquiryId);
     }
 
     @Override
     public long findByInquiryId(Long inquiryId) {
-        return inquiryLikeRepository.countByInquiryId(inquiryId);
+        return inquiryLikeRepository.countByInquiryInquiryId(inquiryId);
     }
 
     @Override

@@ -14,12 +14,12 @@ public class InquiryCommentLikeServiceImpl implements InquiryCommentLikeService 
     private final InquiryCommentLikeRepository inquiryCommentLikeRepository;
     @Override
     public long addOrdown(long memberId, Long inquiryCommentId) {
-        return inquiryCommentLikeRepository.countByMemberMemberIdAndInquiryCommentId(memberId, inquiryCommentId);
+        return inquiryCommentLikeRepository.countByMemberMemberIdAndInquiryCommentInquiryCommentId(memberId, inquiryCommentId);
     }
 
     @Override
     public long findByInquiryCommentId(Long inquiryCommentId) {
-        return inquiryCommentLikeRepository.countByInquiryCommentId(inquiryCommentId);
+        return inquiryCommentLikeRepository.countByInquiryCommentInquiryCommentId(inquiryCommentId);
     }
 
     @Override

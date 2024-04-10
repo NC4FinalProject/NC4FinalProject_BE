@@ -9,9 +9,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +42,10 @@ public class ContentsDTO {
 
     private String thumbnail;
 
+    private LocalDateTime regDate;
+
+    private LocalDateTime modDate;
+
     private List<SectionDTO> sectionList;
     private List<VideoDTO> videoList;
 
@@ -50,7 +57,10 @@ public class ContentsDTO {
                 .category(this.category)
                 .thumbnail(this.thumbnail)
                 .introduce(this.introduce)
+                .regDate(this.regDate)
+                .modDate(this.modDate)
                 .videoList(new ArrayList<>())
+                .sectionList(new ArrayList<>())
                 .price(this.price)
                 .build();
     }

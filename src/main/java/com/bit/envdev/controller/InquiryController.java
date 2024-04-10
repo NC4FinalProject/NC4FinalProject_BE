@@ -32,7 +32,7 @@ public class InquiryController {
     private final InquiryLikeService inquiryLikeService;
     private final InquiryCommentService inquiryCommentService;
     private final InquiryCommentLikeService inquiryCommentLikeService;
-    private final TagService tagService;
+//    private final TagService tagService;
     private List<String> temporaryImage = new ArrayList<>();
 
     @GetMapping("/inquiry")

@@ -1,26 +1,16 @@
 package com.bit.envdev.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.*;
 import com.bit.envdev.entity.Contents;
-import com.bit.envdev.entity.Video;
-import com.bit.envdev.service.MemberService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.bit.envdev.entity.VideoReply;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.bit.envdev.entity.CustomUserDetails;
-import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.service.ContentsService;
 
 import lombok.RequiredArgsConstructor;
@@ -62,5 +52,32 @@ public class ContentsController {
         ContentsDTO contentsDTO = contentsService.findById(contentsId);
         responseDTO.setItem(contentsDTO);
         return ResponseEntity.ok(responseDTO);
+    }
+
+    // // 컨텐츠 목록 보기
+    @GetMapping("/list")
+    public ResponseEntity<?> listContents() {
+        // ResponseDTO 객체 생성
+        ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
+        // contentsService에서 모든 컨텐츠를 조회하여 ContentsDTO 리스트로 가져옴
+        List<ContentsDTO> contentsDTOList = contentsService.findAll();
+        responseDTO.setItems(contentsDTOList);
+        // ResponseDTO 객체를 ResponseEntity를 통해 클라이언트에게 반환
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @PostMapping("/detail/saveVideoReply")
+    public ResponseEntity<?> saveVideoReply(@RequestBody VideoReplyDTO videoReplyDTO,
+                                    @AuthenticationPrincipal CustomUserDetails customUserDetails) throws IOException {
+        ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
+        Long memberId = customUserDetails.getId();
+        videoReplyDTO.setMemberId(memberId);
+
+        // 비디오별 댓글 저장하기
+        VideoReply videoReply = contentsService.saveVideoReply(videoReplyDTO);
+        System.out.println(videoReplyDTO);
+        System.out.println(memberId);
+
+        return null;
     }
 }

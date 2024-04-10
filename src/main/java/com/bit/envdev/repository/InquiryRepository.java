@@ -11,6 +11,6 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long>, Inquiry
 
     @Modifying
     @Query("update Inquiry i set i.inquiryView = i.inquiryId + 1 where i.inquiryId = :inquiryId")
-    void updateView(Long noticeNo);
+    void updateView(Long inquiryId);
 
 }
