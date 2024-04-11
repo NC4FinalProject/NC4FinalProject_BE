@@ -89,4 +89,5 @@ public class ContentsController {
         List<VideoReplyDTO> videoReplyDTOList = contentsService.getVideoReplyList(contentsId, videoId);
         return ResponseEntity.ok().body(videoReplyDTOList);
     }
+
 }

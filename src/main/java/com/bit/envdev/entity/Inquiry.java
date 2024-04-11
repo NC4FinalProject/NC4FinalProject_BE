@@ -63,7 +63,8 @@ public class Inquiry {
     private Member member;
 
     // 수동으로 setting
-    private Long contentsId;
+    @Column
+    private int contentsId;
 
     @OneToMany(mappedBy = "inquiry", cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -77,6 +78,7 @@ public class Inquiry {
     public InquiryDTO toDTO() {
         return InquiryDTO.builder()
                 .inquiryId(this.inquiryId)
+                .contentsId(this.contentsId)
                 .memberDTO(this.member.toDTO())
                 .inquiryTitle(this.inquiryTitle)
                 .inquiryContent(this.inquiryContent)
