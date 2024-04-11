@@ -14,9 +14,11 @@ public interface ContentsService {
     Contents createContents(ContentsDTO contentsDTO, Long id, MultipartFile thumbnail );
     Video createVideo(VideoDTO videoDTO, Contents createdContents, Long id,  MultipartFile videoFile);
     Section createSection(SectionDTO sectionDTO, Contents createdContents);
-    VideoReply saveVideoReply(VideoReplyDTO videoReplyDTO);
+
     ContentsDTO findById(int contentsId);
     List<ContentsDTO> findAll();
 
+    VideoReply saveVideoReply(VideoReplyDTO videoReplyDTO);
+    List<VideoReplyDTO> getVideoReplyList(int contentsId, int videoId);
 
  }

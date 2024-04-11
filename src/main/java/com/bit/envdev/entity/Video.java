@@ -65,6 +65,4 @@ public class Video {
         this.videoReplyList.add(videoReply);
     }
 
-
-
 }
