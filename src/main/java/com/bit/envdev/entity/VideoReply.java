@@ -46,7 +46,7 @@ public class VideoReply {
 
     public VideoReplyDTO toDTO() {
         return VideoReplyDTO.builder()
-                .memberId(this.member.getUsername())
+                .memberId(this.member.getMemberId())
                 .videoReplyId(this.videoReplyId)
                 .videoReplyContent(this.videoReplyContent)
                 .videoId(this.video.getVideoId())

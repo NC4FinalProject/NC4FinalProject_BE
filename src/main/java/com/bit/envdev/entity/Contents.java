@@ -97,6 +97,8 @@ public class Contents {
                 .category(this.category)
                 .price(this.price)
                 .thumbnail(this.thumbnail)
+                .regDate(this.regDate)
+                .modDate(this.modDate)
                 .sectionList(this.sectionList != null ? this.sectionList.stream().map(Section::toDTO).toList() : null)
                 .videoList(this.videoList != null ? this.videoList.stream().map(Video::toDTO).toList() : null)
                 .build();
