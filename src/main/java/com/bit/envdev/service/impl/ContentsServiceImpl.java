@@ -1,21 +1,37 @@
 package com.bit.envdev.service.impl;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.*;
 import com.bit.envdev.entity.*;
 import com.bit.envdev.repository.ContentsRepository;
+import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.repository.SectionRepository;
 import com.bit.envdev.repository.VideoRepository;
-
+import com.bit.envdev.service.ContentsService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import com.bit.envdev.dto.SectionDTO;
+import com.bit.envdev.dto.SectionSubDTO;
+import com.bit.envdev.entity.Contents;
+import com.bit.envdev.entity.Section;
+import com.bit.envdev.entity.SectionSub;
+import com.bit.envdev.repository.SectionRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.bit.envdev.dto.ContentsDTO;
+
+import com.bit.envdev.entity.Member;
+import com.bit.envdev.repository.ContentsRepository;
 import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.service.ContentsService;
 
@@ -23,9 +39,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class ContentsServiceImpl implements ContentsService {
+
 
     private final MemberRepository memberRepository;
 
@@ -140,10 +160,19 @@ public class ContentsServiceImpl implements ContentsService {
 
         return contentsDTOList;
     }
+
+
+    @Override
+    public List<ContentsDTO> get4Contents() {
+        return  contentsRepository.findTop4ByOrderByRegDateDesc().stream()
+                .map(Contents::toDTO)
+                .collect(Collectors.toList());
+    }
     @Override
     public List<VideoReplyDTO> getVideoReplyList(int contentsId, int videoId) {
         // 복합 키 인스턴스 생성
         VideoId videoIdObj = new VideoId(contentsId, videoId);
+
 
         // Video 엔티티 조회
         Optional<Video> videoOpt = videoRepository.findById(videoIdObj);

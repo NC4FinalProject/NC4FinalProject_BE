@@ -47,11 +47,11 @@ public class Inquiry {
     private boolean isSolved;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "inquiryId")
+    @JsonManagedReference
     private List<Tag> tagList;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "inquiryId")
+    @JsonManagedReference
     private List<InquiryFile> inquiryFileList;
 
     @Column(nullable = false)
@@ -89,6 +89,7 @@ public class Inquiry {
                 .inquiryView(this.inquiryView)
                 .inquiryFileDTOList(this.inquiryFileList.stream().map(InquiryFile::toDTO).toList())
                 .tagDTOList(this.tagList.stream().map(Tag::toDTO).toList())
+                .inquiryCommentDTOList(this.inquiryCommentList.stream().map(InquiryComment::toDTO).toList())
                 .build();
     }
 }

@@ -1,7 +1,9 @@
 package com.bit.envdev.controller;
 
 import java.util.HashMap;
+
 import java.util.Map;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +34,7 @@ public class MypageController {
     @GetMapping
     public ResponseEntity<?> mypage(@AuthenticationPrincipal UserDetails userDetails) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
-        
+
         String username = userDetails.getUsername();
         MemberDTO memberDTO = memberService.findByUsername(username);
 
@@ -44,7 +46,7 @@ public class MypageController {
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(responseDTO);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             responseDTO.setErrorMessage(e.getMessage());
             responseDTO.setErrorCode(202);
             responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
@@ -63,8 +65,8 @@ public class MypageController {
         try {
             if (profileImage.getOriginalFilename() != null &&
                     !profileImage.getOriginalFilename().isEmpty()) {
-                        FileDTO fileDTO = fileUtils.parseFileInfo(profileImage, "profile/");
-                        fileString = (fileDTO.getItemFilePath()+fileDTO.getItemFileName());
+                FileDTO fileDTO = fileUtils.parseFileInfo(profileImage, "profile/");
+                fileString = (fileDTO.getItemFilePath() + fileDTO.getItemFileName());
             }
             String username = userDetails.getUsername();
             MemberDTO memberDTO = memberService.findByUsername(username);
@@ -89,50 +91,51 @@ public class MypageController {
     public ResponseEntity<?> profileFile(@AuthenticationPrincipal UserDetails userDetails,
                                         @RequestPart(value = "user_nickname") String userNickname) {
 
+
         ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
-        
+
         try {
             String username = userDetails.getUsername();
             MemberDTO newMemberDTO = memberService.findByUsername(username);
-            
+
             memberService.updateUserNickname(userNickname, newMemberDTO);
             Map<String, String> msgMap = new HashMap<>();
-            
-                    msgMap.put("msg", "정상적으로 입력되었습니다.");
 
-                    responseDTO.setItem(msgMap);
-                    responseDTO.setStatusCode(HttpStatus.OK.value());
-                    return ResponseEntity.ok(responseDTO);
-                } catch (Exception e) {
-                    responseDTO.setErrorMessage(e.getMessage());
-                    responseDTO.setErrorCode(202);
-                    responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
-                    return ResponseEntity.badRequest().body(responseDTO);
-                }
+            msgMap.put("msg", "정상적으로 입력되었습니다.");
+
+            responseDTO.setItem(msgMap);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setErrorMessage(e.getMessage());
+            responseDTO.setErrorCode(202);
+            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
     }
 
     @GetMapping("/wannabe-teacher")
     public ResponseEntity<?> wannabeTeacher(@AuthenticationPrincipal UserDetails userDetails) {
 
         ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
-        
+
         try {
             String username = userDetails.getUsername();
             MemberDTO memberDTO = memberService.findByUsername(username);
-            
+
             memberService.wannabeTeacher(memberDTO);
             Map<String, String> msgMap = new HashMap<>();
-            
-                    msgMap.put("msg", "정상적으로 입력되었습니다.");
 
-                    responseDTO.setItem(msgMap);
-                    responseDTO.setStatusCode(HttpStatus.OK.value());
-                    return ResponseEntity.ok(responseDTO);
-                } catch (Exception e) {
-                    responseDTO.setErrorMessage(e.getMessage());
-                    responseDTO.setErrorCode(202);
-                    responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
-                    return ResponseEntity.badRequest().body(responseDTO);
-                }
+            msgMap.put("msg", "정상적으로 입력되었습니다.");
+
+            responseDTO.setItem(msgMap);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setErrorMessage(e.getMessage());
+            responseDTO.setErrorCode(202);
+            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
     }
 }
