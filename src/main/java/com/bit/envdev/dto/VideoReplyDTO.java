@@ -21,6 +21,10 @@ public class VideoReplyDTO {
 
     private int videoReplyId;
 
+    private String username;
+    private String userNickname;
+    private String profileFile;
+
     private String videoReplyContent;
     public VideoReply toEntity(Video video, Member member) {
         return VideoReply.builder()

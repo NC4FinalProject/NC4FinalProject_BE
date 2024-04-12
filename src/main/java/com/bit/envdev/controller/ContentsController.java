@@ -45,7 +45,7 @@ public class ContentsController {
         sectionDTOList.forEach(sectionDTO -> {contentsService.createSection(sectionDTO, createdContents);});
         return null;
     }
-    // // 컨텐츠 상세 보기
+    // // 컨텐츠 상세 보기 * 유저 닉네임 리스폰 추가
     @GetMapping("/detail/{contentsId}")
     public ResponseEntity<?> Detail(@PathVariable(name = "contentsId") int contentsId) {
         ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
@@ -54,7 +54,7 @@ public class ContentsController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    // // 컨텐츠 목록 보기
+    // // 컨텐츠 목록 보기 * 유저 네임, 유저 닉네임 프로필 리스폰 추가
     @GetMapping("/list")
     public ResponseEntity<?> listContents() {
         // ResponseDTO 객체 생성

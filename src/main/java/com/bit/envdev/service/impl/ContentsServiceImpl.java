@@ -2,10 +2,8 @@ package com.bit.envdev.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-<<<<<<< HEAD
+import java.util.NoSuchElementException;
 import java.util.Optional;
-=======
->>>>>>> b593493 (Merge remote-tracking branch 'origin/dev/240409')
 import java.util.stream.Collectors;
 
 import com.bit.envdev.common.FileUtils;
@@ -53,6 +51,7 @@ public class ContentsServiceImpl implements ContentsService {
 
         String filePath = filePath(thumbnail);
         contentsDTO.setThumbnail(filePath);
+
         Contents contents = contentsDTO.toEntity(member);
 
         return contentsRepository.save(contents);
@@ -119,7 +118,14 @@ public class ContentsServiceImpl implements ContentsService {
 
     @Override
     public ContentsDTO findById(int contentsId) {
-        return contentsRepository.findById(contentsId).orElseThrow().toDTO();
+        // Contents 엔티티 조회
+        Contents contents = contentsRepository.findById(contentsId)
+                .orElseThrow(() -> new NoSuchElementException("Contents not found"));
+        // Contents 엔티티를 DTO로 변환
+        ContentsDTO contentsDTO = contents.toDTO();
+        // Member의 userNickname을 ContentsDTO에 설정
+        contentsDTO.setUserNickname(contents.getMember().getUserNickname());
+        return contentsDTO;
     }
 
     @Override
@@ -149,8 +155,20 @@ public class ContentsServiceImpl implements ContentsService {
         Video video = videoOpt.get();
 
         // VideoReply 목록을 VideoReplyDTO 목록으로 변환
+        // return video.getVideoReplyList().stream()
+        //        .map(VideoReply::toDTO) // VideoReply 엔티티를 VideoReplyDTO로 변환
+        //        .collect(Collectors.toList());
+
         return video.getVideoReplyList().stream()
-                .map(VideoReply::toDTO) // VideoReply 엔티티를 VideoReplyDTO로 변환
+                .map(videoReply -> {
+                    VideoReplyDTO dto = videoReply.toDTO(); // 기존 변환 로직
+                    // 여기서 Member 엔티티에서 필요한 정보를 가져와 DTO에 설정
+                    Member member = videoReply.getMember(); // VideoReply에서 Member 정보를 가져옴
+                    dto.setUsername(member.getUsername());
+                    dto.setUserNickname(member.getUserNickname());
+                    dto.setProfileFile(member.getProfileFile());
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 }
