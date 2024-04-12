@@ -10,4 +10,6 @@ import java.util.List;
 public interface InquiryCommentRepository extends JpaRepository<InquiryComment, Long> {
 
     List<InquiryComment> findByInquiryInquiryIdOrderByInquiryCommentCrtDTDesc(long inquiryId);
+
+    long countByInquiryInquiryId(long inquiryId);
 }
