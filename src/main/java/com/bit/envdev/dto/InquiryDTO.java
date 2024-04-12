@@ -3,6 +3,7 @@ package com.bit.envdev.dto;
 import com.bit.envdev.entity.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +29,8 @@ public class InquiryDTO {
     private String searchCondition;
     private String searchKeyword;
     private boolean isLike;
+    private long commentCount;
+    private List<InquiryCommentDTO> inquiryCommentDTOList;
 
 
     public Inquiry toEntity() {
@@ -41,8 +44,8 @@ public class InquiryDTO {
                 .isPrivate(this.isPrivate)
                 .isSolved(this.isSolved)
                 .inquiryView(this.inquiryView)
-                .inquiryFileList(this.inquiryFileDTOList.stream().map(InquiryFileDTO::toEntity).toList())
-                .tagList(this.tagDTOList.stream().map(TagDTO::toEntity).toList())
+                .inquiryFileList(new ArrayList<>())
+                .tagList(new ArrayList<>())
                 .build();
     }
 }
