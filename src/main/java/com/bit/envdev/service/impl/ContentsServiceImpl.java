@@ -1,24 +1,21 @@
 package com.bit.envdev.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.*;
 import com.bit.envdev.entity.*;
 import com.bit.envdev.repository.ContentsRepository;
+import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.repository.SectionRepository;
 import com.bit.envdev.repository.VideoRepository;
-
+import com.bit.envdev.service.ContentsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import com.bit.envdev.repository.MemberRepository;
-import com.bit.envdev.service.ContentsService;
-
-import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -131,6 +128,13 @@ public class ContentsServiceImpl implements ContentsService {
                 .collect(Collectors.toList());
 
         return contentsDTOList;
+    }
+
+    @Override
+    public List<ContentsDTO> get4Contents() {
+        return  contentsRepository.findTop4ByOrderByRegDateDesc().stream()
+                .map(Contents::toDTO)
+                .collect(Collectors.toList());
     }
 
 }
