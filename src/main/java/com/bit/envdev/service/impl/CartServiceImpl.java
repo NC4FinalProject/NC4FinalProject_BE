@@ -1,10 +1,8 @@
 package com.bit.envdev.service.impl;
 
 import com.bit.envdev.dto.CartDTO;
-import com.bit.envdev.entity.Cart;
-import com.bit.envdev.entity.CartContents;
-import com.bit.envdev.entity.Contents;
-import com.bit.envdev.entity.Member;
+import com.bit.envdev.dto.PaymentContentDTO;
+import com.bit.envdev.entity.*;
 import com.bit.envdev.repository.CartContentsRepository;
 import com.bit.envdev.repository.CartRepository;
 import com.bit.envdev.repository.ContentsRepository;
@@ -90,5 +88,31 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<Map<String, String>> findCartContentsListByMemberId(long cartId) {
         return cartRepository.findCartContentsListByMemberId(cartId);
+    }
+
+    @Override
+    public void deleteOne(long cartId, int contentsId) {
+        CartContentsId cartContentsId = new CartContentsId();
+        cartContentsId.setCart(cartId);
+        cartContentsId.setContents(contentsId);
+        cartContentsRepository.delete(cartContentsRepository.findById(cartContentsId).orElseThrow());
+    }
+
+    @Override
+    public int updateCartContentsPaid(long cartId, List<PaymentContentDTO> paymentContentDTOList) {
+        paymentContentDTOList.forEach(paymentContentDTO -> cartContentsRepository.save(CartContents.builder()
+                .cart(cartRepository.findById(cartId).orElseThrow())
+                .contents(contentsRepository.findById(paymentContentDTO.getContentsId()).orElseThrow())
+                .isPaid(true)
+                .build()));
+
+        return cartContentsRepository.getCartContentCnt(cartId);
+    }
+
+    @Override
+    public void updateCartPaid(long cartId, Member member) {
+        Cart cart = cartRepository.findById(cartId).orElseThrow();
+        cart.setPaid(true);
+        cartRepository.save(cart);
     }
 }

@@ -1,6 +1,7 @@
 package com.bit.envdev.controller;
 
 import com.amazonaws.Response;
+import com.bit.envdev.dto.CartContentsDTO;
 import com.bit.envdev.dto.CartDTO;
 import com.bit.envdev.dto.ResponseDTO;
 import com.bit.envdev.entity.CustomUserDetails;
@@ -62,6 +63,75 @@ public class CartController {
         ResponseDTO<Map<String, Object>> responseDTO = new ResponseDTO<>();
 
         try {
+            Map<String, Object> returnMap = new HashMap<>();
+
+            CartDTO cartDTO = cartService.findCartByMemberId(customUserDetails.getMember().getMemberId());
+            returnMap.put("cart", cartDTO);
+
+            List<Map<String, String>> cartContentsList = cartService.findCartContentsListByMemberId(cartDTO.getCartId());
+            returnMap.put("cartContentsList", cartContentsList);
+
+            responseDTO.setItem(returnMap);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            if(e.getMessage().equalsIgnoreCase("not exist cart")) {
+                responseDTO.setErrorCode(4003);
+            } else {
+                responseDTO.setErrorCode(4004);
+            }
+            responseDTO.setErrorMessage(e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+
+    @DeleteMapping("/deleteOne/{cartId}")
+    public ResponseEntity<?> deleteOne(@PathVariable("cartId") long cartId,
+                                       @RequestParam("contentsId") int contentsId,
+                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<Map<String, Object>> responseDTO = new ResponseDTO<>();
+
+        try {
+            cartService.deleteOne(cartId, contentsId);
+
+            Map<String, Object> returnMap = new HashMap<>();
+
+            CartDTO cartDTO = cartService.findCartByMemberId(customUserDetails.getMember().getMemberId());
+            returnMap.put("cart", cartDTO);
+
+            List<Map<String, String>> cartContentsList = cartService.findCartContentsListByMemberId(cartDTO.getCartId());
+            returnMap.put("cartContentsList", cartContentsList);
+
+            responseDTO.setItem(returnMap);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            if(e.getMessage().equalsIgnoreCase("not exist cart")) {
+                responseDTO.setErrorCode(4003);
+            } else {
+                responseDTO.setErrorCode(4004);
+            }
+            responseDTO.setErrorMessage(e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> delete(@RequestBody List<CartContentsDTO> cartContentsDTOList,
+                                       @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<Map<String, Object>> responseDTO = new ResponseDTO<>();
+
+        try {
+            cartContentsDTOList.forEach(cartContentsDTO ->
+                    cartService.deleteOne(cartContentsDTO.getCartId(), cartContentsDTO.getContentsId()));
+
+
             Map<String, Object> returnMap = new HashMap<>();
 
             CartDTO cartDTO = cartService.findCartByMemberId(customUserDetails.getMember().getMemberId());

@@ -45,7 +45,7 @@ public class CartRepositoryCustomImpl implements CartRepositoryCustom {
                 .select(cartContents, contents)
                 .from(cartContents)
                 .join(cartContents.contents, contents)
-                .where(cartContents.cart.cartId.eq(cartId))
+                .where(cartContents.cart.cartId.eq(cartId).and(cartContents.isPaid.eq(false)))
                 .fetch();
 
         List<Map<String, String>> cartContentsList = new ArrayList<>();
