@@ -1,18 +1,37 @@
 package com.bit.envdev.service.impl;
 
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.*;
 import com.bit.envdev.entity.*;
 import com.bit.envdev.repository.ContentsRepository;
+import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.repository.SectionRepository;
 import com.bit.envdev.repository.VideoRepository;
-
+import com.bit.envdev.service.ContentsService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import com.bit.envdev.dto.SectionDTO;
+import com.bit.envdev.dto.SectionSubDTO;
+import com.bit.envdev.entity.Contents;
+import com.bit.envdev.entity.Section;
+import com.bit.envdev.entity.SectionSub;
+import com.bit.envdev.repository.SectionRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.bit.envdev.dto.ContentsDTO;
+
+import com.bit.envdev.entity.Member;
+import com.bit.envdev.repository.ContentsRepository;
 import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.service.ContentsService;
 
@@ -20,9 +39,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class ContentsServiceImpl implements ContentsService {
+
 
     private final MemberRepository memberRepository;
 
@@ -48,6 +71,7 @@ public class ContentsServiceImpl implements ContentsService {
 
         String filePath = filePath(thumbnail);
         contentsDTO.setThumbnail(filePath);
+
         Contents contents = contentsDTO.toEntity(member);
 
         return contentsRepository.save(contents);
@@ -92,23 +116,20 @@ public class ContentsServiceImpl implements ContentsService {
         Member member = memberRepository.findById(videoReplyDTO.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 멤버가 존재하지 않습니다. id=" + videoReplyDTO.getMemberId()));
 
-        System.out.println("contentsId: " + videoReplyDTO.getContentsId() + ", videoId: " + videoReplyDTO.getVideoId());
-
-
         // VideoId 객체 생성
-//        VideoId videoId = new VideoId(videoReplyDTO.getContentsId(), videoReplyDTO.getVideoId());
-
+        VideoId videoId = new VideoId(videoReplyDTO.getContentsId(), videoReplyDTO.getVideoId());
         // Video 엔티티 찾기
-//        Video video = videoRepository.findById(videoId)
-//                .orElseThrow(() -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다. id=" + videoId));
+        Video video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 비디오가 존재하지 않습니다. id=" + videoId));
 
         // VideoReply 엔티티 생성 및 Video 엔티티에 추가
-//        VideoReply videoReply = videoReplyDTO.toEntity(video, member);
-//        video.getVideoReplyList().add(videoReply); // Video 엔티티의 댓글 리스트에 추가
-//        videoReply.setVideo(video); // 양방향 매핑 설정
+        VideoReply videoReply = videoReplyDTO.toEntity(video, member);
+        video.getVideoReplyList().add(videoReply); // Video 엔티티의 댓글 리스트에 추가
+        videoReply.setVideo(video); // 양방향 매핑 설정
 
         // 변경된 Video 엔티티 저장
-//        videoRepository.save(video);
+        videoRepository.save(video);
+
         System.out.println("올 비디오 댓글 저장 ㅊㅋ");
 //        videoReply
         return null; // 저장된 VideoReply 반환
@@ -117,7 +138,14 @@ public class ContentsServiceImpl implements ContentsService {
 
     @Override
     public ContentsDTO findById(int contentsId) {
-        return contentsRepository.findById(contentsId).orElseThrow().toDTO();
+        // Contents 엔티티 조회
+        Contents contents = contentsRepository.findById(contentsId)
+                .orElseThrow(() -> new NoSuchElementException("Contents not found"));
+        // Contents 엔티티를 DTO로 변환
+        ContentsDTO contentsDTO = contents.toDTO();
+        // Member의 userNickname을 ContentsDTO에 설정
+        contentsDTO.setUserNickname(contents.getMember().getUserNickname());
+        return contentsDTO;
     }
 
     @Override
@@ -133,12 +161,43 @@ public class ContentsServiceImpl implements ContentsService {
         return contentsDTOList;
     }
 
-}
 
-//        if(videoFile != null){
-//        for(int i = 0; i < videoDTOList.size(); i++) {
-//        videoDTOList.get(i).setVideoPath(filePath(videoFile[i]));
-//        }
-//        }
-//        List<Video> videoList = videoDTOList.stream().map(videoDTO -> videoDTO.toEntity(contents)).toList();
-//        videoList.forEach(contents::addVideoFile);
+    @Override
+    public List<ContentsDTO> get4Contents() {
+        return  contentsRepository.findTop4ByOrderByRegDateDesc().stream()
+                .map(Contents::toDTO)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<VideoReplyDTO> getVideoReplyList(int contentsId, int videoId) {
+        // 복합 키 인스턴스 생성
+        VideoId videoIdObj = new VideoId(contentsId, videoId);
+
+
+        // Video 엔티티 조회
+        Optional<Video> videoOpt = videoRepository.findById(videoIdObj);
+
+        if (!videoOpt.isPresent()) {
+            return new ArrayList<>();
+        }
+
+        Video video = videoOpt.get();
+
+        // VideoReply 목록을 VideoReplyDTO 목록으로 변환
+        // return video.getVideoReplyList().stream()
+        //        .map(VideoReply::toDTO) // VideoReply 엔티티를 VideoReplyDTO로 변환
+        //        .collect(Collectors.toList());
+
+        return video.getVideoReplyList().stream()
+                .map(videoReply -> {
+                    VideoReplyDTO dto = videoReply.toDTO(); // 기존 변환 로직
+                    // 여기서 Member 엔티티에서 필요한 정보를 가져와 DTO에 설정
+                    Member member = videoReply.getMember(); // VideoReply에서 Member 정보를 가져옴
+                    dto.setUsername(member.getUsername());
+                    dto.setUserNickname(member.getUserNickname());
+                    dto.setProfileFile(member.getProfileFile());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+}
