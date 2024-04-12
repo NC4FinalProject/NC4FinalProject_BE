@@ -89,7 +89,7 @@ public class FileUtils {
 
     public InquiryFileDTO parseInquiryFileInfo(MultipartFile multipartFile, String directory) {
 
-        String bucketName = "envdev";
+        String bucketName = "bitcamp-bucket-36";
 
         InquiryFileDTO inquiryFileDTO = new InquiryFileDTO();
 

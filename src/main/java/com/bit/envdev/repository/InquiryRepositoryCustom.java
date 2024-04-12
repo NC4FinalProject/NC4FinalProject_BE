@@ -7,5 +7,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface InquiryRepositoryCustom {
 
-    Page<Inquiry> searchAll(Pageable pageable, String searchCondition, String searchKeyword);
+    Page<Inquiry> searchAllByContentsId(Pageable pageable, String searchCondition, String searchKeyword, int contentsId);
 }
