@@ -3,8 +3,10 @@ package com.bit.envdev.service.impl;
 import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.InquiryDTO;
 import com.bit.envdev.dto.InquiryFileDTO;
+import com.bit.envdev.dto.TagDTO;
 import com.bit.envdev.entity.Inquiry;
 import com.bit.envdev.entity.InquiryFile;
+import com.bit.envdev.entity.Tag;
 import com.bit.envdev.repository.ContentsRepository;
 import com.bit.envdev.repository.InquiryCommentRepository;
 import com.bit.envdev.repository.InquiryFileRepository;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +35,6 @@ public class InquiryServiceImpl implements InquiryService {
     private final FileUtils fileUtils;
     private final InquiryFileRepository inquiryFileRepository;
     private final InquiryCommentRepository inquiryCommentRepository;
-    private final ContentsRepository contentsRepository;
 
 
     @Override
@@ -43,8 +45,6 @@ public class InquiryServiceImpl implements InquiryService {
             InquiryDTO inquiryDTO = inquiry.toDTO();
             long commentCount = inquiryCommentRepository.countByInquiryInquiryId(inquiry.getInquiryId());
             inquiryDTO.setCommentCount(commentCount);
-            String contentsTitle = contentsRepository.findById(inquiry.getContentsId()).orElseThrow().getContentsTitle();
-            inquiryDTO.setContentsTitle(contentsTitle);
             return inquiryDTO;
         });
     }
@@ -52,7 +52,25 @@ public class InquiryServiceImpl implements InquiryService {
     @Override
     public void post(InquiryDTO inquiryDTO) {
         try {
-            inquiryRepository.save(inquiryDTO.toEntity());
+            Inquiry inquiry = inquiryDTO.toEntity();
+
+            List<InquiryFileDTO> inquiryFileDTOList = inquiryDTO.getInquiryFileDTOList();
+            if (inquiryFileDTOList != null) {
+                for (InquiryFileDTO fileDTO : inquiryFileDTOList) {
+                    InquiryFile inquiryFile = fileDTO.toEntity(inquiry);
+                    inquiry.getInquiryFileList().add(inquiryFile);
+                }
+            }
+
+            List<TagDTO> tagDTOList = inquiryDTO.getTagDTOList();
+            if (tagDTOList != null) {
+                for (TagDTO tagDTO : tagDTOList) {
+                    Tag tag = tagDTO.toEntity(inquiry);
+                    inquiry.getTagList().add(tag);
+                }
+            }
+
+            inquiryRepository.save(inquiry);
         } catch (Exception e) {
             throw new RuntimeException("Failed to post inquiry: " + e.getMessage());
         }

@@ -47,11 +47,11 @@ public class Inquiry {
     private boolean isSolved;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "inquiryId")
+    @JsonManagedReference
     private List<Tag> tagList;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "inquiryId")
+    @JsonManagedReference
     private List<InquiryFile> inquiryFileList;
 
     @Column(nullable = false)

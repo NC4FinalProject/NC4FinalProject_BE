@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -26,6 +27,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/inquiry")
+@ToString
 
 public class InquiryController {
     private final InquiryService inquiryService;
@@ -47,6 +49,7 @@ public class InquiryController {
         long loginMemberId = 0;
         List<PaymentDTO> paymentDTOList = null;
         Role loginMemberRole = null;
+        String contentsTitle = null;
 
         if (customUserDetails != null && customUserDetails.getMember() != null) {
             loginMemberNickname = customUserDetails.getMember().getUserNickname();
@@ -68,6 +71,7 @@ public class InquiryController {
             responseData.put("loginMemberNickname", loginMemberNickname);
             responseData.put("loginMemberRole", loginMemberRole);
             responseData.put("paymentList", paymentDTOList);
+            responseData.put("contentsTitle", contentsTitle);
 
             return ResponseEntity.ok(responseData);
         } catch (Exception e) {
@@ -83,11 +87,17 @@ public class InquiryController {
     public ResponseEntity<?> postInquiryWithImage(@RequestPart("inquiryDTO") InquiryDTO inquiryDTO,
                                                   @RequestParam("contentsId") int contentsId,
                                                   @RequestPart(value = "inquiryFileDTOList", required = false) List<InquiryFileDTO> inquiryFileDTOList,
+                                                  @RequestPart(value = "tagDTOList", required = false) List<TagDTO> tagDTOList,
                                                   @PageableDefault(page = 0, size = 5) Pageable pageable) {
         ResponseDTO<InquiryDTO> responseDTO = new ResponseDTO<>();
         try {
-            inquiryDTO.setInquiryFileDTOList(inquiryFileDTOList);
 
+            System.out.println("여기까지오냐");
+            System.out.println(inquiryDTO);
+            System.out.println(inquiryDTO.getInquiryFileDTOList());
+
+            inquiryDTO.setInquiryFileDTOList(inquiryFileDTOList);
+            inquiryDTO.setTagDTOList(tagDTOList);
             inquiryService.post(inquiryDTO);
             temporaryImage.clear();
             Page<InquiryDTO> inquiryDTOPage = inquiryService.searchAll(pageable, "all", "", contentsId);
@@ -258,6 +268,8 @@ public class InquiryController {
     @PostMapping("/upload")
     public ResponseEntity<?> upload(MultipartFile upload) {
         Map<String, String> result = new HashMap<>();
+
+        System.out.println(upload.getOriginalFilename());
 
         InquiryFileDTO inquiryFileDTO = fileUtils.parseInquiryFileInfo(upload, "inquiry/");
         temporaryImage.add(inquiryFileDTO.getInquiryFilePath() + inquiryFileDTO.getInquiryFileName());

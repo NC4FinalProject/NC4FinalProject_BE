@@ -3,6 +3,7 @@ package com.bit.envdev.service.impl;
 import com.bit.envdev.dto.InquiryCommentDTO;
 import com.bit.envdev.entity.CustomUserDetails;
 import com.bit.envdev.entity.Inquiry;
+import com.bit.envdev.entity.InquiryComment;
 import com.bit.envdev.repository.InquiryCommentRepository;
 import com.bit.envdev.repository.InquiryRepository;
 import com.bit.envdev.repository.MemberRepository;
@@ -25,12 +26,12 @@ public class InquiryCommentServiceImpl implements InquiryCommentService {
     @Override
     public List<InquiryCommentDTO> post(long inquiryId, InquiryCommentDTO inquiryCommentDTO, CustomUserDetails customUserDetails) {
 
-        if (!inquiryRepository.existsById(inquiryId)) {
-            throw new RuntimeException("해당 문의글이 존재하지 않습니다.");
-        }
+        Inquiry inquiry = inquiryRepository.findById(inquiryId)
+                .orElseThrow(() -> new RuntimeException("해당 문의글이 존재하지 않습니다."));
 
         inquiryCommentDTO.setMemberDTO(memberRepository.findById(customUserDetails.getMember().getMemberId()).orElseThrow().toDTO());
-        inquiryCommentRepository.save(inquiryCommentDTO.toEntity());
+        inquiryCommentRepository.save(inquiryCommentDTO.toEntity(inquiry));
+
         return inquiryCommentRepository.findByInquiryInquiryIdOrderByInquiryCommentCrtDTDesc(inquiryId).stream()
                 .map(inquiryComment -> {
                     InquiryCommentDTO dto = inquiryComment.toDTO();
@@ -43,12 +44,19 @@ public class InquiryCommentServiceImpl implements InquiryCommentService {
     @Override
     @Modifying
     public List<InquiryCommentDTO> modify(long inquiryId, InquiryCommentDTO inquiryCommentDTO, CustomUserDetails customUserDetails) {
-        if (!inquiryRepository.existsById(inquiryId)) {
-            throw new RuntimeException("해당 문의글이 존재하지 않습니다.");
-        }
+        Inquiry inquiry = inquiryRepository.findById(inquiryId)
+                .orElseThrow(() -> new RuntimeException("해당 문의글이 존재하지 않습니다."));
 
-        inquiryCommentDTO.setMemberDTO(memberRepository.findById(customUserDetails.getMember().getMemberId()).orElseThrow().toDTO());
-        inquiryCommentRepository.save(inquiryCommentDTO.toEntity());
+        InquiryComment existingInquiryComment = inquiryCommentRepository.findById(inquiryCommentDTO.getInquiryCommentId())
+                .orElseThrow(() -> new RuntimeException("해당 댓글이 존재하지 않습니다."));
+
+        InquiryCommentDTO existingInquiryCommentDTO = existingInquiryComment.toDTO();
+
+        existingInquiryCommentDTO.setMemberDTO(memberRepository.findById(customUserDetails.getMember().getMemberId()).orElseThrow().toDTO());
+
+        InquiryComment modifiedInquiryComment = existingInquiryCommentDTO.toEntity(inquiry);
+
+        inquiryCommentRepository.save(modifiedInquiryComment);
         return inquiryCommentRepository.findByInquiryInquiryIdOrderByInquiryCommentCrtDTDesc(inquiryId).stream()
                 .map(inquiryComment -> {
                     InquiryCommentDTO dto = inquiryComment.toDTO();
