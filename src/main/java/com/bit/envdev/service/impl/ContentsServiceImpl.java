@@ -141,10 +141,7 @@ public class ContentsServiceImpl implements ContentsService {
 
         return contentsDTOList;
     }
-    @Override
-    public List<VideoReplyDTO> getVideoReplyList(int contentsId, int videoId) {
-        // 복합 키 인스턴스 생성
-        VideoId videoIdObj = new VideoId(contentsId, videoId);
+
 
     @Override
     public List<ContentsDTO> get4Contents() {
@@ -152,6 +149,11 @@ public class ContentsServiceImpl implements ContentsService {
                 .map(Contents::toDTO)
                 .collect(Collectors.toList());
     }
+    @Override
+    public List<VideoReplyDTO> getVideoReplyList(int contentsId, int videoId) {
+        // 복합 키 인스턴스 생성
+        VideoId videoIdObj = new VideoId(contentsId, videoId);
+
 
         // Video 엔티티 조회
         Optional<Video> videoOpt = videoRepository.findById(videoIdObj);

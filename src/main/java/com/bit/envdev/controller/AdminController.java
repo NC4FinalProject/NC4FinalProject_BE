@@ -31,21 +31,21 @@ public class AdminController {
 
         try {
             List<NoticeDTO> notices = noticeService.findAll();
-            System.out.println("1111111111111111111111111111");
+
             List<MemberDTO> recentUsers = memberService.find4User();
-            System.out.println("222222222222222222222222222");
+
             List<MemberGraphDTO> registrationCounts = memberService.getRegistrationCount();
-            System.out.println("33333333333333333333333333");
+
             List<MemberGraphDTO> monthlyCounts = memberService.getMonthlyUserCount();
-            System.out.println("444444444444444444444444");
+
             List<MemberGraphDTO> monthlytotalUserCount = memberService.getMonthTotalUserCount();
-            System.out.println("5555555555555555555555555555");
+
             long preTeacherCount = memberService.getPreTeacherCount();
-            System.out.println("666666666666666666666666");
+
             List<MemberDTO> preTeachers = memberService.findByRole();
-            System.out.println("7777777777777777777777777");
+
             List<MemberGraphDTO>  daliyOutUserCount = memberService.getDailyOutUserCount();
-            System.out.println("8888888888888888888888888888888");
+
             List<MemberGraphDTO>  monthlyOutUserCount = memberService.getMonthlyOutUserCount();
             long todayUserCount = memberService.getTodayUserCount();
             List<ContentsDTO> contents = contentsService.get4Contents();
