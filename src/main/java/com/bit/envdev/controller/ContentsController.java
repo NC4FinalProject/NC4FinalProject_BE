@@ -1,13 +1,21 @@
 package com.bit.envdev.controller;
 
+
 import java.io.IOException;
 import java.util.List;
 import com.bit.envdev.dto.*;
 import com.bit.envdev.entity.Contents;
 import com.bit.envdev.entity.VideoReply;
+import java.util.HashMap;
+import java.util.Map;
+
+
+import com.bit.envdev.service.ContentsBookmarkService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.bit.envdev.entity.CustomUserDetails;
@@ -23,6 +31,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class ContentsController {
 
     private final ContentsService contentsService;
+    private final ContentsBookmarkService contentsBookmarkService;
+
+
     // 컨텐츠 등록 하기
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestPart("insertRequestDTO") InsertRequestDTO insertRequestDTO,
@@ -80,4 +91,63 @@ public class ContentsController {
 
         return null;
     }
+
+
+    @GetMapping("/bookmark")
+    public ResponseEntity<?> getBookmarkContents(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<List<ContentsBookmarkDTO>> responseDTO = new ResponseDTO<>();
+        try {
+            List<ContentsBookmarkDTO> bookmarkContents = contentsBookmarkService.getBookmarkContents(customUserDetails.getMember().getMemberId());
+            responseDTO.setItem(bookmarkContents);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+            return ResponseEntity.ok(responseDTO);
+        } catch(Exception e) {
+            responseDTO.setErrorMessage(e.getMessage());
+            responseDTO.setErrorCode(501);
+            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+
+    }
+
+    @PostMapping("/bookmark")
+    public ResponseEntity<?> addBookmark(@RequestBody ContentsBookmarkDTO contentsBookmarkDTO,@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
+        try {
+            System.out.println("=============================");
+            System.out.println(contentsBookmarkDTO);
+            contentsBookmarkService.addBookmark(contentsBookmarkDTO, customUserDetails.getMember());
+            Map<String, String> msgMap = new HashMap<>();
+            msgMap.put("msg", "Bookmark add");
+            responseDTO.setItem(msgMap);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            responseDTO.setErrorMessage(e.getMessage());
+            responseDTO.setErrorCode(502);
+            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+
+    @DeleteMapping("bookmark/{contentsId}")
+    public ResponseEntity<?> removeBookmark(@PathVariable int contentsId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
+        try {
+            contentsBookmarkService.removeBookmark(contentsId, customUserDetails.getMember().getMemberId());
+            Map<String, String> msgMap = new HashMap<>();
+            msgMap.put("msg", "Bookmark remove");
+            responseDTO.setItem(msgMap);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+            return ResponseEntity.ok(responseDTO);
+        } catch(Exception e) {
+            responseDTO.setErrorMessage(e.getMessage());
+            responseDTO.setErrorCode(503);
+            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(responseDTO);
+
+        }
+    }
 }
+
