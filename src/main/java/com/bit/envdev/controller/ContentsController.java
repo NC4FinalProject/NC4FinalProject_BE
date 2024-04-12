@@ -44,7 +44,7 @@ public class ContentsController {
         sectionDTOList.forEach(sectionDTO -> {contentsService.createSection(sectionDTO, createdContents);});
         return null;
     }
-    // // 컨텐츠 상세 보기
+    // // 컨텐츠 상세 보기 * 유저 닉네임 리스폰 추가
     @GetMapping("/detail/{contentsId}")
     public ResponseEntity<?> Detail(@PathVariable(name = "contentsId") int contentsId) {
         ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
@@ -53,7 +53,7 @@ public class ContentsController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    // // 컨텐츠 목록 보기
+    // // 컨텐츠 목록 보기 * 유저 네임, 유저 닉네임 프로필 리스폰 추가
     @GetMapping("/list")
     public ResponseEntity<?> listContents() {
         // ResponseDTO 객체 생성
@@ -69,14 +69,24 @@ public class ContentsController {
     public ResponseEntity<?> saveVideoReply(@RequestBody VideoReplyDTO videoReplyDTO,
                                     @AuthenticationPrincipal CustomUserDetails customUserDetails) throws IOException {
         ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
-        Long memberId = customUserDetails.getId();
-        videoReplyDTO.setMemberId(memberId);
+        videoReplyDTO.setMemberId(customUserDetails.getId());
 
         // 비디오별 댓글 저장하기
         VideoReply videoReply = contentsService.saveVideoReply(videoReplyDTO);
-        System.out.println(videoReplyDTO);
-        System.out.println(memberId);
+        System.out.println(videoReply);
 
         return null;
     }
+    @GetMapping("/detail/getVideoReplyList")
+    public ResponseEntity<?> getVideoReplyList(@RequestParam("contentsId") int contentsId,
+                                               @RequestParam("videoId") int videoId,
+                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        // 여기서 contentsId와 videoId를 사용하여 필요한 로직 처리
+        System.out.println("Requested contentsId: " + contentsId + ", videoId: " + videoId);
+
+        // 예를 들어, 해당 contentsId와 videoId에 대한 댓글 목록을 조회하여 반환
+        List<VideoReplyDTO> videoReplyDTOList = contentsService.getVideoReplyList(contentsId, videoId);
+        return ResponseEntity.ok().body(videoReplyDTOList);
+    }
+
 }
