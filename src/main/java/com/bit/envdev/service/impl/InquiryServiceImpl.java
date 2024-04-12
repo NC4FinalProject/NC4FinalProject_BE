@@ -3,10 +3,15 @@ package com.bit.envdev.service.impl;
 import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.InquiryDTO;
 import com.bit.envdev.dto.InquiryFileDTO;
+import com.bit.envdev.dto.TagDTO;
 import com.bit.envdev.entity.Inquiry;
 import com.bit.envdev.entity.InquiryFile;
+import com.bit.envdev.entity.Tag;
+import com.bit.envdev.repository.ContentsRepository;
+import com.bit.envdev.repository.InquiryCommentRepository;
 import com.bit.envdev.repository.InquiryFileRepository;
 import com.bit.envdev.repository.InquiryRepository;
+import com.bit.envdev.service.ContentsService;
 import com.bit.envdev.service.InquiryService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,19 +34,43 @@ public class InquiryServiceImpl implements InquiryService {
     private final InquiryRepository inquiryRepository;
     private final FileUtils fileUtils;
     private final InquiryFileRepository inquiryFileRepository;
+    private final InquiryCommentRepository inquiryCommentRepository;
 
 
     @Override
-    public Page<InquiryDTO> searchAll(Pageable pageable, String searchCondition, String searchKeyword) {
-        Page<Inquiry> inquiryPage = inquiryRepository.searchAll(pageable, searchCondition, searchKeyword);
+    public Page<InquiryDTO> searchAll(Pageable pageable, String searchCondition, String searchKeyword, int contentsId) {
+        Page<Inquiry> inquiryPage = inquiryRepository.searchAllByContentsId(pageable, searchCondition, searchKeyword, contentsId);
 
-        return inquiryPage.map(Inquiry::toDTO);
+        return inquiryPage.map(inquiry -> {
+            InquiryDTO inquiryDTO = inquiry.toDTO();
+            long commentCount = inquiryCommentRepository.countByInquiryInquiryId(inquiry.getInquiryId());
+            inquiryDTO.setCommentCount(commentCount);
+            return inquiryDTO;
+        });
     }
 
     @Override
     public void post(InquiryDTO inquiryDTO) {
         try {
-            inquiryRepository.save(inquiryDTO.toEntity());
+            Inquiry inquiry = inquiryDTO.toEntity();
+
+            List<InquiryFileDTO> inquiryFileDTOList = inquiryDTO.getInquiryFileDTOList();
+            if (inquiryFileDTOList != null) {
+                for (InquiryFileDTO fileDTO : inquiryFileDTOList) {
+                    InquiryFile inquiryFile = fileDTO.toEntity(inquiry);
+                    inquiry.getInquiryFileList().add(inquiryFile);
+                }
+            }
+
+            List<TagDTO> tagDTOList = inquiryDTO.getTagDTOList();
+            if (tagDTOList != null) {
+                for (TagDTO tagDTO : tagDTOList) {
+                    Tag tag = tagDTO.toEntity(inquiry);
+                    inquiry.getTagList().add(tag);
+                }
+            }
+
+            inquiryRepository.save(inquiry);
         } catch (Exception e) {
             throw new RuntimeException("Failed to post inquiry: " + e.getMessage());
         }
@@ -113,7 +143,7 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
-    public void deleteById(Long inquiryId) {
+    public void deleteById(Long inquiryId, int contentsId) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow(() -> new RuntimeException("Inquiry not found"));
         List<InquiryFile> inquiryFiles = inquiry.getInquiryFileList();
         if (inquiryFiles != null || inquiryFiles.size() > 0) {
