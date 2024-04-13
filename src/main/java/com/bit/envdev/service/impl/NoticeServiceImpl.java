@@ -114,7 +114,7 @@ public class NoticeServiceImpl implements NoticeService {
     public void removeImage(List<String> temporaryImage) {
         if (temporaryImage != null || temporaryImage.size() > 0) {
             temporaryImage.forEach(image -> {
-                String imgName = image.replace("https://kr.object.ncloudstorage.com/bitcamp-bucket-36/", "");
+                String imgName = image.replace("https://kr.object.ncloudstorage.com/envdev/", "");
                 fileUtils.deleteObject(image);
             });
         }
