@@ -1,5 +1,6 @@
 package com.bit.envdev.dto;
 
+import com.bit.envdev.constant.Role;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
@@ -15,4 +16,5 @@ public class ResponseDTO<T> {
     private int errorCode;
     private String errorMessage;
     private int statusCode;
+    private Role role;
 }

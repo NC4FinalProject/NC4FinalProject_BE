@@ -274,8 +274,8 @@ public class InquiryController {
         InquiryFileDTO inquiryFileDTO = fileUtils.parseInquiryFileInfo(upload, "inquiry/");
         temporaryImage.add(inquiryFileDTO.getInquiryFilePath() + inquiryFileDTO.getInquiryFileName());
         System.out.println(temporaryImage);
-        System.out.println("https://kr.object.ncloudstorage.com/bitcamp-bucket-36/" + inquiryFileDTO.getInquiryFilePath() + inquiryFileDTO.getInquiryFileName());
-        result.put("url", "https://kr.object.ncloudstorage.com/bitcamp-bucket-36/" + inquiryFileDTO.getInquiryFilePath() + inquiryFileDTO.getInquiryFileName());
+        System.out.println("https://kr.object.ncloudstorage.com/envdev/" + inquiryFileDTO.getInquiryFilePath() + inquiryFileDTO.getInquiryFileName());
+        result.put("url", "https://kr.object.ncloudstorage.com/envdev/" + inquiryFileDTO.getInquiryFilePath() + inquiryFileDTO.getInquiryFileName());
         result.put("inquiryFilePath", inquiryFileDTO.getInquiryFilePath());
         result.put("inquiryFileName", inquiryFileDTO.getInquiryFileName());
         result.put("inquiryFileOrigin", inquiryFileDTO.getInquiryFileOrigin());
