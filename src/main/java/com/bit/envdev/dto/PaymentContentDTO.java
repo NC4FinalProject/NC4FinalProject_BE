@@ -1,6 +1,7 @@
 package com.bit.envdev.dto;
 
 
+import com.bit.envdev.entity.Payment;
 import com.bit.envdev.entity.PaymentContent;
 import lombok.*;
 
@@ -9,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class PaymentContentDTO {
     private int paymentContentId;
     private String teacherName;
@@ -17,13 +19,14 @@ public class PaymentContentDTO {
     private int price;
     private int contentsId;
 
-    public PaymentContent toEntity() {
+    public PaymentContent toEntity(Payment payment) {
         return PaymentContent.builder()
                 .paymentContentId(this.paymentContentId)
                 .teacherName(this.teacherName)
                 .contentsTitle(this.contentsTitle)
                 .thumbnail(this.thumbnail)
                 .price(this.price)
+                .payment(payment)
                 .build();
     }
 }

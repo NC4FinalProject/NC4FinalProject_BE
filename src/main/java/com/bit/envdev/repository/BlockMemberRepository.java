@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface BlockMemberRepository extends JpaRepository<BlockMember, Long> {
     @Modifying(clearAutomatically = true)
-    @Query(value = "update BlockInquiryComment b set b.state=1 where b.reportId=:id")
+    @Query(value = "update BlockMember b set b.state=1 where b.reportId=:id")
     void updateStateById(Long id);
 
     @Modifying(clearAutomatically = true)
