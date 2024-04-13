@@ -27,6 +27,7 @@ public class PaymentContentDTO {
                 .thumbnail(this.thumbnail)
                 .price(this.price)
                 .payment(payment)
+                .contentsId(this.contentsId)
                 .build();
     }
 }
