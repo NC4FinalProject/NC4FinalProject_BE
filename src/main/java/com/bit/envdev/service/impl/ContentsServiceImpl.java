@@ -1,13 +1,6 @@
 package com.bit.envdev.service.impl;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-
 import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.*;
 import com.bit.envdev.entity.*;
@@ -17,29 +10,17 @@ import com.bit.envdev.repository.SectionRepository;
 import com.bit.envdev.repository.VideoRepository;
 import com.bit.envdev.service.ContentsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.bit.envdev.dto.SectionDTO;
-import com.bit.envdev.dto.SectionSubDTO;
-import com.bit.envdev.entity.Contents;
-import com.bit.envdev.entity.Section;
-import com.bit.envdev.entity.SectionSub;
-import com.bit.envdev.repository.SectionRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-
-import com.bit.envdev.dto.ContentsDTO;
-
-import com.bit.envdev.entity.Member;
-import com.bit.envdev.repository.ContentsRepository;
-import com.bit.envdev.repository.MemberRepository;
-import com.bit.envdev.service.ContentsService;
-
-import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -199,5 +180,17 @@ public class ContentsServiceImpl implements ContentsService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<ContentsDTO> searchData(Pageable pageable, String searchKeyword, String searchCondition) {
+        Page<Contents> contentsList = contentsRepository.findAll(pageable);
+        if ("all".equals(searchCondition)) {
+            contentsList = contentsRepository.findByContentsTitleContaining(pageable, searchKeyword);
+        } else {
+            System.out.println("searchCondition : " + searchCondition);
+            contentsList = contentsRepository.findByCategoryAndContentsTitleContaining(pageable, searchCondition, searchKeyword);
+        }
+        return contentsList.map(Contents::toDTO);
     }
 }
