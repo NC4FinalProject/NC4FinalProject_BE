@@ -2,6 +2,7 @@ package com.bit.envdev.entity;
 
 import com.bit.envdev.dto.ContentsDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,9 +36,11 @@ public class Contents {
     private String contentsTitle;
 
     @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Section> sectionList;
 
     @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Video> videoList;
 
     // @JsonIgnoreProperties
