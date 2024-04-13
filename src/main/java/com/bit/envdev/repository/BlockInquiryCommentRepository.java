@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 public interface BlockInquiryCommentRepository extends JpaRepository<BlockInquiryComment, Long> {
     @Modifying(clearAutomatically = true)
-    @Query(value = "update BlockInquiryComment b set b.state=1 where b.reportId=:id")
+    @Query(value = "update BlockInquiry b set b.state=1 where b.reportId=:id")
     void updateStateById(Long id);
 
     @Modifying(clearAutomatically = true)
