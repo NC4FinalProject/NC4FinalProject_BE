@@ -12,4 +12,6 @@ public interface CartRepositoryCustom {
     Optional<Cart> getCartByMemberId(long memberId);
 
     List<Map<String, String>> findCartContentsListByMemberId(long cartId);
+
+    int getCartContentsCntByMemberId(long memberId, int contentsId);
 }
