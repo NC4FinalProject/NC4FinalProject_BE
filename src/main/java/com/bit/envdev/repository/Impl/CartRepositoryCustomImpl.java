@@ -66,4 +66,13 @@ public class CartRepositoryCustomImpl implements CartRepositoryCustom {
 
         return cartContentsList;
     }
+
+    @Override
+    public int getCartContentsCntByMemberId(long memberId, int contentsId) {
+        return (int)jpaQueryFactory.select(cartContents, cart)
+                .from(cartContents)
+                .join(cartContents.cart, cart)
+                .where(cartContents.contents.contentsId.eq(contentsId).and(cart.member.memberId.eq(memberId)).and(cartContents.isPaid.eq(true)))
+                .stream().count();
+    }
 }

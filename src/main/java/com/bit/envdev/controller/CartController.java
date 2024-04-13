@@ -49,8 +49,10 @@ public class CartController {
             System.out.println(e.getMessage());
             if(e.getMessage().equalsIgnoreCase("already exist contents")) {
                 responseDTO.setErrorCode(4001);
-            } else {
+            } else if(e.getMessage().equalsIgnoreCase("already buy contents")) {
                 responseDTO.setErrorCode(4002);
+            } else {
+                responseDTO.setErrorCode(4003);
             }
             responseDTO.setErrorMessage(e.getMessage());
             responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());

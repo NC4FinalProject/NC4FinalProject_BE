@@ -33,6 +33,12 @@ public class CartServiceImpl implements CartService {
         cartDTO.setMemberId(member.getMemberId());
 
         Cart cart = cartDTO.toEntity();
+        
+        // 2-1-1. 이미 결제한 강의일 때는 에러 발생
+        if(cartRepository.getCartContentsCntByMemberId(member.getMemberId(), cartDTO.getContentsId()) > 0) {
+            System.out.println(cartRepository.getCartContentsCntByMemberId(member.getMemberId(), cartDTO.getContentsId()));
+            throw new RuntimeException("already buy contents");
+        }
 
         CartContents cartContents = CartContents.builder()
                 .cart(cart)
@@ -59,7 +65,13 @@ public class CartServiceImpl implements CartService {
             }
         });
 
-        // 2-2-3. 위 에러 발생이 안하면 아이템 추가
+        // 2-2-3. 이미 결제한 강의일 때는 에러 발생
+        if(cartRepository.getCartContentsCntByMemberId(member.getMemberId(), cartDTO.getContentsId()) > 0) {
+            System.out.println(cartRepository.getCartContentsCntByMemberId(member.getMemberId(), cartDTO.getContentsId()));
+            throw new RuntimeException("already buy contents");
+        }
+
+        // 2-2-4. 위 에러 발생이 안하면 아이템 추가
         CartContents cartContents = CartContents.builder()
                 .cart(cart)
                 .contents(contentsRepository.findById(cartDTO.getContentsId()).orElseThrow())
