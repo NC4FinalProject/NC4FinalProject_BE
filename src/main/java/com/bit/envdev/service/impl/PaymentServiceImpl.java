@@ -1,12 +1,16 @@
 package com.bit.envdev.service.impl;
 
+import com.bit.envdev.dto.PaymentContentDTO;
 import com.bit.envdev.dto.PaymentDTO;
 import com.bit.envdev.dto.ReviewDTO;
 import com.bit.envdev.entity.CustomUserDetails;
 import com.bit.envdev.entity.Member;
 import com.bit.envdev.entity.Payment;
+import com.bit.envdev.entity.PaymentContent;
+import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.repository.PaymentRepository;
 import com.bit.envdev.service.PaymentService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
+    private final MemberRepository memberRepository;
+
     @Override
     public List<PaymentDTO> getPaymentList(long loginMemberId) {
 
@@ -31,5 +37,39 @@ public class PaymentServiceImpl implements PaymentService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public long savePayment(PaymentDTO paymentDTO, List<PaymentContentDTO> paymentContentDTOList, long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow();
+
+        paymentDTO.setMemberDTO(member.toDTO());
+
+        Payment payment = paymentDTO.toEntity();
+
+        List<PaymentContent> paymentContentList = paymentContentDTOList.stream().map(paymentContentDTO -> paymentContentDTO.toEntity(payment)).toList();
+
+        paymentContentList.forEach(paymentContent -> payment.addContentsList(paymentContent));
+
+        paymentRepository.save(payment);
+
+        return payment.getPaymentId();
+    }
+
+    @Override
+    public PaymentDTO getPayment(long paymentId, long memberId) {
+        Payment payment = paymentRepository.findById(paymentId).orElseThrow();
+        Member member = memberRepository.findById(memberId).orElseThrow();
+
+        return Payment.builder()
+                .paymentId(payment.getPaymentId())
+                .paymentDate(payment.getPaymentDate())
+                .totalPrice(payment.getTotalPrice())
+                .contentsList(payment.getContentsList())
+                .paymentUniqueNo(payment.getPaymentUniqueNo())
+                .member(member)
+                .build()
+                .toDTO();
     }
 }

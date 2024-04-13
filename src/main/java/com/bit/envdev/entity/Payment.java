@@ -16,8 +16,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
-
 public class Payment {
 
     @Id
@@ -33,15 +31,15 @@ public class Payment {
     private Date paymentDate;
 
     // 토스페이먼츠 결제를 위한 컬럼
-    @Column
+    @Column(nullable = true)
     private String paymentUniqueNo;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany
-    @JoinColumn(name = "payment_id")
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<PaymentContent> contentsList;
 
     public PaymentDTO toDTO() {
@@ -53,5 +51,9 @@ public class Payment {
                 .contentsList(this.contentsList.stream().map(PaymentContent::toDTO).toList())
                 .memberDTO(this.member.toDTO())
                 .build();
+    }
+
+    public void addContentsList(PaymentContent paymentContent) {
+        this.contentsList.add(paymentContent);
     }
 }
