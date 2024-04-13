@@ -59,4 +59,8 @@ public interface MemberService {
     MemberDTO findById(long id);
 
     long getTodayUserCount();
+
+    void changePw(MemberDTO member, String userPw);
+
+    void changeRole(MemberDTO member, Role role);
 }

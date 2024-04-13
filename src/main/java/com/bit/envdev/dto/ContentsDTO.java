@@ -49,6 +49,8 @@ public class ContentsDTO {
     private List<SectionDTO> sectionList;
     private List<VideoDTO> videoList;
 
+    private String userNickname;
+
     public Contents toEntity(Member member) {
         return Contents.builder()
                 .contentsId(this.contentsId)
