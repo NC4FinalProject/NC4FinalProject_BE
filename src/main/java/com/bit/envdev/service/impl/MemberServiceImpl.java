@@ -4,6 +4,7 @@ package com.bit.envdev.service.impl;
 import com.bit.envdev.constant.Role;
 import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.dto.MemberGraphDTO;
+import com.bit.envdev.dto.PointDTO;
 import com.bit.envdev.entity.Member;
 import com.bit.envdev.entity.MemberGraph;
 import com.bit.envdev.jwt.JwtTokenProvider;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -276,4 +278,17 @@ public class MemberServiceImpl implements MemberService {
         long todayUserCount = memberRepository.countTodayRegistrations();
         return todayUserCount;
     }
+
+    @Override
+    public void changePw(MemberDTO member, String userPw) {
+        member.setPassword(passwordEncoder.encode(userPw));
+        memberRepository.save(member.toEntity());
+    }
+
+    @Override
+    public void changeRole(MemberDTO member, Role role) {
+        member.setRole(role);
+        memberRepository.save(member.toEntity());
+    }
+
 }

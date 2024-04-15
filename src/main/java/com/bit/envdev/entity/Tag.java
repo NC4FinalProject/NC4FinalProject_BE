@@ -19,6 +19,11 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int tagId;
 
+    @ManyToOne
+    @JoinColumn(name = "inquiryId")
+    @JsonBackReference
+    private Inquiry inquiry;
+
     @Column
     private String tagContent;
 

@@ -19,6 +19,11 @@ public class InquiryFile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long inquiryFileId;
 
+    @ManyToOne
+    @JoinColumn(name = "inquiryId")
+    @JsonBackReference
+    private Inquiry inquiry;
+
     private String inquiryFileName;
     private String inquiryFilePath;
     private String inquiryFileOrigin;
