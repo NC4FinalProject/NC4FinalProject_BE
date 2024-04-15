@@ -6,11 +6,9 @@ import com.bit.envdev.dto.InquiryFileDTO;
 import com.bit.envdev.dto.TagDTO;
 import com.bit.envdev.entity.Inquiry;
 import com.bit.envdev.entity.InquiryFile;
+import com.bit.envdev.entity.Member;
 import com.bit.envdev.entity.Tag;
-import com.bit.envdev.repository.ContentsRepository;
-import com.bit.envdev.repository.InquiryCommentRepository;
-import com.bit.envdev.repository.InquiryFileRepository;
-import com.bit.envdev.repository.InquiryRepository;
+import com.bit.envdev.repository.*;
 import com.bit.envdev.service.ContentsService;
 import com.bit.envdev.service.InquiryService;
 import jakarta.servlet.http.Cookie;
@@ -21,6 +19,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -35,7 +34,9 @@ public class InquiryServiceImpl implements InquiryService {
     private final FileUtils fileUtils;
     private final InquiryFileRepository inquiryFileRepository;
     private final InquiryCommentRepository inquiryCommentRepository;
-
+    private final MemberRepository memberRepository;
+    private final InquiryLikeRepository inquiryLikeRepository;
+    private final ContentsRepository contentsRepository;
 
     @Override
     public Page<InquiryDTO> searchAll(Pageable pageable, String searchCondition, String searchKeyword, int contentsId) {
@@ -44,17 +45,28 @@ public class InquiryServiceImpl implements InquiryService {
         return inquiryPage.map(inquiry -> {
             InquiryDTO inquiryDTO = inquiry.toDTO();
             long commentCount = inquiryCommentRepository.countByInquiryInquiryId(inquiry.getInquiryId());
+            long likeCount = inquiryLikeRepository.countByInquiryInquiryId(inquiry.getInquiryId());
+            String contentsTitle= contentsRepository.findById(inquiry.getContentsId()).orElseThrow().getContentsTitle();
+            String author = contentsRepository.findById(inquiry.getContentsId()).orElseThrow().getMember().getUserNickname();
+            inquiryDTO.setContentsTitle(contentsTitle);
             inquiryDTO.setCommentCount(commentCount);
+            inquiryDTO.setLikeCount(likeCount);
+            inquiryDTO.setAuthor(author);
             return inquiryDTO;
         });
     }
 
     @Override
-    public void post(InquiryDTO inquiryDTO) {
+    public void post(InquiryDTO inquiryDTO, long memberId) {
         try {
+            Member member = memberRepository.findById(memberId).orElseThrow();
+
+            inquiryDTO.setMemberDTO(member.toDTO());
+
             Inquiry inquiry = inquiryDTO.toEntity();
 
             List<InquiryFileDTO> inquiryFileDTOList = inquiryDTO.getInquiryFileDTOList();
+
             if (inquiryFileDTOList != null) {
                 for (InquiryFileDTO fileDTO : inquiryFileDTOList) {
                     InquiryFile inquiryFile = fileDTO.toEntity(inquiry);
@@ -78,23 +90,37 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     @Transactional
-    public void modify(InquiryDTO inquiryDTO) {
-        Inquiry inquiry = inquiryRepository.findById(inquiryDTO.getInquiryId()).orElseThrow(() -> new RuntimeException("질의응답이 존재하지 않습니다."));
-        InquiryDTO existingInquiryDTO = inquiry.toDTO();
-
+    @Modifying
+    public void modify(InquiryDTO inquiryDTO, long memberId) {
         try {
-            List<InquiryFileDTO> existingInquiryFiles = existingInquiryDTO.getInquiryFileDTOList();
-            List<InquiryFileDTO> inquiryFileList = inquiryDTO.getInquiryFileDTOList().stream().toList();
+            Inquiry inquiry = inquiryRepository.findById(inquiryDTO.getInquiryId()).orElseThrow();
 
-            existingInquiryFiles.addAll(inquiryFileList);
-            inquiryDTO.setInquiryFileDTOList(existingInquiryFiles);
+            Inquiry modifyInquiry = Inquiry.builder()
+                    .inquiryId(inquiryDTO.getInquiryId())
+                    .isPrivate(inquiryDTO.isPrivate())
+                    .inquiryTitle(inquiryDTO.getInquiryTitle())
+                    .inquiryContent(inquiryDTO.getInquiryContent())
+                    .member(inquiry.getMember())
+                    .inquiryCrtDT(inquiry.getInquiryCrtDT())
+                    .inquiryUdtDT(inquiry.getInquiryUdtDT())
+                    .inquiryView(inquiry.getInquiryView())
+                    .contentsId(inquiry.getContentsId())
+                    .inquiryCommentList(inquiry.getInquiryCommentList())
+                    .inquiryFileList(inquiry.getInquiryFileList())
+                    .tagList(inquiry.getTagList())
+                    .isSolved(inquiry.isSolved())
+                    .build();
 
-            inquiryDTO.setInquiryContent(inquiryDTO.getInquiryContent());
-
-            inquiryRepository.save(inquiryDTO.toEntity());
-
+            List<InquiryFileDTO> inquiryFileDTOList = inquiryDTO.getInquiryFileDTOList();
+            if (inquiryFileDTOList != null) {
+                for (InquiryFileDTO fileDTO : inquiryFileDTOList) {
+                    InquiryFile inquiryFile = fileDTO.toEntity(modifyInquiry);
+                    modifyInquiry.getInquiryFileList().add(inquiryFile);
+                }
+            }
+            inquiryRepository.save(modifyInquiry);
         } catch (Exception e) {
-            throw new RuntimeException("질의응답 수정 실패: " + e.getMessage());
+            throw new RuntimeException("Failed to post inquiry: " + e.getMessage());
         }
 
     }
@@ -106,6 +132,76 @@ public class InquiryServiceImpl implements InquiryService {
             inquiryFileRepository.deleteById(inquiryFileId);
             inquiryFileRepository.flush();
         });
+    }
+
+    @Override
+    public void updateInquiryView(Long inquiryId) {
+        InquiryDTO inquiryDTO = inquiryRepository.findById(inquiryId).orElseThrow().toDTO();
+
+        inquiryDTO.setInquiryView(inquiryDTO.getInquiryView() + 1);
+
+        Inquiry inquiry = inquiryDTO.toEntity();
+
+        List<InquiryFileDTO> inquiryFileDTOList = inquiryDTO.getInquiryFileDTOList();
+
+        if (inquiryFileDTOList != null) {
+            for (InquiryFileDTO fileDTO : inquiryFileDTOList) {
+                InquiryFile inquiryFile = fileDTO.toEntity(inquiry);
+                inquiry.getInquiryFileList().add(inquiryFile);
+            }
+        }
+
+        List<TagDTO> tagDTOList = inquiryDTO.getTagDTOList();
+
+        if (tagDTOList != null) {
+            for (TagDTO tagDTO : tagDTOList) {
+                Tag tag = tagDTO.toEntity(inquiry);
+                inquiry.getTagList().add(tag);
+            }
+        }
+
+        inquiryRepository.save(inquiry);
+    }
+
+    @Override
+    public Page<InquiryDTO> myInquiries(Pageable pageable, String searchCondition, String searchKeyword, int contentsId, long memberId) {
+        Page<Inquiry> inquiryPage = inquiryRepository.myInquiries(pageable, searchCondition, searchKeyword, contentsId, memberId);
+
+        return inquiryPage.map(inquiry -> {
+            InquiryDTO inquiryDTO = inquiry.toDTO();
+            long commentCount = inquiryCommentRepository.countByInquiryInquiryId(inquiry.getInquiryId());
+            long likeCount = inquiryLikeRepository.countByInquiryInquiryId(inquiry.getInquiryId());
+            String contentsTitle= contentsRepository.findById(inquiry.getContentsId()).orElseThrow().getContentsTitle();
+            String author = contentsRepository.findById(inquiry.getContentsId()).orElseThrow().getMember().getUserNickname();
+            inquiryDTO.setContentsTitle(contentsTitle);
+            inquiryDTO.setCommentCount(commentCount);
+            inquiryDTO.setLikeCount(likeCount);
+            inquiryDTO.setAuthor(author);
+            return inquiryDTO;
+        });
+    }
+
+    @Override
+    public void upadateSolve(long inquiryId) {
+        Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow();
+
+        Inquiry solvedInquiry = Inquiry.builder()
+                .inquiryId(inquiryId)
+                .isSolved(true)
+                .inquiryCrtDT(inquiry.getInquiryCrtDT())
+                .inquiryUdtDT(inquiry.getInquiryUdtDT())
+                .inquiryView(inquiry.getInquiryView())
+                .contentsId(inquiry.getContentsId())
+                .inquiryContent(inquiry.getInquiryContent())
+                .tagList(inquiry.getTagList())
+                .inquiryFileList(inquiry.getInquiryFileList())
+                .inquiryCommentList(inquiry.getInquiryCommentList())
+                .member(inquiry.getMember())
+                .inquiryTitle(inquiry.getInquiryTitle())
+                .isPrivate(inquiry.isPrivate())
+                .build();
+
+        inquiryRepository.save(solvedInquiry);
     }
 
     @Override
@@ -143,18 +239,9 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
-    public void deleteById(Long inquiryId, int contentsId) {
-        Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow(() -> new RuntimeException("Inquiry not found"));
-        List<InquiryFile> inquiryFiles = inquiry.getInquiryFileList();
-        if (inquiryFiles != null || inquiryFiles.size() > 0) {
-            inquiryFiles.forEach(inquiryFile -> {
-                String imgName = inquiryFile.getInquiryFilePath() + inquiryFile.getInquiryFileName();
-                fileUtils.deleteObject(imgName);
-            });
-            inquiryRepository.deleteById(inquiryId);
-        }
+    public void deleteById(Long inquiryId) {
+        inquiryRepository.deleteById(inquiryId);
     }
-
 
     @Override
     public InquiryDTO findById(Long inquiryId) {

@@ -13,13 +13,13 @@ import java.util.List;
 public interface InquiryService {
     Page<InquiryDTO> searchAll(Pageable pageable, String searchCondition, String searchKeyword, int contentsId);
 
-    void post(InquiryDTO inquiryDTO);
+    void post(InquiryDTO inquiryDTO, long memberId);
 
     void removeImage(List<String> temporaryImage);
 
-    void deleteById(Long inquiryId, int contentsId);
+    void deleteById(Long inquiryId);
 
-    void modify(InquiryDTO inquiryDTO);
+    void modify(InquiryDTO inquiryDTO, long memberId);
 
     List<Long> modifyInquiryFileList(InquiryDTO inquiryDTO);
 
@@ -29,4 +29,9 @@ public interface InquiryService {
 
     void modifyInquiryFile(List<Long> modifyInquiryFileLIst);
 
+    void updateInquiryView(Long inquiryId);
+
+    Page<InquiryDTO> myInquiries(Pageable pageable, String searchCondition, String searchKeyword, int contentsId, long memberId);
+
+    void upadateSolve(long inquiryId);
 }

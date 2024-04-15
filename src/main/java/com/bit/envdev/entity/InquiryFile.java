@@ -34,6 +34,7 @@ public class InquiryFile {
                 .inquiryFileName(this.inquiryFileName)
                 .inquiryFilePath(this.inquiryFilePath)
                 .inquiryFileOrigin(this.inquiryFileOrigin)
+                .inquiryId(this.inquiry.getInquiryId())
                 .build();
     }
 }

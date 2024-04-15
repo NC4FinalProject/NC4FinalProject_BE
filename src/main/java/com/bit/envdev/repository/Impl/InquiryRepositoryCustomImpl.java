@@ -29,7 +29,7 @@ public class InquiryRepositoryCustomImpl implements InquiryRepositoryCustom {
     public Page<Inquiry> searchAllByContentsId(Pageable pageable, String searchCondition, String searchKeyword, int contentsId){
         List<Inquiry> inquiryList = jpaQueryFactory
                 .selectFrom(inquiry)
-                .where(getSearch(searchCondition, searchKeyword, contentsId))
+                .where(inquiry.contentsId.eq(contentsId).and(getSearch(searchCondition, searchKeyword)))
                 .orderBy(inquiry.inquiryUdtDT.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -37,17 +37,33 @@ public class InquiryRepositoryCustomImpl implements InquiryRepositoryCustom {
 
         long totalCnt = jpaQueryFactory
                 .select(inquiry.count())
-                .where(getSearch(searchCondition, searchKeyword, contentsId))
+                .where(inquiry.contentsId.eq(contentsId).and(getSearch(searchCondition, searchKeyword)))
                 .from(inquiry)
                 .fetchOne();
         return new PageImpl<>(inquiryList, pageable, totalCnt);
     }
 
+    @Override
+    public Page<Inquiry> myInquiries(Pageable pageable, String searchCondition, String searchKeyword, int contentsId, long memberId) {
+        List<Inquiry> inquiryList = jpaQueryFactory.selectFrom(inquiry)
+                .where(inquiry.contentsId.eq(contentsId).and(inquiry.member.memberId.eq(memberId)).and(getSearch(searchCondition, searchKeyword)))
+                .orderBy(inquiry.inquiryUdtDT.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
 
-    private BooleanBuilder getSearch(String searchCondition, String searchKeyword, int contentsId) {
+        long totalCnt = jpaQueryFactory
+                .select(inquiry.count())
+                .where(inquiry.contentsId.eq(contentsId).and(inquiry.member.memberId.eq(memberId)).and(getSearch(searchCondition, searchKeyword)))
+                .from(inquiry)
+                .fetchOne();
+
+        return new PageImpl<>(inquiryList, pageable, totalCnt);
+    }
+
+
+    private BooleanBuilder getSearch(String searchCondition, String searchKeyword) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(inquiry.contentsId.eq(contentsId));
 
         if (searchKeyword == null || searchKeyword.isEmpty()) {
             return null;
