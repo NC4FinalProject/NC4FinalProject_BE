@@ -91,7 +91,7 @@ public class InquiryServiceImpl implements InquiryService {
     @Override
     @Transactional
     @Modifying
-    public void modify(InquiryDTO inquiryDTO, long memberId) {
+    public InquiryDTO modify(InquiryDTO inquiryDTO, long memberId) {
         try {
             Inquiry inquiry = inquiryRepository.findById(inquiryDTO.getInquiryId()).orElseThrow();
 
@@ -118,7 +118,7 @@ public class InquiryServiceImpl implements InquiryService {
                     modifyInquiry.getInquiryFileList().add(inquiryFile);
                 }
             }
-            inquiryRepository.save(modifyInquiry);
+            return inquiryRepository.save(modifyInquiry).toDTO();
         } catch (Exception e) {
             throw new RuntimeException("Failed to post inquiry: " + e.getMessage());
         }

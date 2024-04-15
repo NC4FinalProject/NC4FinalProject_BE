@@ -246,13 +246,11 @@ public class InquiryController {
             inquiryDTO.setInquiryFileDTOList(inquiryFileDTOList);
             inquiryDTO.setTagDTOList(tagDTOList);
 
-            inquiryService.modify(inquiryDTO, customUserDetails.getMember().getMemberId());
+            InquiryDTO updatedInquiryDTO = inquiryService.modify(inquiryDTO, customUserDetails.getMember().getMemberId());
 
             temporaryImage.clear();
 
-            Page<InquiryDTO> inquiryDTOPage = inquiryService.searchAll(pageable, "all", "", contentsId);
-
-            responseDTO.setPageItems(inquiryDTOPage);
+            responseDTO.setItem(updatedInquiryDTO);
 
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(responseDTO);

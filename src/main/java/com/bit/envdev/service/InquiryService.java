@@ -19,7 +19,7 @@ public interface InquiryService {
 
     void deleteById(Long inquiryId);
 
-    void modify(InquiryDTO inquiryDTO, long memberId);
+    InquiryDTO modify(InquiryDTO inquiryDTO, long memberId);
 
     List<Long> modifyInquiryFileList(InquiryDTO inquiryDTO);
 
