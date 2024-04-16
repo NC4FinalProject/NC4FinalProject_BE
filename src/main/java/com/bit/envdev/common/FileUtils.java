@@ -10,6 +10,8 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.bit.envdev.configuration.NaverConfiguration;
+import com.bit.envdev.dto.ContentsDTO;
+import com.bit.envdev.dto.ContentsFileDTO;
 import com.bit.envdev.dto.FileDTO;
 import com.bit.envdev.dto.InquiryFileDTO;
 import org.springframework.stereotype.Component;
@@ -216,5 +218,51 @@ public class FileUtils {
         fileDTO.setItemFileOrigin(fileOrigin);
         System.out.println(fileDTO);
         return fileDTO;
+    }
+
+    public ContentsFileDTO parseContentsFileInfo(MultipartFile multipartFile, String directory) {
+
+        String bucketName = "envdev";
+
+        ContentsFileDTO contentsFileDTO = new ContentsFileDTO();
+
+        String fileOrigin = multipartFile.getOriginalFilename();
+
+        SimpleDateFormat formater = new SimpleDateFormat("yyyyMMddHHmmsss");
+        Date nowDate = new Date();
+
+        String nowDateStr = formater.format(nowDate);
+
+        UUID uuid = UUID.randomUUID();
+
+
+        String fileName = nowDateStr + "_" + uuid.toString() + "_" + fileOrigin;
+
+
+        String filePath = directory;
+
+
+        try(InputStream fileIputStream = multipartFile.getInputStream()) {
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentType(multipartFile.getContentType());
+
+            PutObjectRequest putObjectRequest = new PutObjectRequest(
+                    bucketName,
+                    directory + fileName,
+                    fileIputStream,
+                    objectMetadata
+            ).withCannedAcl(CannedAccessControlList.PublicRead);
+
+            s3.putObject(putObjectRequest);
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+
+        contentsFileDTO.setContentsFileName(fileName);
+        contentsFileDTO.setContentsFilePath(filePath);
+        contentsFileDTO.setContentsFileOrigin(fileOrigin);
+
+        return contentsFileDTO;
     }
 }

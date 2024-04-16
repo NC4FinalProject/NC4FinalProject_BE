@@ -55,6 +55,15 @@ public class ContentsServiceImpl implements ContentsService {
 
         Contents contents = contentsDTO.toEntity(member);
 
+        List<ContentsFileDTO> contentsFileDTOList = contentsDTO.getContentsFileDTOList();
+
+        if(contentsFileDTOList != null) {
+            for(ContentsFileDTO contentsFileDTO : contentsFileDTOList) {
+                ContentsFile contentsFile = contentsFileDTO.toEntity(contents);
+                contents.getContentsFileList().add(contentsFile);
+            }
+        }
+
         return contentsRepository.save(contents);
     }
     @Transactional
