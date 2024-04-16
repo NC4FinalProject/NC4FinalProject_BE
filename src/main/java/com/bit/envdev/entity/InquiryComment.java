@@ -54,6 +54,7 @@ public class InquiryComment  {
                 .inquiryCommentUdtDT(this.inquiryCommentUdtDT)
                 .inquiryCommentContent(this.inquiryCommentContent)
                 .memberDTO(this.member.toDTO())
+                .inquiryId(this.inquiry.getInquiryId())
                 .build();
     }
 }

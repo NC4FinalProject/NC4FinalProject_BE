@@ -46,6 +46,9 @@ public class PaymentServiceImpl implements PaymentService {
 
         paymentDTO.setMemberDTO(member.toDTO());
 
+        System.out.println(member.toDTO());
+        paymentContentDTOList.forEach(paymentContentDTO -> System.out.println(paymentContentDTO));
+
         Payment payment = paymentDTO.toEntity();
 
         List<PaymentContent> paymentContentList = paymentContentDTOList.stream().map(paymentContentDTO -> paymentContentDTO.toEntity(payment)).toList();

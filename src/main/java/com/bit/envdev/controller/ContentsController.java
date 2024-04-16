@@ -1,15 +1,15 @@
 package com.bit.envdev.controller;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
+
+import com.bit.envdev.common.FileUtils;
 import com.bit.envdev.dto.*;
 import com.bit.envdev.entity.Contents;
 import com.bit.envdev.entity.CustomUserDetails;
 import com.bit.envdev.entity.VideoReply;
 import com.bit.envdev.service.ContentsService;
 import lombok.RequiredArgsConstructor;
-import java.util.HashMap;
-import java.util.Map;
 import com.bit.envdev.service.ContentsBookmarkService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -30,6 +30,8 @@ public class ContentsController {
 
     private final ContentsService contentsService;
     private final ContentsBookmarkService contentsBookmarkService;
+    private final FileUtils fileUtils;
+    private List<String> temporaryImage = new ArrayList<>();
 
 
     // 컨텐츠 등록 하기
@@ -37,11 +39,13 @@ public class ContentsController {
     public ResponseEntity<?> create(@RequestPart("insertRequestDTO") InsertRequestDTO insertRequestDTO,
                                     @RequestPart("thumbnail") MultipartFile thumbnail,
                                     @RequestPart("videoFile") MultipartFile[] videoFile,
+                                    @RequestPart(value = "contentsFileDTOList", required = false) List<ContentsFileDTO> contentsFileDTOList,
                                     @AuthenticationPrincipal CustomUserDetails customUserDetails) throws IOException {
         ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
         Long memberId = customUserDetails.getId();
         // 가져온 정보 나눠담기
         ContentsDTO contentsDTO = insertRequestDTO.getContentsDTO();
+        contentsDTO.setContentsFileDTOList(contentsFileDTOList);
         List<SectionDTO> sectionDTOList = insertRequestDTO.getSectionDTO();
         List<VideoDTO> videoDTOList = insertRequestDTO.getVideoDTO();
         // 기본 정보 밀어넣기, 썸네일 파일 밀어넣기
@@ -158,6 +162,23 @@ public class ContentsController {
             return ResponseEntity.badRequest().body(responseDTO);
 
         }
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> upload(MultipartFile upload) {
+        Map<String, String> result = new HashMap<>();
+
+        System.out.println(upload.getOriginalFilename());
+
+        ContentsFileDTO contentsFileDTO = fileUtils.parseContentsFileInfo(upload, "board/");
+        temporaryImage.add(contentsFileDTO.getContentsFilePath() + contentsFileDTO.getContentsFileName());
+
+        result.put("url", "https://kr.object.ncloudstorage.com/envdev/" + contentsFileDTO.getContentsFilePath() + contentsFileDTO.getContentsFileName());
+        result.put("inquiryFilePath", contentsFileDTO.getContentsFilePath());
+        result.put("inquiryFileName", contentsFileDTO.getContentsFileName());
+        result.put("inquiryFileOrigin", contentsFileDTO.getContentsFileOrigin());
+
+        return ResponseEntity.ok(result);
     }
 }
 

@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class InquiryDTO {
     private long inquiryId;
     private int contentsId;
@@ -31,6 +32,8 @@ public class InquiryDTO {
     private boolean isLike;
     private long commentCount;
     private List<InquiryCommentDTO> inquiryCommentDTOList;
+    private long likeCount;
+    private String author;
 
 
     public Inquiry toEntity() {
@@ -44,6 +47,7 @@ public class InquiryDTO {
                 .isPrivate(this.isPrivate)
                 .isSolved(this.isSolved)
                 .inquiryView(this.inquiryView)
+                .member(this.memberDTO.toEntity())
                 .inquiryFileList(new ArrayList<>())
                 .tagList(new ArrayList<>())
                 .build();

@@ -55,6 +55,15 @@ public class ContentsServiceImpl implements ContentsService {
 
         Contents contents = contentsDTO.toEntity(member);
 
+        List<ContentsFileDTO> contentsFileDTOList = contentsDTO.getContentsFileDTOList();
+
+        if(contentsFileDTOList != null) {
+            for(ContentsFileDTO contentsFileDTO : contentsFileDTOList) {
+                ContentsFile contentsFile = contentsFileDTO.toEntity(contents);
+                contents.getContentsFileList().add(contentsFile);
+            }
+        }
+
         return contentsRepository.save(contents);
     }
     @Transactional
@@ -192,5 +201,12 @@ public class ContentsServiceImpl implements ContentsService {
             contentsList = contentsRepository.findByCategoryAndContentsTitleContaining(pageable, searchCondition, searchKeyword);
         }
         return contentsList.map(Contents::toDTO);
+    }
+
+    @Override
+    public List<ContentsDTO> get12RandomContents() {
+        return contentsRepository.findTop12ByOrderByIdAsc().stream()
+                .map(Contents::toDTO)
+                .collect(Collectors.toList());
     }
 }

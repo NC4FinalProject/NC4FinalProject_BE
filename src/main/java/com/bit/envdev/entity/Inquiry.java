@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,11 +47,11 @@ public class Inquiry {
     @Column(columnDefinition = "boolean default false")
     private boolean isSolved;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "inquiry", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Tag> tagList;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "inquiry", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<InquiryFile> inquiryFileList;
 
@@ -87,9 +88,9 @@ public class Inquiry {
                 .isPrivate(this.isPrivate)
                 .isSolved(this.isSolved)
                 .inquiryView(this.inquiryView)
-                .inquiryFileDTOList(this.inquiryFileList.stream().map(InquiryFile::toDTO).toList())
-                .tagDTOList(this.tagList.stream().map(Tag::toDTO).toList())
-                .inquiryCommentDTOList(this.inquiryCommentList.stream().map(InquiryComment::toDTO).toList())
+                .inquiryFileDTOList(this.inquiryFileList != null ? this.inquiryFileList.stream().map(InquiryFile::toDTO).toList() : new ArrayList<>())
+                .tagDTOList(this.tagList != null ? this.tagList.stream().map(Tag::toDTO).toList() : new ArrayList<>())
+                .inquiryCommentDTOList(this.inquiryCommentList != null ? this.inquiryCommentList.stream().map(InquiryComment::toDTO).toList() : new ArrayList<>())
                 .build();
     }
 }

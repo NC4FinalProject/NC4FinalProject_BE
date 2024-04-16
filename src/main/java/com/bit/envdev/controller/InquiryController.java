@@ -44,7 +44,6 @@ public class InquiryController {
                                             @RequestParam("searchCondition") String searchCondition,
                                             @RequestParam("searchKeyword") String searchKeyword,
                                             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
         String loginMemberNickname = null;
         long loginMemberId = 0;
         List<PaymentDTO> paymentDTOList = null;
@@ -83,22 +82,21 @@ public class InquiryController {
         }
     }
 
-    @PostMapping("/inquiry")
-    public ResponseEntity<?> postInquiryWithImage(@RequestPart("inquiryDTO") InquiryDTO inquiryDTO,
-                                                  @RequestParam("contentsId") int contentsId,
+    @PostMapping("/inquiry/{contentsId}")
+    public ResponseEntity<?> postInquiryWithImage(@PathVariable("contentsId") int contentsId,
+                                                  @RequestPart("inquiryDTO") InquiryDTO inquiryDTO,
                                                   @RequestPart(value = "inquiryFileDTOList", required = false) List<InquiryFileDTO> inquiryFileDTOList,
                                                   @RequestPart(value = "tagDTOList", required = false) List<TagDTO> tagDTOList,
-                                                  @PageableDefault(page = 0, size = 5) Pageable pageable) {
+                                                  @RequestPart(value = "isPrivate", required = false) boolean isPrivate,
+                                                  @PageableDefault(page = 0, size = 5) Pageable pageable,
+                                                  @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<InquiryDTO> responseDTO = new ResponseDTO<>();
         try {
-
-            System.out.println("여기까지오냐");
-            System.out.println(inquiryDTO);
-            System.out.println(inquiryDTO.getInquiryFileDTOList());
-
+            inquiryDTO.setContentsId(contentsId);
+            inquiryDTO.setPrivate(isPrivate);
             inquiryDTO.setInquiryFileDTOList(inquiryFileDTOList);
             inquiryDTO.setTagDTOList(tagDTOList);
-            inquiryService.post(inquiryDTO);
+            inquiryService.post(inquiryDTO, customUserDetails.getMember().getMemberId());
             temporaryImage.clear();
             Page<InquiryDTO> inquiryDTOPage = inquiryService.searchAll(pageable, "all", "", contentsId);
 
@@ -146,40 +144,23 @@ public class InquiryController {
         }
     }
 
-    @PostMapping("/like/{inquiryId}")
-    public ResponseEntity<?> toggleLike(@PathVariable("inquiryId") long inquiryId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Map<String, String> result = new HashMap<>();
-        try {
-
-            inquiryLikeService.insertLike(customUserDetails.getMember(), inquiryId);
-            long inquiryCnt = inquiryLikeService.addOrdown(customUserDetails.getMember().getMemberId(), inquiryId);
-            long inquiryLikeCnt = inquiryLikeService.findByInquiryId(inquiryId);
-
-            result.put("check", String.valueOf(inquiryCnt));
-            result.put("likeCnt", String.valueOf(inquiryLikeCnt));
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            result.put("check", "error");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
-        }
-    }
-
     @PostMapping("/commentlike/{inquiryCommentId}")
     public ResponseEntity<?> commentToggleLike(@PathVariable("inquiryCommentId") long inquiryCommentId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Map<String, String> result = new HashMap<>();
+        ResponseDTO<InquiryCommentDTO> responseDTO = new ResponseDTO();
         try {
 
-            inquiryCommentLikeService.insertLike(customUserDetails.getMember(), inquiryCommentId);
-            // T/F 판단 눌렀는지
-            long inquiryCommentCnt = inquiryCommentLikeService.addOrdown(customUserDetails.getMember().getMemberId(), inquiryCommentId);
-            long inquiryCommentLikeCnt = inquiryCommentLikeService.findByInquiryCommentId(inquiryCommentId);
+            List<InquiryCommentDTO> commentDTOList = inquiryCommentLikeService.insertLike(customUserDetails.getMember(), inquiryCommentId);
 
-            result.put("check", String.valueOf(inquiryCommentCnt));
-            result.put("likeCnt", String.valueOf(inquiryCommentLikeCnt));
-            return ResponseEntity.ok(result);
+            responseDTO.setItems(commentDTOList);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+
+            return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
-            result.put("check", "error");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+            responseDTO.setErrorCode(404);
+            responseDTO.setErrorMessage("inquiry not found: " + e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
         }
     }
 
@@ -207,11 +188,21 @@ public class InquiryController {
     }
 
     @DeleteMapping("/delete/{inquiryId}")
-    public ResponseEntity<?> delete(@PathVariable("inquiryId") Long inquiryId, @RequestParam("contentsId") int contentsId) {
+    public ResponseEntity<?> delete(@PageableDefault(page = 0, size = 5) Pageable pageable,
+                                    @PathVariable("inquiryId") long inquiryId,
+                                    @RequestParam("contentsId") int contentsId,
+                                    @RequestParam("searchCondition") String searchCondition,
+                                    @RequestParam("searchKeyword") String searchKeyword,
+                                    @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<InquiryDTO> responseDTO = new ResponseDTO<>();
         try {
-            inquiryService.deleteById(inquiryId, contentsId);
+            inquiryService.deleteById(inquiryId);
+
+            Page<InquiryDTO> inquiryDTOPage = inquiryService.searchAll(pageable, searchCondition, searchKeyword, contentsId);
+
+            responseDTO.setPageItems(inquiryDTOPage);
             responseDTO.setStatusCode(HttpStatus.OK.value());
+
 
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
@@ -223,17 +214,39 @@ public class InquiryController {
         }
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateInquiryInfo(MultipartFile upload, @RequestPart("inquiryDTO") InquiryDTO inquiryDTO,
-                                               @RequestPart(value = "inquiryFileDTOList", required = false) List<InquiryFileDTO> inquiryFileDTOList) {
-        ResponseDTO<List<Long>> responseDTO = new ResponseDTO<>();
+    @PutMapping("/update/{contentsId}")
+    public ResponseEntity<?> updateInquiryInfo(@PathVariable("contentsId") int contentsId,
+                                               @RequestPart("inquiryDTO") InquiryDTO inquiryDTO,
+                                               @RequestPart(value = "inquiryFileDTOList", required = false) List<InquiryFileDTO> inquiryFileDTOList,
+                                               @RequestPart(value = "tagDTOList", required = false) List<TagDTO> tagDTOList,
+                                               @RequestPart(value = "isPrivate", required = false) boolean isPrivate,
+                                               @PageableDefault(page = 0, size = 5) Pageable pageable,
+                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<InquiryDTO> responseDTO = new ResponseDTO<>();
         try {
-            List<Long> modifyInquiryFileLIst = inquiryService.modifyInquiryFileList(inquiryDTO);
-            inquiryService.modifyInquiryFile(modifyInquiryFileLIst);
+            inquiryDTO.setContentsId(contentsId);
+            inquiryDTO.setPrivate(isPrivate);
+            inquiryDTO.setInquiryFileDTOList(inquiryFileDTOList);
+            inquiryDTO.setTagDTOList(tagDTOList);
+
+            InquiryDTO updatedInquiryDTO = inquiryService.modify(inquiryDTO, customUserDetails.getMember().getMemberId());
+
             temporaryImage.clear();
 
+            updatedInquiryDTO.setContentsTitle(inquiryService.getContentsTitle(updatedInquiryDTO.getContentsId()));
+            updatedInquiryDTO.setAuthor(inquiryService.getContentsAuthor(updatedInquiryDTO.getContentsId()));
+            updatedInquiryDTO.setLikeCount(inquiryService.getLikeCount(updatedInquiryDTO.getInquiryId()));
+            long memberLike = inquiryLikeService.findByMemberIdAndInquiryId(customUserDetails.getMember().getMemberId(), inquiryDTO.getInquiryId());
+
+            if(memberLike == 0) {
+                updatedInquiryDTO.setLike(false);
+            } else {
+                updatedInquiryDTO.setLike(true);
+            }
+
+            responseDTO.setItem(updatedInquiryDTO);
+
             responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setItem(modifyInquiryFileLIst);
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
             responseDTO.setErrorCode(404);
@@ -244,26 +257,26 @@ public class InquiryController {
         }
     }
 
-    @PutMapping("/updateProc")
-    public ResponseEntity<?> updateInquiry(MultipartFile upload, @RequestPart("inquiryDTO") InquiryDTO inquiryDTO,
-                                           @RequestPart("modifyFiles") List<Long> modifyInquiryFiles,
-                                           @RequestPart(value = "fileDTOList", required = false) List<InquiryFileDTO> inquiryFileDTOList) {
-        ResponseDTO<InquiryDTO> responseDTO = new ResponseDTO<>();
-        try {
-            inquiryDTO.setInquiryFileDTOList(inquiryFileDTOList);
-            inquiryService.modifyInquiryFile(modifyInquiryFiles);
-            inquiryService.modify(inquiryDTO);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-
-            return ResponseEntity.ok(responseDTO);
-        } catch (Exception e) {
-            responseDTO.setErrorCode(404);
-            responseDTO.setErrorMessage("inquiry not found: " + e.getMessage());
-            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
-        }
-    }
+//    @PutMapping("/updateProc")
+//    public ResponseEntity<?> updateInquiry(MultipartFile upload, @RequestPart("inquiryDTO") InquiryDTO inquiryDTO,
+//                                           @RequestPart("modifyFiles") List<Long> modifyInquiryFiles,
+//                                           @RequestPart(value = "fileDTOList", required = false) List<InquiryFileDTO> inquiryFileDTOList) {
+//        ResponseDTO<InquiryDTO> responseDTO = new ResponseDTO<>();
+//        try {
+//            inquiryDTO.setInquiryFileDTOList(inquiryFileDTOList);
+//            inquiryService.modifyInquiryFile(modifyInquiryFiles);
+//            inquiryService.modify(inquiryDTO);
+//            responseDTO.setStatusCode(HttpStatus.OK.value());
+//
+//            return ResponseEntity.ok(responseDTO);
+//        } catch (Exception e) {
+//            responseDTO.setErrorCode(404);
+//            responseDTO.setErrorMessage("inquiry not found: " + e.getMessage());
+//            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
+//
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+//        }
+//    }
 
     @PostMapping("/upload")
     public ResponseEntity<?> upload(MultipartFile upload) {
@@ -295,10 +308,13 @@ public class InquiryController {
     }
 
     @PostMapping("/comment")
-    public ResponseEntity<?> postComment(@RequestParam Long inquiryId, @RequestBody InquiryCommentDTO inquiryCommentDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> postComment(@RequestBody InquiryCommentDTO inquiryCommentDTO,
+                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<InquiryCommentDTO> responseDTO = new ResponseDTO<>();
         try {
-            inquiryCommentService.post(inquiryId, inquiryCommentDTO, customUserDetails);
+            List<InquiryCommentDTO> commentDTOList = inquiryCommentService.post(inquiryCommentDTO, customUserDetails);
+
+            responseDTO.setItems(commentDTOList);
             responseDTO.setStatusCode(HttpStatus.OK.value());
 
             return ResponseEntity.ok(responseDTO);
@@ -312,10 +328,12 @@ public class InquiryController {
     }
 
     @PutMapping("/comment")
-    public ResponseEntity<?> modifyComment(@RequestParam Long inquiryId, @RequestBody InquiryCommentDTO inquiryCommentDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> modifyComment(@RequestBody InquiryCommentDTO inquiryCommentDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<InquiryCommentDTO> responseDTO = new ResponseDTO<>();
         try {
-            inquiryCommentService.modify(inquiryId, inquiryCommentDTO, customUserDetails);
+            List<InquiryCommentDTO> inquiryCommentDTOList = inquiryCommentService.modify(inquiryCommentDTO, customUserDetails);
+
+            responseDTO.setItems(inquiryCommentDTOList);
             responseDTO.setStatusCode(HttpStatus.OK.value());
 
             return ResponseEntity.ok(responseDTO);
@@ -332,7 +350,9 @@ public class InquiryController {
     public ResponseEntity<?> deleteComment(@RequestParam Long inquiryId, @PathVariable("inquiryCommentId") Long inquiryCommentId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<InquiryCommentDTO> responseDTO = new ResponseDTO<>();
         try {
-            inquiryCommentService.delete(inquiryId, inquiryCommentId, customUserDetails);
+            List<InquiryCommentDTO> inquiryCommentDTOList = inquiryCommentService.delete(inquiryId, inquiryCommentId, customUserDetails);
+
+            responseDTO.setItems(inquiryCommentDTOList);
             responseDTO.setStatusCode(HttpStatus.OK.value());
 
             return ResponseEntity.ok(responseDTO);
@@ -345,4 +365,123 @@ public class InquiryController {
         }
     }
 
+    @GetMapping("/updateInquiryView/{inquiryId}")
+    public ResponseEntity<?> updateInquiryView(@PathVariable("inquiryId") Long inquiryId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<InquiryDTO> responseDTO = new ResponseDTO<>();
+        try {
+            InquiryDTO updatedInquiryDTO = inquiryService.updateInquiryView(inquiryId);
+
+            updatedInquiryDTO.setContentsTitle(inquiryService.getContentsTitle(updatedInquiryDTO.getContentsId()));
+            updatedInquiryDTO.setAuthor(inquiryService.getContentsAuthor(updatedInquiryDTO.getContentsId()));
+            updatedInquiryDTO.setLikeCount(inquiryService.getLikeCount(updatedInquiryDTO.getInquiryId()));
+
+
+            long memberLike = inquiryLikeService.findByMemberIdAndInquiryId(customUserDetails.getMember().getMemberId(), updatedInquiryDTO.getInquiryId());
+
+            if(memberLike == 0) {
+                updatedInquiryDTO.setLike(false);
+            } else {
+                updatedInquiryDTO.setLike(true);
+            }
+
+            responseDTO.setItem(updatedInquiryDTO);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setErrorCode(404);
+            responseDTO.setErrorMessage("inquiry not found: " + e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+        }
+    }
+
+    @GetMapping("/myInquiries/{contentsId}")
+    public ResponseEntity<?> myInquiries(@PageableDefault(page = 0, size = 5) Pageable pageable,
+                                         @PathVariable("contentsId") int contentsId,
+                                         @RequestParam("searchCondition") String searchCondition,
+                                         @RequestParam("searchKeyword") String searchKeyword,
+                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<InquiryDTO> responseDTO = new ResponseDTO<>();
+        try {
+            Page<InquiryDTO> inquiryDTOPage = inquiryService.myInquiries(pageable, searchCondition, searchKeyword, contentsId, customUserDetails.getMember().getMemberId());
+
+            responseDTO.setPageItems(inquiryDTOPage);
+
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setErrorCode(404);
+            responseDTO.setErrorMessage("inquiry not found: " + e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+        }
+    }
+
+    @PutMapping("/updateSolve/{inquiryId}")
+    public ResponseEntity<?> updateSolve(@PathVariable("inquiryId") long inquiryId,
+                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<InquiryDTO> responseDTO = new ResponseDTO<>();
+        try {
+            InquiryDTO updatedInquiryDTO = inquiryService.upadateSolve(inquiryId);
+
+            updatedInquiryDTO.setContentsTitle(inquiryService.getContentsTitle(updatedInquiryDTO.getContentsId()));
+            updatedInquiryDTO.setAuthor(inquiryService.getContentsAuthor(updatedInquiryDTO.getContentsId()));
+            updatedInquiryDTO.setLikeCount(inquiryService.getLikeCount(updatedInquiryDTO.getInquiryId()));
+            long memberLike = inquiryLikeService.findByMemberIdAndInquiryId(customUserDetails.getMember().getMemberId(), updatedInquiryDTO.getInquiryId());
+            if(memberLike == 0) {
+                updatedInquiryDTO.setLike(false);
+            } else {
+                updatedInquiryDTO.setLike(true);
+            }
+
+            responseDTO.setItem(updatedInquiryDTO);
+
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setErrorCode(404);
+            responseDTO.setErrorMessage("inquiry not found: " + e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+        }
+    }
+
+    @PostMapping("/like/{inquiryId}")
+    public ResponseEntity<?> like(@PathVariable("inquiryId") long inquiryId,
+                                  @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<InquiryDTO> responseDTO = new ResponseDTO<>();
+        try {
+            long likeCnt = inquiryLikeService.findByMemberIdAndInquiryId(customUserDetails.getMember().getMemberId(), inquiryId);
+
+            InquiryDTO inquiryDTO = new InquiryDTO();
+
+            if(likeCnt == 0) {
+                inquiryDTO = inquiryLikeService.insertLike(customUserDetails.getMember(), inquiryId);
+                inquiryDTO.setLike(true);
+            } else {
+                inquiryDTO = inquiryLikeService.deleteLike(customUserDetails.getMember(), inquiryId);
+                inquiryDTO.setLike(false);
+            }
+
+            inquiryDTO.setContentsTitle(inquiryService.getContentsTitle(inquiryDTO.getContentsId()));
+            inquiryDTO.setAuthor(inquiryService.getContentsAuthor(inquiryDTO.getContentsId()));
+            inquiryDTO.setLikeCount(inquiryService.getLikeCount(inquiryDTO.getInquiryId()));
+
+            responseDTO.setItem(inquiryDTO);
+
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setErrorCode(404);
+            responseDTO.setErrorMessage("inquiry not found: " + e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+        }
+    }
 }
