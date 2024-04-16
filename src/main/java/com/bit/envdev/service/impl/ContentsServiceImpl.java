@@ -193,4 +193,11 @@ public class ContentsServiceImpl implements ContentsService {
         }
         return contentsList.map(Contents::toDTO);
     }
+
+    @Override
+    public List<ContentsDTO> get12RandomContents() {
+        return contentsRepository.findTop12ByOrderByIdAsc().stream()
+                .map(Contents::toDTO)
+                .collect(Collectors.toList());
+    }
 }

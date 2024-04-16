@@ -1,5 +1,6 @@
 package com.bit.envdev.dto;
 
+import com.bit.envdev.constant.Role;
 import com.bit.envdev.entity.*;
 import lombok.*;
 
@@ -20,7 +21,8 @@ public class ReviewDTO {
     private int contentsId;
     private MemberDTO memberDTO;
 
-
+    public ReviewDTO(String contentsTitle, Role role, String userNickname, String reviewContent, Date reviewCrtDate) {
+    }
 
     public Review toEntity() {
         return Review.builder()
