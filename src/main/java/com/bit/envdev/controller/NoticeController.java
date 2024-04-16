@@ -194,7 +194,7 @@ public class NoticeController {
             noticeService.modifyNoticeFile(modifyNoticeFileLIst);
             temporaryImage.clear();
 
-           responseDTO.setStatusCode(HttpStatus.OK.value());
+            responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setItem(modifyNoticeFileLIst);
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
