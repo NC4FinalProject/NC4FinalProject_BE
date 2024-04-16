@@ -250,6 +250,9 @@ public class InquiryController {
 
             temporaryImage.clear();
 
+            updatedInquiryDTO.setContentsTitle(inquiryService.getContentsTitle(updatedInquiryDTO.getContentsId()));
+            updatedInquiryDTO.setAuthor(inquiryService.getContentsAuthor(updatedInquiryDTO.getContentsId()));
+
             responseDTO.setItem(updatedInquiryDTO);
 
             responseDTO.setStatusCode(HttpStatus.OK.value());
@@ -314,10 +317,13 @@ public class InquiryController {
     }
 
     @PostMapping("/comment")
-    public ResponseEntity<?> postComment(@RequestParam Long inquiryId, @RequestBody InquiryCommentDTO inquiryCommentDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> postComment(@RequestBody InquiryCommentDTO inquiryCommentDTO,
+                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<InquiryCommentDTO> responseDTO = new ResponseDTO<>();
         try {
-            inquiryCommentService.post(inquiryId, inquiryCommentDTO, customUserDetails);
+            List<InquiryCommentDTO> commentDTOList = inquiryCommentService.post(inquiryCommentDTO, customUserDetails);
+
+            responseDTO.setItems(commentDTOList);
             responseDTO.setStatusCode(HttpStatus.OK.value());
 
             return ResponseEntity.ok(responseDTO);
@@ -331,10 +337,12 @@ public class InquiryController {
     }
 
     @PutMapping("/comment")
-    public ResponseEntity<?> modifyComment(@RequestParam Long inquiryId, @RequestBody InquiryCommentDTO inquiryCommentDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<?> modifyComment(@RequestBody InquiryCommentDTO inquiryCommentDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<InquiryCommentDTO> responseDTO = new ResponseDTO<>();
         try {
-            inquiryCommentService.modify(inquiryId, inquiryCommentDTO, customUserDetails);
+            List<InquiryCommentDTO> inquiryCommentDTOList = inquiryCommentService.modify(inquiryCommentDTO, customUserDetails);
+
+            responseDTO.setItems(inquiryCommentDTOList);
             responseDTO.setStatusCode(HttpStatus.OK.value());
 
             return ResponseEntity.ok(responseDTO);
@@ -351,7 +359,9 @@ public class InquiryController {
     public ResponseEntity<?> deleteComment(@RequestParam Long inquiryId, @PathVariable("inquiryCommentId") Long inquiryCommentId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<InquiryCommentDTO> responseDTO = new ResponseDTO<>();
         try {
-            inquiryCommentService.delete(inquiryId, inquiryCommentId, customUserDetails);
+            List<InquiryCommentDTO> inquiryCommentDTOList = inquiryCommentService.delete(inquiryId, inquiryCommentId, customUserDetails);
+
+            responseDTO.setItems(inquiryCommentDTOList);
             responseDTO.setStatusCode(HttpStatus.OK.value());
 
             return ResponseEntity.ok(responseDTO);
@@ -366,9 +376,14 @@ public class InquiryController {
 
     @GetMapping("/updateInquiryView/{inquiryId}")
     public ResponseEntity<?> updateInquiryView(@PathVariable("inquiryId") Long inquiryId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        ResponseDTO<InquiryCommentDTO> responseDTO = new ResponseDTO<>();
+        ResponseDTO<InquiryDTO> responseDTO = new ResponseDTO<>();
         try {
-            inquiryService.updateInquiryView(inquiryId);
+            InquiryDTO updatedInquiryDTO = inquiryService.updateInquiryView(inquiryId);
+
+            updatedInquiryDTO.setContentsTitle(inquiryService.getContentsTitle(updatedInquiryDTO.getContentsId()));
+            updatedInquiryDTO.setAuthor(inquiryService.getContentsAuthor(updatedInquiryDTO.getContentsId()));
+
+            responseDTO.setItem(updatedInquiryDTO);
             responseDTO.setStatusCode(HttpStatus.OK.value());
 
             return ResponseEntity.ok(responseDTO);
@@ -407,16 +422,15 @@ public class InquiryController {
 
     @PutMapping("/updateSolve/{inquiryId}")
     public ResponseEntity<?> updateSolve(@PathVariable("inquiryId") long inquiryId,
-                                         @PageableDefault(page = 0, size = 5) Pageable pageable,
-                                         @RequestParam("contentsId") int contentsId,
                                          @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<InquiryDTO> responseDTO = new ResponseDTO<>();
         try {
-            inquiryService.upadateSolve(inquiryId);
+            InquiryDTO updatedInquiryDTO = inquiryService.upadateSolve(inquiryId);
 
-            Page<InquiryDTO> inquiryDTOPage = inquiryService.searchAll(pageable, "all", "", contentsId);
+            updatedInquiryDTO.setContentsTitle(inquiryService.getContentsTitle(updatedInquiryDTO.getContentsId()));
+            updatedInquiryDTO.setAuthor(inquiryService.getContentsAuthor(updatedInquiryDTO.getContentsId()));
 
-            responseDTO.setPageItems(inquiryDTOPage);
+            responseDTO.setItem(updatedInquiryDTO);
 
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(responseDTO);

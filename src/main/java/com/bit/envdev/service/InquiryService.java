@@ -1,12 +1,10 @@
 package com.bit.envdev.service;
 
 import com.bit.envdev.dto.InquiryDTO;
-import com.bit.envdev.dto.NoticeDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -29,9 +27,13 @@ public interface InquiryService {
 
     void modifyInquiryFile(List<Long> modifyInquiryFileLIst);
 
-    void updateInquiryView(Long inquiryId);
+    InquiryDTO updateInquiryView(Long inquiryId);
 
     Page<InquiryDTO> myInquiries(Pageable pageable, String searchCondition, String searchKeyword, int contentsId, long memberId);
 
-    void upadateSolve(long inquiryId);
+    InquiryDTO upadateSolve(long inquiryId);
+
+    String getContentsTitle(int contentsId);
+
+    String getContentsAuthor(int contentsId);
 }

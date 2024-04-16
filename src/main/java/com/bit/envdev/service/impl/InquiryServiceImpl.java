@@ -9,7 +9,6 @@ import com.bit.envdev.entity.InquiryFile;
 import com.bit.envdev.entity.Member;
 import com.bit.envdev.entity.Tag;
 import com.bit.envdev.repository.*;
-import com.bit.envdev.service.ContentsService;
 import com.bit.envdev.service.InquiryService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +50,7 @@ public class InquiryServiceImpl implements InquiryService {
             inquiryDTO.setCommentCount(commentCount);
             inquiryDTO.setLikeCount(likeCount);
             inquiryDTO.setAuthor(author);
+            inquiryDTO.getMemberDTO().setPassword("");
             return inquiryDTO;
         });
     }
@@ -135,7 +134,7 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
-    public void updateInquiryView(Long inquiryId) {
+    public InquiryDTO updateInquiryView(Long inquiryId) {
         InquiryDTO inquiryDTO = inquiryRepository.findById(inquiryId).orElseThrow().toDTO();
 
         inquiryDTO.setInquiryView(inquiryDTO.getInquiryView() + 1);
@@ -160,7 +159,18 @@ public class InquiryServiceImpl implements InquiryService {
             }
         }
 
-        inquiryRepository.save(inquiry);
+        InquiryDTO returnInquiryDTO = inquiryRepository.save(inquiry).toDTO();
+
+        long commentCount = inquiryCommentRepository.countByInquiryInquiryId(returnInquiryDTO.getInquiryId());
+        long likeCount = inquiryLikeRepository.countByInquiryInquiryId(returnInquiryDTO.getInquiryId());
+        String contentsTitle= contentsRepository.findById(returnInquiryDTO.getContentsId()).orElseThrow().getContentsTitle();
+        String author = contentsRepository.findById(returnInquiryDTO.getContentsId()).orElseThrow().getMember().getUserNickname();
+        returnInquiryDTO.setContentsTitle(contentsTitle);
+        returnInquiryDTO.setCommentCount(commentCount);
+        returnInquiryDTO.setLikeCount(likeCount);
+        returnInquiryDTO.setAuthor(author);
+
+        return returnInquiryDTO;
     }
 
     @Override
@@ -182,7 +192,7 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
-    public void upadateSolve(long inquiryId) {
+    public InquiryDTO upadateSolve(long inquiryId) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId).orElseThrow();
 
         Inquiry solvedInquiry = Inquiry.builder()
@@ -201,7 +211,17 @@ public class InquiryServiceImpl implements InquiryService {
                 .isPrivate(inquiry.isPrivate())
                 .build();
 
-        inquiryRepository.save(solvedInquiry);
+        return inquiryRepository.save(solvedInquiry).toDTO();
+    }
+
+    @Override
+    public String getContentsTitle(int contentsId) {
+        return contentsRepository.findById(contentsId).orElseThrow().getContentsTitle();
+    }
+
+    @Override
+    public String getContentsAuthor(int contentsId) {
+        return contentsRepository.findById(contentsId).orElseThrow().getMember().getUserNickname();
     }
 
     @Override
