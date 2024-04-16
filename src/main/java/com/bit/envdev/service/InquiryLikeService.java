@@ -1,5 +1,6 @@
 package com.bit.envdev.service;
 
+import com.bit.envdev.dto.InquiryDTO;
 import com.bit.envdev.entity.Member;
 
 public interface InquiryLikeService {
@@ -8,5 +9,9 @@ public interface InquiryLikeService {
 
     long findByInquiryId(Long inquiryId);
 
-    void insertLike(Member member, Long inquiryId);
+    InquiryDTO insertLike(Member member, Long inquiryId);
+
+    long findByMemberIdAndInquiryId(long memberId, long inquiryId);
+
+    InquiryDTO deleteLike(Member member, long inquiryId);
 }

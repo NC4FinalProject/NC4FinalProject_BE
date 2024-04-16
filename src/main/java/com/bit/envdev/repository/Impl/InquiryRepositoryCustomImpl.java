@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.bit.envdev.entity.QInquiry.inquiry;
@@ -60,7 +61,6 @@ public class InquiryRepositoryCustomImpl implements InquiryRepositoryCustom {
 
         return new PageImpl<>(inquiryList, pageable, totalCnt);
     }
-
 
     private BooleanBuilder getSearch(String searchCondition, String searchKeyword) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();

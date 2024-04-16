@@ -16,13 +16,13 @@ import lombok.NoArgsConstructor;
 public class InquiryCommentLike {
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inquiry_comment_id")
     private InquiryComment inquiryComment;
 
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id")
 
     private Member member;

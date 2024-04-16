@@ -4,6 +4,7 @@ import com.bit.envdev.dto.InquiryCommentDTO;
 import com.bit.envdev.entity.CustomUserDetails;
 import com.bit.envdev.entity.Inquiry;
 import com.bit.envdev.entity.InquiryComment;
+import com.bit.envdev.repository.InquiryCommentLikeRepository;
 import com.bit.envdev.repository.InquiryCommentRepository;
 import com.bit.envdev.repository.InquiryRepository;
 import com.bit.envdev.repository.MemberRepository;
@@ -22,6 +23,7 @@ public class InquiryCommentServiceImpl implements InquiryCommentService {
     private final InquiryCommentRepository inquiryCommentRepository;
     private final MemberRepository memberRepository;
     private final InquiryRepository inquiryRepository;
+    private final InquiryCommentLikeRepository inquiryCommentLikeRepository;
 
     @Override
     public List<InquiryCommentDTO> post(InquiryCommentDTO inquiryCommentDTO, CustomUserDetails customUserDetails) {
@@ -34,6 +36,13 @@ public class InquiryCommentServiceImpl implements InquiryCommentService {
         return inquiryCommentRepository.findByInquiryInquiryIdOrderByInquiryCommentCrtDTDesc(inquiryCommentDTO.getInquiryId()).stream()
                 .map(inquiryComment -> {
                     InquiryCommentDTO dto = inquiryComment.toDTO();
+                    dto.setInquiryCommentLikeCount(inquiryCommentLikeRepository.countByInquiryCommentInquiryCommentId(dto.getInquiryCommentId()));
+                    long inquiryCommentLike = inquiryCommentLikeRepository.countByMemberMemberIdAndInquiryCommentInquiryCommentId(customUserDetails.getMember().getMemberId(), inquiryComment.getInquiryCommentId());
+                    if(inquiryCommentLike == 0) {
+                        dto.setCommentLike(false);
+                    } else {
+                        dto.setCommentLike(true);
+                    }
                     dto.getMemberDTO().setPassword("");
                     return dto;
                 })
@@ -58,6 +67,13 @@ public class InquiryCommentServiceImpl implements InquiryCommentService {
         return inquiryCommentRepository.findByInquiryInquiryIdOrderByInquiryCommentCrtDTDesc(modifiedInquiryComment.getInquiry().getInquiryId()).stream()
                 .map(inquiryCommen -> {
                     InquiryCommentDTO dto = inquiryCommen.toDTO();
+                    dto.setInquiryCommentLikeCount(inquiryCommentLikeRepository.countByInquiryCommentInquiryCommentId(dto.getInquiryCommentId()));
+                    long inquiryCommentLike = inquiryCommentLikeRepository.countByMemberMemberIdAndInquiryCommentInquiryCommentId(customUserDetails.getMember().getMemberId(), inquiryCommen.getInquiryCommentId());
+                    if(inquiryCommentLike == 0) {
+                        dto.setCommentLike(false);
+                    } else {
+                        dto.setCommentLike(true);
+                    }
                     dto.getMemberDTO().setPassword("");
                     return dto;
                 })
@@ -71,6 +87,13 @@ public class InquiryCommentServiceImpl implements InquiryCommentService {
         return inquiryCommentRepository.findByInquiryInquiryIdOrderByInquiryCommentCrtDTDesc(inquiryId).stream()
                 .map(inquiryComment -> {
                     InquiryCommentDTO dto = inquiryComment.toDTO();
+                    dto.setInquiryCommentLikeCount(inquiryCommentLikeRepository.countByInquiryCommentInquiryCommentId(dto.getInquiryCommentId()));
+                    long inquiryCommentLike = inquiryCommentLikeRepository.countByMemberMemberIdAndInquiryCommentInquiryCommentId(customUserDetails.getMember().getMemberId(), inquiryCommentId);
+                    if(inquiryCommentLike == 0) {
+                        dto.setCommentLike(false);
+                    } else {
+                        dto.setCommentLike(true);
+                    }
                     dto.getMemberDTO().setPassword("");
                     return dto;
                 })

@@ -36,4 +36,6 @@ public interface InquiryService {
     String getContentsTitle(int contentsId);
 
     String getContentsAuthor(int contentsId);
+
+    long getLikeCount(long inquiryId);
 }

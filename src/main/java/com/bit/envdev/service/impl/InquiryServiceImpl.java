@@ -1,6 +1,7 @@
 package com.bit.envdev.service.impl;
 
 import com.bit.envdev.common.FileUtils;
+import com.bit.envdev.dto.InquiryCommentDTO;
 import com.bit.envdev.dto.InquiryDTO;
 import com.bit.envdev.dto.InquiryFileDTO;
 import com.bit.envdev.dto.TagDTO;
@@ -35,6 +36,7 @@ public class InquiryServiceImpl implements InquiryService {
     private final MemberRepository memberRepository;
     private final InquiryLikeRepository inquiryLikeRepository;
     private final ContentsRepository contentsRepository;
+    private final InquiryCommentLikeRepository inquiryCommentLikeRepository;
 
     @Override
     public Page<InquiryDTO> searchAll(Pageable pageable, String searchCondition, String searchKeyword, int contentsId) {
@@ -42,10 +44,22 @@ public class InquiryServiceImpl implements InquiryService {
 
         return inquiryPage.map(inquiry -> {
             InquiryDTO inquiryDTO = inquiry.toDTO();
+            List<InquiryCommentDTO> commentDTOList = inquiryDTO.getInquiryCommentDTOList();
+            commentDTOList.forEach(
+                    inquiryCommentDTO ->
+                            inquiryCommentDTO.setInquiryCommentLikeCount(
+                                    inquiryCommentLikeRepository.countByInquiryCommentInquiryCommentId(inquiryCommentDTO.getInquiryCommentId())
+            ));
             long commentCount = inquiryCommentRepository.countByInquiryInquiryId(inquiry.getInquiryId());
             long likeCount = inquiryLikeRepository.countByInquiryInquiryId(inquiry.getInquiryId());
             String contentsTitle= contentsRepository.findById(inquiry.getContentsId()).orElseThrow().getContentsTitle();
             String author = contentsRepository.findById(inquiry.getContentsId()).orElseThrow().getMember().getUserNickname();
+            long memberLikeCount = inquiryLikeRepository.countByMemberMemberIdAndInquiryInquiryId(inquiry.getMember().getMemberId(), inquiryDTO.getInquiryId());
+            if(memberLikeCount == 0) {
+                inquiryDTO.setLike(false);
+            } else {
+                inquiryDTO.setLike(true);
+            }
             inquiryDTO.setContentsTitle(contentsTitle);
             inquiryDTO.setCommentCount(commentCount);
             inquiryDTO.setLikeCount(likeCount);
@@ -160,9 +174,20 @@ public class InquiryServiceImpl implements InquiryService {
         }
 
         InquiryDTO returnInquiryDTO = inquiryRepository.save(inquiry).toDTO();
-
+        List<InquiryCommentDTO> commentDTOList = returnInquiryDTO.getInquiryCommentDTOList();
+        commentDTOList.forEach(
+                inquiryCommentDTO ->
+                        inquiryCommentDTO.setInquiryCommentLikeCount(
+                                inquiryCommentLikeRepository.countByInquiryCommentInquiryCommentId(inquiryCommentDTO.getInquiryCommentId())
+                        ));
         long commentCount = inquiryCommentRepository.countByInquiryInquiryId(returnInquiryDTO.getInquiryId());
         long likeCount = inquiryLikeRepository.countByInquiryInquiryId(returnInquiryDTO.getInquiryId());
+        long memberLikeCount = inquiryLikeRepository.countByMemberMemberIdAndInquiryInquiryId(inquiry.getMember().getMemberId(), inquiryDTO.getInquiryId());
+        if(memberLikeCount == 0) {
+            inquiryDTO.setLike(false);
+        } else {
+            inquiryDTO.setLike(true);
+        }
         String contentsTitle= contentsRepository.findById(returnInquiryDTO.getContentsId()).orElseThrow().getContentsTitle();
         String author = contentsRepository.findById(returnInquiryDTO.getContentsId()).orElseThrow().getMember().getUserNickname();
         returnInquiryDTO.setContentsTitle(contentsTitle);
@@ -179,10 +204,22 @@ public class InquiryServiceImpl implements InquiryService {
 
         return inquiryPage.map(inquiry -> {
             InquiryDTO inquiryDTO = inquiry.toDTO();
+            List<InquiryCommentDTO> commentDTOList = inquiryDTO.getInquiryCommentDTOList();
+            commentDTOList.forEach(
+                    inquiryCommentDTO ->
+                            inquiryCommentDTO.setInquiryCommentLikeCount(
+                                    inquiryCommentLikeRepository.countByInquiryCommentInquiryCommentId(inquiryCommentDTO.getInquiryCommentId())
+                            ));
             long commentCount = inquiryCommentRepository.countByInquiryInquiryId(inquiry.getInquiryId());
             long likeCount = inquiryLikeRepository.countByInquiryInquiryId(inquiry.getInquiryId());
             String contentsTitle= contentsRepository.findById(inquiry.getContentsId()).orElseThrow().getContentsTitle();
             String author = contentsRepository.findById(inquiry.getContentsId()).orElseThrow().getMember().getUserNickname();
+            long memberLikeCount = inquiryLikeRepository.countByMemberMemberIdAndInquiryInquiryId(inquiry.getMember().getMemberId(), inquiryDTO.getInquiryId());
+            if(memberLikeCount == 0) {
+                inquiryDTO.setLike(false);
+            } else {
+                inquiryDTO.setLike(true);
+            }
             inquiryDTO.setContentsTitle(contentsTitle);
             inquiryDTO.setCommentCount(commentCount);
             inquiryDTO.setLikeCount(likeCount);
@@ -222,6 +259,11 @@ public class InquiryServiceImpl implements InquiryService {
     @Override
     public String getContentsAuthor(int contentsId) {
         return contentsRepository.findById(contentsId).orElseThrow().getMember().getUserNickname();
+    }
+
+    @Override
+    public long getLikeCount(long inquiryId) {
+        return inquiryLikeRepository.countByInquiryInquiryId(inquiryId);
     }
 
     @Override

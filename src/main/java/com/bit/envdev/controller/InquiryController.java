@@ -144,40 +144,23 @@ public class InquiryController {
         }
     }
 
-    @PostMapping("/like/{inquiryId}")
-    public ResponseEntity<?> toggleLike(@PathVariable("inquiryId") long inquiryId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Map<String, String> result = new HashMap<>();
-        try {
-
-            inquiryLikeService.insertLike(customUserDetails.getMember(), inquiryId);
-            long inquiryCnt = inquiryLikeService.addOrdown(customUserDetails.getMember().getMemberId(), inquiryId);
-            long inquiryLikeCnt = inquiryLikeService.findByInquiryId(inquiryId);
-
-            result.put("check", String.valueOf(inquiryCnt));
-            result.put("likeCnt", String.valueOf(inquiryLikeCnt));
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            result.put("check", "error");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
-        }
-    }
-
     @PostMapping("/commentlike/{inquiryCommentId}")
     public ResponseEntity<?> commentToggleLike(@PathVariable("inquiryCommentId") long inquiryCommentId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Map<String, String> result = new HashMap<>();
+        ResponseDTO<InquiryCommentDTO> responseDTO = new ResponseDTO();
         try {
 
-            inquiryCommentLikeService.insertLike(customUserDetails.getMember(), inquiryCommentId);
-            // T/F 판단 눌렀는지
-            long inquiryCommentCnt = inquiryCommentLikeService.addOrdown(customUserDetails.getMember().getMemberId(), inquiryCommentId);
-            long inquiryCommentLikeCnt = inquiryCommentLikeService.findByInquiryCommentId(inquiryCommentId);
+            List<InquiryCommentDTO> commentDTOList = inquiryCommentLikeService.insertLike(customUserDetails.getMember(), inquiryCommentId);
 
-            result.put("check", String.valueOf(inquiryCommentCnt));
-            result.put("likeCnt", String.valueOf(inquiryCommentLikeCnt));
-            return ResponseEntity.ok(result);
+            responseDTO.setItems(commentDTOList);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+
+            return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
-            result.put("check", "error");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+            responseDTO.setErrorCode(404);
+            responseDTO.setErrorMessage("inquiry not found: " + e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
         }
     }
 
@@ -252,6 +235,14 @@ public class InquiryController {
 
             updatedInquiryDTO.setContentsTitle(inquiryService.getContentsTitle(updatedInquiryDTO.getContentsId()));
             updatedInquiryDTO.setAuthor(inquiryService.getContentsAuthor(updatedInquiryDTO.getContentsId()));
+            updatedInquiryDTO.setLikeCount(inquiryService.getLikeCount(updatedInquiryDTO.getInquiryId()));
+            long memberLike = inquiryLikeService.findByMemberIdAndInquiryId(customUserDetails.getMember().getMemberId(), inquiryDTO.getInquiryId());
+
+            if(memberLike == 0) {
+                updatedInquiryDTO.setLike(false);
+            } else {
+                updatedInquiryDTO.setLike(true);
+            }
 
             responseDTO.setItem(updatedInquiryDTO);
 
@@ -382,6 +373,16 @@ public class InquiryController {
 
             updatedInquiryDTO.setContentsTitle(inquiryService.getContentsTitle(updatedInquiryDTO.getContentsId()));
             updatedInquiryDTO.setAuthor(inquiryService.getContentsAuthor(updatedInquiryDTO.getContentsId()));
+            updatedInquiryDTO.setLikeCount(inquiryService.getLikeCount(updatedInquiryDTO.getInquiryId()));
+
+
+            long memberLike = inquiryLikeService.findByMemberIdAndInquiryId(customUserDetails.getMember().getMemberId(), updatedInquiryDTO.getInquiryId());
+
+            if(memberLike == 0) {
+                updatedInquiryDTO.setLike(false);
+            } else {
+                updatedInquiryDTO.setLike(true);
+            }
 
             responseDTO.setItem(updatedInquiryDTO);
             responseDTO.setStatusCode(HttpStatus.OK.value());
@@ -429,8 +430,49 @@ public class InquiryController {
 
             updatedInquiryDTO.setContentsTitle(inquiryService.getContentsTitle(updatedInquiryDTO.getContentsId()));
             updatedInquiryDTO.setAuthor(inquiryService.getContentsAuthor(updatedInquiryDTO.getContentsId()));
+            updatedInquiryDTO.setLikeCount(inquiryService.getLikeCount(updatedInquiryDTO.getInquiryId()));
+            long memberLike = inquiryLikeService.findByMemberIdAndInquiryId(customUserDetails.getMember().getMemberId(), updatedInquiryDTO.getInquiryId());
+            if(memberLike == 0) {
+                updatedInquiryDTO.setLike(false);
+            } else {
+                updatedInquiryDTO.setLike(true);
+            }
 
             responseDTO.setItem(updatedInquiryDTO);
+
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setErrorCode(404);
+            responseDTO.setErrorMessage("inquiry not found: " + e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+        }
+    }
+
+    @PostMapping("/like/{inquiryId}")
+    public ResponseEntity<?> like(@PathVariable("inquiryId") long inquiryId,
+                                  @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<InquiryDTO> responseDTO = new ResponseDTO<>();
+        try {
+            long likeCnt = inquiryLikeService.findByMemberIdAndInquiryId(customUserDetails.getMember().getMemberId(), inquiryId);
+
+            InquiryDTO inquiryDTO = new InquiryDTO();
+
+            if(likeCnt == 0) {
+                inquiryDTO = inquiryLikeService.insertLike(customUserDetails.getMember(), inquiryId);
+                inquiryDTO.setLike(true);
+            } else {
+                inquiryDTO = inquiryLikeService.deleteLike(customUserDetails.getMember(), inquiryId);
+                inquiryDTO.setLike(false);
+            }
+
+            inquiryDTO.setContentsTitle(inquiryService.getContentsTitle(inquiryDTO.getContentsId()));
+            inquiryDTO.setAuthor(inquiryService.getContentsAuthor(inquiryDTO.getContentsId()));
+            inquiryDTO.setLikeCount(inquiryService.getLikeCount(inquiryDTO.getInquiryId()));
+
+            responseDTO.setItem(inquiryDTO);
 
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(responseDTO);
