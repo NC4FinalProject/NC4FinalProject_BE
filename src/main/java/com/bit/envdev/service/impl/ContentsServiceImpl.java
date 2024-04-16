@@ -209,4 +209,105 @@ public class ContentsServiceImpl implements ContentsService {
                 .map(Contents::toDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Page<ContentsDTO> searchAll(Pageable pageable, String category, String pricePattern, String orderType) {
+        if(category.isEmpty() && pricePattern.isEmpty() && orderType.isEmpty()) {
+            return contentsRepository.findAll(pageable).map(Contents::toDTO);
+        } else {
+            if(orderType.isEmpty()) {
+                if(category.isEmpty() && !pricePattern.isEmpty()) {
+                    if(pricePattern.equalsIgnoreCase("무료")) {
+                        return contentsRepository.searchAllFree(pageable).map(Contents::toDTO);
+                    } else if(pricePattern.equalsIgnoreCase("유료")) {
+                        return contentsRepository.searchAllPay(pageable).map(Contents::toDTO);
+                    } else if(pricePattern.equalsIgnoreCase("국가")) {
+                        return contentsRepository.searchAllNational(pageable).map(Contents::toDTO);
+                    }
+                } else if(!category.isEmpty() && pricePattern.isEmpty()) {
+                    return contentsRepository.searchAllCategory(pageable, category).map(Contents::toDTO);
+                } else if(!category.isEmpty() && !pricePattern.isEmpty()) {
+                    if(pricePattern.equalsIgnoreCase("무료")) {
+                        return contentsRepository.searchAllCategoryFree(pageable, category).map(Contents::toDTO);
+                    } else if(pricePattern.equalsIgnoreCase("유료")) {
+                        return contentsRepository.searchAllCategoryPay(pageable, category).map(Contents::toDTO);
+                    } else if(pricePattern.equalsIgnoreCase("국가")) {
+                        return contentsRepository.searchAllCategoryNational(pageable, category).map(Contents::toDTO);
+                    }
+                } else {
+
+                }
+            } else {
+                if(orderType.equalsIgnoreCase("판매순")) {
+                    if(category.isEmpty() && !pricePattern.isEmpty()) {
+                        if(pricePattern.equalsIgnoreCase("무료")) {
+                            return contentsRepository.searchAllFreeSale(pageable).map(Contents::toDTO);
+                        } else if(pricePattern.equalsIgnoreCase("유료")) {
+                            return contentsRepository.searchAllPaySale(pageable).map(Contents::toDTO);
+                        } else if(pricePattern.equalsIgnoreCase("국가")) {
+                            return contentsRepository.searchAllNationalSale(pageable).map(Contents::toDTO);
+                        }
+                    } else if(!category.isEmpty() && pricePattern.isEmpty()) {
+                        return contentsRepository.searchAllCategorySale(pageable, category).map(Contents::toDTO);
+                    } else if(!category.isEmpty() && !pricePattern.isEmpty()) {
+                        if(pricePattern.equalsIgnoreCase("무료")) {
+                            return contentsRepository.searchAllCategoryFreeSale(pageable, category).map(Contents::toDTO);
+                        } else if(pricePattern.equalsIgnoreCase("유료")) {
+                            return contentsRepository.searchAllCategoryPaySale(pageable, category).map(Contents::toDTO);
+                        } else if(pricePattern.equalsIgnoreCase("국가")) {
+                            return contentsRepository.searchAllCategoryNationalSale(pageable, category).map(Contents::toDTO);
+                        }
+                    } else {
+                        return contentsRepository.searchAllSale(pageable);
+                    }
+                } else if(orderType.equalsIgnoreCase("인기순")) {
+                    if(category.isEmpty() && !pricePattern.isEmpty()) {
+                        if(pricePattern.equalsIgnoreCase("무료")) {
+                            return contentsRepository.searchAllFreePop(pageable).map(Contents::toDTO);
+                        } else if(pricePattern.equalsIgnoreCase("유료")) {
+                            return contentsRepository.searchAllPayPop(pageable).map(Contents::toDTO);
+                        } else if(pricePattern.equalsIgnoreCase("국가")) {
+                            return contentsRepository.searchAllNationalPop(pageable).map(Contents::toDTO);
+                        }
+                    } else if(!category.isEmpty() && pricePattern.isEmpty()) {
+                        return contentsRepository.searchAllCategoryPop(pageable, category).map(Contents::toDTO);
+                    } else if(!category.isEmpty() && !pricePattern.isEmpty()) {
+                        if(pricePattern.equalsIgnoreCase("무료")) {
+                            return contentsRepository.searchAllCategoryFreePop(pageable, category).map(Contents::toDTO);
+                        } else if(pricePattern.equalsIgnoreCase("유료")) {
+                            return contentsRepository.searchAllCategoryPayPop(pageable, category).map(Contents::toDTO);
+                        } else if(pricePattern.equalsIgnoreCase("국가")) {
+                            return contentsRepository.searchAllCategoryNationalPop(pageable, category).map(Contents::toDTO);
+                        }
+                    } else {
+                        return contentsRepository.searchAllPop(pageable);
+                    }
+                } else {
+                    if(category.isEmpty() && !pricePattern.isEmpty()) {
+                        if(pricePattern.equalsIgnoreCase("무료")) {
+                            return contentsRepository.searchAllFreeReg(pageable).map(Contents::toDTO);
+                        } else if(pricePattern.equalsIgnoreCase("유료")) {
+                            return contentsRepository.searchAllPayReg(pageable).map(Contents::toDTO);
+                        } else if(pricePattern.equalsIgnoreCase("국가")) {
+                            return contentsRepository.searchAllNationalReg(pageable).map(Contents::toDTO);
+                        }
+                    } else if(!category.isEmpty() && pricePattern.isEmpty()) {
+                        return contentsRepository.searchAllCategoryReg(pageable, category).map(Contents::toDTO);
+                    } else if(!category.isEmpty() && !pricePattern.isEmpty()) {
+                        if(pricePattern.equalsIgnoreCase("무료")) {
+                            return contentsRepository.searchAllCategoryFreeReg(pageable, category).map(Contents::toDTO);
+                        } else if(pricePattern.equalsIgnoreCase("유료")) {
+                            return contentsRepository.searchAllCategoryPayReg(pageable, category).map(Contents::toDTO);
+                        } else if(pricePattern.equalsIgnoreCase("국가")) {
+                            return contentsRepository.searchAllCategoryNationalReg(pageable, category).map(Contents::toDTO);
+                        }
+                    } else {
+                        return contentsRepository.searchAllReg(pageable);
+                    }
+                }
+            }
+        }
+
+        return contentsRepository.findAll(pageable).map(Contents::toDTO);
+    }
 }

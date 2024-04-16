@@ -89,6 +89,15 @@ public class Contents {
     @JsonManagedReference
     private List<ContentsFile> contentsFileList;
 
+    @Transient
+    private long paymentCount;
+
+    @Transient
+    private long reviewCount;
+
+    @Transient
+    private double reviewRaiting;
+
     // // 이넘 데이터 관련
     // @Enumerated(EnumType.STRING)
 	// private RoleType role; // USER, ADMIN // or // private ItemSellStatus itemSellSTatus;

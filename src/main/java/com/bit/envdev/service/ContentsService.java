@@ -34,5 +34,7 @@ public interface ContentsService {
     Page<ContentsDTO> searchData(Pageable pageable, String searchKeyword, String searchCondition);
 
     List<ContentsDTO> get12RandomContents();
+
+    Page<ContentsDTO> searchAll(Pageable pageable, String category, String pricePattern, String orderType);
 }
 
