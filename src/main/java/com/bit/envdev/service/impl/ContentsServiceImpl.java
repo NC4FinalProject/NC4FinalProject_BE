@@ -258,7 +258,7 @@ public class ContentsServiceImpl implements ContentsService {
                             return contentsRepository.searchAllCategoryNationalSale(pageable, category).map(Contents::toDTO);
                         }
                     } else {
-                        return contentsRepository.searchAllSale(pageable);
+                        return contentsRepository.searchAllSale(pageable).map(Contents::toDTO);
                     }
                 } else if(orderType.equalsIgnoreCase("인기순")) {
                     if(category.isEmpty() && !pricePattern.isEmpty()) {
@@ -280,7 +280,7 @@ public class ContentsServiceImpl implements ContentsService {
                             return contentsRepository.searchAllCategoryNationalPop(pageable, category).map(Contents::toDTO);
                         }
                     } else {
-                        return contentsRepository.searchAllPop(pageable);
+                        return contentsRepository.searchAllPop(pageable).map(Contents::toDTO);
                     }
                 } else {
                     if(category.isEmpty() && !pricePattern.isEmpty()) {
@@ -302,7 +302,7 @@ public class ContentsServiceImpl implements ContentsService {
                             return contentsRepository.searchAllCategoryNationalReg(pageable, category).map(Contents::toDTO);
                         }
                     } else {
-                        return contentsRepository.searchAllReg(pageable);
+                        return contentsRepository.searchAllReg(pageable).map(Contents::toDTO);
                     }
                 }
             }

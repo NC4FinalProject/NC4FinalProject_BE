@@ -80,7 +80,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    ON A.contents_id = B.contents_id\n" +
             "   WHERE A.price = 0" +
             "    ORDER BY B.PAYMENT_COUNT DESC",
-    countQuery = "SELECT COUNT(D.*)" +
+    countQuery = "SELECT COUNT(*)" +
             "FROM (" +
             "   SELECT A.*\n" +
             "     , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
@@ -110,7 +110,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "   WHERE A.price != 0" +
             "     AND A.price != -1" +
             "    ORDER BY B.PAYMENT_COUNT DESC",
-            countQuery = "SELECT COUNT(D.*)" +
+            countQuery = "SELECT COUNT(*)" +
                     "FROM (" +
                     "   SELECT A.*\n" +
                     "     , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
@@ -140,7 +140,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    ON A.contents_id = B.contents_id\n" +
             "   WHERE A.price = -1" +
             "    ORDER BY B.PAYMENT_COUNT DESC",
-            countQuery = "SELECT COUNT(D.*)" +
+            countQuery = "SELECT COUNT(*)" +
                     "FROM (" +
                     "   SELECT A.*\n" +
                     "     , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
@@ -169,7 +169,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    ON A.contents_id = B.contents_id\n" +
             "   WHERE A.category = :category" +
             "    ORDER BY B.PAYMENT_COUNT DESC",
-            countQuery = "SELECT COUNT(D.*)" +
+            countQuery = "SELECT COUNT(*)" +
                     "FROM (" +
                     "   SELECT A.*\n" +
                     "     , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
@@ -199,7 +199,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "   WHERE A.category = :category" +
             "     AND A.price = 0" +
             "    ORDER BY B.PAYMENT_COUNT DESC",
-            countQuery = "SELECT COUNT(D.*)" +
+            countQuery = "SELECT COUNT(*)" +
                     "FROM (" +
                     "   SELECT A.*\n" +
                     "     , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
@@ -231,7 +231,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     AND A.price = 0" +
             "     AND A.price != -1" +
             "    ORDER BY B.PAYMENT_COUNT DESC",
-            countQuery = "SELECT COUNT(D.*)" +
+            countQuery = "SELECT COUNT(*)" +
                     "FROM (" +
                     "   SELECT A.*\n" +
                     "     , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
@@ -263,7 +263,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "   WHERE A.category = :category" +
             "     AND A.price = -1" +
             "    ORDER BY B.PAYMENT_COUNT DESC",
-            countQuery = "SELECT COUNT(D.*)" +
+            countQuery = "SELECT COUNT(*)" +
                     "FROM (" +
                     "   SELECT A.*\n" +
                     "     , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
@@ -295,7 +295,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    ON A.contents_id = B.contents_id\n" +
             "    WHERE A.price = 0" +
             "    ORDER BY B.REVIEW_RAITING DESC, B.REVIEW_COUNT DESC",
-    countQuery = "SELECT COUNT(D.*)" +
+    countQuery = "SELECT COUNT(*)" +
             "   FROM (" +
             "   SELECT A.*\n" +
             "     , IFNULL(B.REVIEW_RAITING, 0) AS REVIEW_RAITING\n" +
@@ -329,7 +329,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    WHERE A.price != 0" +
             "      AND A.price != -1" +
             "    ORDER BY B.REVIEW_RAITING DESC, B.REVIEW_COUNT DESC",
-            countQuery = "SELECT COUNT(D.*)" +
+            countQuery = "SELECT COUNT(*)" +
                     "   FROM (" +
                     "   SELECT A.*\n" +
                     "     , IFNULL(B.REVIEW_RAITING, 0) AS REVIEW_RAITING\n" +
@@ -363,7 +363,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    ON A.contents_id = B.contents_id\n" +
             "    WHERE A.price = -1" +
             "    ORDER BY B.REVIEW_RAITING DESC, B.REVIEW_COUNT DESC",
-            countQuery = "SELECT COUNT(D.*)" +
+            countQuery = "SELECT COUNT(*)" +
                     "   FROM (" +
                     "   SELECT A.*\n" +
                     "     , IFNULL(B.REVIEW_RAITING, 0) AS REVIEW_RAITING\n" +
@@ -396,7 +396,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    ON A.contents_id = B.contents_id\n" +
             "    WHERE A.category = :category" +
             "    ORDER BY B.REVIEW_RAITING DESC, B.REVIEW_COUNT DESC",
-            countQuery = "SELECT COUNT(D.*)" +
+            countQuery = "SELECT COUNT(*)" +
                     "   FROM (" +
                     "   SELECT A.*\n" +
                     "     , IFNULL(B.REVIEW_RAITING, 0) AS REVIEW_RAITING\n" +
@@ -430,7 +430,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    WHERE A.category = :category" +
             "      AND A.price = 0" +
             "    ORDER BY B.REVIEW_RAITING DESC, B.REVIEW_COUNT DESC",
-            countQuery = "SELECT COUNT(D.*)" +
+            countQuery = "SELECT COUNT(*)" +
                     "   FROM (" +
                     "   SELECT A.*\n" +
                     "     , IFNULL(B.REVIEW_RAITING, 0) AS REVIEW_RAITING\n" +
@@ -466,7 +466,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "      AND A.price != 0" +
             "      AND A.price != -1" +
             "    ORDER BY B.REVIEW_RAITING DESC, B.REVIEW_COUNT DESC",
-            countQuery = "SELECT COUNT(D.*)" +
+            countQuery = "SELECT COUNT(*)" +
                     "   FROM (" +
                     "   SELECT A.*\n" +
                     "     , IFNULL(B.REVIEW_RAITING, 0) AS REVIEW_RAITING\n" +
@@ -502,7 +502,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    WHERE A.category = :category" +
             "      AND A.price = -1" +
             "    ORDER BY B.REVIEW_RAITING DESC, B.REVIEW_COUNT DESC",
-            countQuery = "SELECT COUNT(D.*)" +
+            countQuery = "SELECT COUNT(*)" +
                     "   FROM (" +
                     "   SELECT A.*\n" +
                     "     , IFNULL(B.REVIEW_RAITING, 0) AS REVIEW_RAITING\n" +
@@ -533,7 +533,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    ) B\n" +
             "    ON A.contents_id = B.contents_id\n" +
             "    ORDER BY B.PAYMENT_COUNT DESC",
-            countQuery = "SELECT COUNT(D.*)" +
+            countQuery = "SELECT COUNT(*)" +
                     "FROM (" +
                     "   SELECT A.*\n" +
                     "     , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
@@ -547,7 +547,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    ON A.contents_id = B.contents_id\n" +
                     "    ORDER BY B.PAYMENT_COUNT DESC" +
                     ") D", nativeQuery = true)
-    Page<ContentsDTO> searchAllSale(Pageable pageable);
+    Page<Contents> searchAllSale(Pageable pageable);
 
     @Query(value = "SELECT A.*\n" +
             "     , IFNULL(B.REVIEW_RAITING, 0) AS REVIEW_RAITING\n" +
@@ -562,7 +562,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    ) B\n" +
             "    ON A.contents_id = B.contents_id\n" +
             "    ORDER BY B.REVIEW_RAITING DESC, B.REVIEW_COUNT DESC",
-            countQuery = "SELECT COUNT(D.*)" +
+            countQuery = "SELECT COUNT(*)" +
                     "   FROM (" +
                     "   SELECT A.*\n" +
                     "     , IFNULL(B.REVIEW_RAITING, 0) AS REVIEW_RAITING\n" +
@@ -578,8 +578,8 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    ON A.contents_id = B.contents_id" +
                     "    ORDER BY B.REVIEW_RAITING DESC, B.REVIEW_COUNT DESC" +
                     ") D", nativeQuery = true)
-    Page<ContentsDTO> searchAllPop(Pageable pageable);
+    Page<Contents> searchAllPop(Pageable pageable);
 
     @Query(value = "SELECT * FROM Contents ORDER BY reg_date DESC", countQuery = "SELECT count(*) FROM Contents ORDER BY reg_date DESC",nativeQuery = true)
-    Page<ContentsDTO> searchAllReg(Pageable pageable);
+    Page<Contents> searchAllReg(Pageable pageable);
 }
