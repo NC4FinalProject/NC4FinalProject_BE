@@ -39,7 +39,7 @@ public class ContentsServiceImpl implements ContentsService {
     public String filePath(MultipartFile file){
         String filePath = null;
         if (file.getOriginalFilename() != null && !file.getOriginalFilename().isEmpty()) {
-            FileDTO fileDTO = fileUtils.uploadFile(file, "board/");  // 오브젝트 스토리지에 업로드하면서 만들어진 디티오를 파일 디티오에 담음
+            FileDTO fileDTO = fileUtils.uploadFile(file, "video/");  // 오브젝트 스토리지에 업로드하면서 만들어진 디티오를 파일 디티오에 담음
             filePath = (fileDTO.getItemFilePath()+fileDTO.getItemFileName()); // 파일 디티오에 경로와 파일 디티오에 파일 네임을 담은 fileString에 담음
         }
         return filePath;
@@ -129,8 +129,7 @@ public class ContentsServiceImpl implements ContentsService {
     @Override
     public ContentsDTO findById(int contentsId) {
         // Contents 엔티티 조회
-        Contents contents = contentsRepository.findById(contentsId)
-                .orElseThrow(() -> new NoSuchElementException("Contents not found"));
+        Contents contents = contentsRepository.searchById(contentsId);
         // Contents 엔티티를 DTO로 변환
         ContentsDTO contentsDTO = contents.toDTO();
         // Member의 userNickname을 ContentsDTO에 설정
@@ -213,7 +212,7 @@ public class ContentsServiceImpl implements ContentsService {
     @Override
     public Page<ContentsDTO> searchAll(Pageable pageable, String category, String pricePattern, String orderType) {
         if(category.isEmpty() && pricePattern.isEmpty() && orderType.isEmpty()) {
-            return contentsRepository.findAll(pageable).map(Contents::toDTO);
+            return contentsRepository.searchAll(pageable).map(Contents::toDTO);
         } else {
             if(orderType.isEmpty()) {
                 if(category.isEmpty() && !pricePattern.isEmpty()) {
@@ -308,6 +307,11 @@ public class ContentsServiceImpl implements ContentsService {
             }
         }
 
-        return contentsRepository.findAll(pageable).map(Contents::toDTO);
+        return contentsRepository.searchAll(pageable).map(Contents::toDTO);
+    }
+
+    @Override
+    public Page<ContentsDTO> searchMyAll(Pageable pageable, Member member) {
+        return null;
     }
 }

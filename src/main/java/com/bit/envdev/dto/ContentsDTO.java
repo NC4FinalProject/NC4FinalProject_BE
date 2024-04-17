@@ -51,6 +51,8 @@ public class ContentsDTO {
 
     private String userNickname;
     private List<ContentsFileDTO> contentsFileDTOList;
+    private double reviewRating;
+    private int reviewCount;
 
     public Contents toEntity(Member member) {
         return Contents.builder()

@@ -4,10 +4,7 @@ import com.bit.envdev.dto.ContentsDTO;
 import com.bit.envdev.dto.SectionDTO;
 import com.bit.envdev.dto.VideoDTO;
 import com.bit.envdev.dto.VideoReplyDTO;
-import com.bit.envdev.entity.Contents;
-import com.bit.envdev.entity.Section;
-import com.bit.envdev.entity.Video;
-import com.bit.envdev.entity.VideoReply;
+import com.bit.envdev.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,5 +33,7 @@ public interface ContentsService {
     List<ContentsDTO> get12RandomContents();
 
     Page<ContentsDTO> searchAll(Pageable pageable, String category, String pricePattern, String orderType);
+
+    Page<ContentsDTO> searchMyAll(Pageable pageable, Member member);
 }
 
