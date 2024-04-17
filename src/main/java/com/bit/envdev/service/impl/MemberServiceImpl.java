@@ -293,7 +293,7 @@ public class MemberServiceImpl implements MemberService {
                 .memberId(member.getMemberId())
                 .contentsList(member.getContentsList())
                 .memo(member.getMemo())
-                .role(memberDTO.getRole())
+                .role(role)
                 .modifiedAt(LocalDateTime.now())
                 .createdAt(member.getCreatedAt())
                 .emailVerification(member.getEmailVerification())
