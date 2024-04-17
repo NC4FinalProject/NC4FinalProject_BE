@@ -29,6 +29,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -44,6 +45,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -60,6 +62,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -76,6 +79,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -93,6 +97,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -108,6 +113,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -124,6 +130,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -139,6 +146,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -155,6 +163,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -171,6 +180,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -188,6 +198,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -205,6 +216,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -223,6 +235,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -239,6 +252,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -256,6 +270,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -272,6 +287,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -289,6 +305,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -306,6 +323,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -324,6 +342,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -340,6 +359,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -357,6 +377,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -373,6 +394,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -390,6 +412,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SSELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -407,6 +430,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -425,6 +449,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -443,6 +468,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -462,6 +488,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -479,6 +506,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -892,6 +920,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -908,6 +937,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -925,6 +955,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -942,6 +973,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -960,6 +992,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -976,6 +1009,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -993,6 +1027,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -1009,6 +1044,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -1026,6 +1062,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -1043,6 +1080,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -1061,6 +1099,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -1079,6 +1118,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -1098,6 +1138,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -1115,6 +1156,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -1187,6 +1229,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT C.CONTENTS_ID\n" +
@@ -1202,6 +1245,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT C.CONTENTS_ID\n" +
@@ -1218,6 +1262,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT CONTENTS_ID\n" +
@@ -1233,6 +1278,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT CONTENTS_ID\n" +
@@ -1282,6 +1328,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT CONTENTS_ID\n" +
@@ -1306,6 +1353,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , A.MOD_DATE\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "    SELECT C.CONTENTS_ID\n" +
@@ -1337,6 +1385,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                 "     , A.MOD_DATE\n" +
                 "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                 "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                "     , 0 AS PAYMENT_COUNT\n" +
                 "    FROM CONTENTS A\n" +
                 "    LEFT JOIN (\n" +
                 "    SELECT C.CONTENTS_ID\n" +
@@ -1361,6 +1410,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
     @Query(value = "SELECT AA.*\n" +
             "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(BB.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
@@ -1388,6 +1438,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                 "   SELECT AA.*\n" +
                 "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                 "     , IFNULL(BB.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                "     , 0 AS PAYMENT_COUNT\n" +
                 "    FROM (\n" +
                 "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                 "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
