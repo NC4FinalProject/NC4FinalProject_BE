@@ -41,6 +41,7 @@ public class MemberController {
             Member newMember = memberService.join(memberDTO);
             pointService.pointJoinWithBuilder(newMember, 3000,  "회원가입 축하 포인트 지급");
 
+            responseDTO.setItem(newMember.toDTO());
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(responseDTO);
             
