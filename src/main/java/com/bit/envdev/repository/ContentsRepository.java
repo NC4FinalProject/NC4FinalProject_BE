@@ -1291,4 +1291,54 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    ON A.contents_id = B.contents_id" +
             "    WHERE A.contents_id = :contentsId", nativeQuery = true)
     Contents searchById(int contentsId);
+
+    @Query(value = "SELECT A.CONTENTS_ID\n" +
+            "     , A.CATEGORY\n" +
+            "     , A.CONTENTS_TITLE\n" +
+            "     , A.INTRODUCE\n" +
+            "     , A.PRICE\n" +
+            "     , A.PRICE_TYPE\n" +
+            "     , A.REG_DATE\n" +
+            "     , A.THUMBNAIL\n" +
+            "     , A.MEMBER_ID\n" +
+            "     , A.MOD_DATE\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "    FROM CONTENTS A\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT C.CONTENTS_ID\n" +
+            "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "             , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "            FROM REVIEW C\n" +
+            "    ) B\n" +
+            "    ON A.contents_id = B.contents_id\n" +
+            "    JOIN payment_content D\n" +
+            "    ON A.contents_id = D.contents_id",
+        countQuery = "SELECT COUNT(*) " +
+                " FROM (" +
+                "   SELECT A.CONTENTS_ID\n" +
+                "     , A.CATEGORY\n" +
+                "     , A.CONTENTS_TITLE\n" +
+                "     , A.INTRODUCE\n" +
+                "     , A.PRICE\n" +
+                "     , A.PRICE_TYPE\n" +
+                "     , A.REG_DATE\n" +
+                "     , A.THUMBNAIL\n" +
+                "     , A.MEMBER_ID\n" +
+                "     , A.MOD_DATE\n" +
+                "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                "    FROM CONTENTS A\n" +
+                "    LEFT JOIN (\n" +
+                "        SELECT C.CONTENTS_ID\n" +
+                "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                "             , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                "            FROM REVIEW C\n" +
+                "    ) B\n" +
+                "    ON A.contents_id = B.contents_id\n" +
+                "    JOIN payment_content D\n" +
+                "    ON A.contents_id = D.contents_id" +
+                ") D", nativeQuery = true
+    )
+    Page<Contents> searchMyAll(Pageable pageable, long memberId);
 }

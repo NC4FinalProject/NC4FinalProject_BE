@@ -286,9 +286,25 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void changeRole(MemberDTO member, Role role) {
-        member.setRole(role);
-        memberRepository.save(member.toEntity());
+    public void changeRole(MemberDTO memberDTO, Role role) {
+        Member member = memberRepository.findById(memberDTO.getMemberId()).orElseThrow();
+
+        Member changedMember = Member.builder()
+                .memberId(member.getMemberId())
+                .contentsList(member.getContentsList())
+                .memo(member.getMemo())
+                .role(memberDTO.getRole())
+                .modifiedAt(LocalDateTime.now())
+                .createdAt(member.getCreatedAt())
+                .emailVerification(member.getEmailVerification())
+                .password(member.getPassword())
+                .pointList(member.getPointList())
+                .profileFile(member.getProfileFile())
+                .username(member.getUsername())
+                .userNickname(member.getUserNickname())
+                .build();
+
+        memberRepository.save(changedMember);
     }
 
 }
