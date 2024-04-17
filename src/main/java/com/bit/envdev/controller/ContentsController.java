@@ -12,6 +12,9 @@ import com.bit.envdev.service.ContentsService;
 import lombok.RequiredArgsConstructor;
 import com.bit.envdev.service.ContentsBookmarkService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -69,12 +72,16 @@ public class ContentsController {
 
     // // 컨텐츠 목록 보기 * 유저 네임, 유저 닉네임 프로필 리스폰 추가
     @GetMapping("/list")
-    public ResponseEntity<?> listContents() {
+    public ResponseEntity<?> listContents(@PageableDefault(page = 0, size = 16) Pageable pageable,
+                                          @RequestParam("category") String category,
+                                          @RequestParam("pricePattern") String pricePattern,
+                                          @RequestParam("orderType") String orderType) {
         // ResponseDTO 객체 생성
         ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
         // contentsService에서 모든 컨텐츠를 조회하여 ContentsDTO 리스트로 가져옴
-        List<ContentsDTO> contentsDTOList = contentsService.findAll();
-        responseDTO.setItems(contentsDTOList);
+        Page<ContentsDTO> contentsDTOList = contentsService.searchAll(pageable, category, pricePattern, orderType);
+        
+        responseDTO.setPageItems(contentsDTOList);
         // ResponseDTO 객체를 ResponseEntity를 통해 클라이언트에게 반환
         return ResponseEntity.ok(responseDTO);
     }
@@ -179,6 +186,19 @@ public class ContentsController {
         result.put("inquiryFileOrigin", contentsFileDTO.getContentsFileOrigin());
 
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/mylist")
+    public ResponseEntity<?> mylistContents(@PageableDefault(page = 0, size = 16) Pageable pageable,
+                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        // ResponseDTO 객체 생성
+        ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
+        // contentsService에서 모든 컨텐츠를 조회하여 ContentsDTO 리스트로 가져옴
+        Page<ContentsDTO> contentsDTOList = contentsService.searchMyAll(pageable, customUserDetails.getMember());
+
+        responseDTO.setPageItems(contentsDTOList);
+        // ResponseDTO 객체를 ResponseEntity를 통해 클라이언트에게 반환
+        return ResponseEntity.ok(responseDTO);
     }
 }
 
