@@ -314,4 +314,9 @@ public class ContentsServiceImpl implements ContentsService {
     public Page<ContentsDTO> searchMyAll(Pageable pageable, Member member) {
         return contentsRepository.searchMyAll(pageable, member.getMemberId()).map(Contents::toDTO);
     }
+
+    @Override
+    public Page<ContentsDTO> searchTeacherAll(Pageable pageable, Member member) {
+        return contentsRepository.searchTeacherAll(pageable, member.getMemberId()).map(Contents::toDTO);
+    }
 }

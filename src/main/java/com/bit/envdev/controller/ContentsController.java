@@ -195,7 +195,18 @@ public class ContentsController {
         ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
         // contentsService에서 모든 컨텐츠를 조회하여 ContentsDTO 리스트로 가져옴
         Page<ContentsDTO> contentsDTOList = contentsService.searchMyAll(pageable, customUserDetails.getMember());
+        responseDTO.setPageItems(contentsDTOList);
+        // ResponseDTO 객체를 ResponseEntity를 통해 클라이언트에게 반환
+        return ResponseEntity.ok(responseDTO);
+    }
 
+    @GetMapping("/teachercontentslist")
+    public ResponseEntity<?> teacherContentsList(@PageableDefault(page = 0, size = 15) Pageable pageable,
+                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        // ResponseDTO 객체 생성
+        ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
+        // contentsService에서 모든 컨텐츠를 조회하여 ContentsDTO 리스트로 가져옴
+        Page<ContentsDTO> contentsDTOList = contentsService.searchTeacherAll(pageable, customUserDetails.getMember());
         responseDTO.setPageItems(contentsDTOList);
         // ResponseDTO 객체를 ResponseEntity를 통해 클라이언트에게 반환
         return ResponseEntity.ok(responseDTO);

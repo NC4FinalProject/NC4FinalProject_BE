@@ -61,8 +61,7 @@ public class PaymentController {
 
             // 2. cartContents 테이블에 ispaid true로 변경
             int cartContentCnt = cartService.updateCartContentsPaid(paymentDTO.getCartId(), paymentContentDTOList);
-            System.out.println("======================================");
-            System.out.println(cartContentCnt);
+
             // 3. cartContents 테이블에 ispaid false인 게 0개면 cart 테이블 ispaid true로 변경
             if (cartContentCnt == 0) {
                 cartService.updateCartPaid(paymentDTO.getCartId(), customUserDetails.getMember());

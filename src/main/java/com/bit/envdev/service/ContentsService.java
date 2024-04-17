@@ -35,5 +35,7 @@ public interface ContentsService {
     Page<ContentsDTO> searchAll(Pageable pageable, String category, String pricePattern, String orderType);
 
     Page<ContentsDTO> searchMyAll(Pageable pageable, Member member);
+
+    Page<ContentsDTO> searchTeacherAll(Pageable pageable, Member member);
 }
 

@@ -12,9 +12,12 @@ import com.bit.envdev.repository.PaymentRepository;
 import com.bit.envdev.service.PaymentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,5 +77,10 @@ public class PaymentServiceImpl implements PaymentService {
                 .member(member)
                 .build()
                 .toDTO();
+    }
+
+    @Override
+    public Page<Map<String, Object>> getPurchaseList(Pageable pageable, Member member) {
+        return paymentRepository.getPurchaseList(pageable, member.getMemberId());
     }
 }
