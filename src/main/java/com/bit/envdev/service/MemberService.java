@@ -54,7 +54,7 @@ public interface MemberService {
 
     List<MemberDTO> findByRole();
 
-    void codeVerification(MemberDTO memberDTO, String code);
+    String codeVerification(String tempCode, String code);
 
     MemberDTO findById(long id);
 

@@ -1,5 +1,6 @@
 package com.bit.envdev.controller;
 
+import com.bit.envdev.dto.EmailVerifyMemberDTO;
 import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.dto.ResponseDTO;
 import com.bit.envdev.entity.Member;
@@ -12,11 +13,18 @@ import lombok.RequiredArgsConstructor;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,11 +35,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
     
     private final MemberServiceImpl memberService;
     private final SendEmailServiceImpl sendEmailService;
     private final PointServiceImpl pointService;
+
+    private static String tempCode = "";
 
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody MemberDTO memberDTO) {
@@ -114,25 +125,51 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/email-verification")
-    public ResponseEntity<?> emailVerification(@AuthenticationPrincipal UserDetails userDetails) {
-        ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
-        
-        try {
-            String username = userDetails.getUsername();
-            MemberDTO memberDTO = memberService.findByUsername(username);
+//    @PostMapping("/email-verification")
+//    public ResponseEntity<?> emailVerification(EmailVerifyMemberDTO verifyMemberDTO) {
+//        ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
+//
+//        try {
+//            String username = verifyMemberDTO.getUsername();
+//            MemberDTO memberDTO = memberService.findByUsername(username);
+//
+//                if ("verified".equals(memberDTO.getEmailVerification())) {
+//                    responseDTO.setErrorCode(201);
+//                    responseDTO.setErrorMessage("이미 인증된 이메일 입니다.");
+//                    responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+//                    return ResponseEntity.badRequest().body(responseDTO);
+//                } else {
+//                    sendEmailService.createMail(memberDTO);
+//                    responseDTO.setItem(memberDTO);
+//                    responseDTO.setStatusCode(HttpStatus.OK.value());
+//                    return ResponseEntity.ok(responseDTO);
+//                }
+//        } catch (Exception e) {
+//            responseDTO.setErrorCode(200);
+//            responseDTO.setErrorMessage(e.getMessage());
+//            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+//            return ResponseEntity.badRequest().body(responseDTO);
+//        }
+//    }
 
-                if ("verified".equals(memberDTO.getEmailVerification())) {
-                    responseDTO.setErrorCode(201);
-                    responseDTO.setErrorMessage("이미 인증된 이메일 입니다.");
-                    responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
-                    return ResponseEntity.badRequest().body(responseDTO);
-                } else {
-                    sendEmailService.createMail(memberDTO);
-                    responseDTO.setItem(memberDTO);
-                    responseDTO.setStatusCode(HttpStatus.OK.value());
-                    return ResponseEntity.ok(responseDTO); 
-                }
+    @Transactional
+    @PostMapping("/email-verification")
+    public ResponseEntity<?> emailVerification(@RequestBody EmailVerifyMemberDTO verifyMemberDTO) {
+        ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
+        try {
+            String username = verifyMemberDTO.getUsername();
+            MemberDTO memberDTO = memberService.findByUsername(username);
+            if ("verified".equals(memberDTO.getEmailVerification())) {
+                responseDTO.setErrorCode(201);
+                responseDTO.setErrorMessage("이미 인증된 이메일 입니다.");
+                responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(responseDTO);
+            } else {
+                tempCode = sendEmailService.createMail(verifyMemberDTO);
+//                responseDTO.setItem(memberDTO);
+//                responseDTO.setStatusCode(HttpStatus.OK.value());
+                return ResponseEntity.ok(responseDTO);
+            }
         } catch (Exception e) {
             responseDTO.setErrorCode(200);
             responseDTO.setErrorMessage(e.getMessage());
@@ -167,35 +204,35 @@ public class MemberController {
         }
     }
 
+    @Transactional
     @PostMapping("/code-check")
-    public ResponseEntity<?> emailCheck(@AuthenticationPrincipal UserDetails userDetails, @RequestBody Object codeObject) {
-        ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
+    public ResponseEntity<?> emailCheck(@RequestBody Object codeObject) {
+        ResponseDTO<String> responseDTO = new ResponseDTO<>();
 
-    try {
-            String username = userDetails.getUsername();
-            MemberDTO memberDTO = memberService.findByUsername(username);
-            
+        try {
             Map<String, Object> map = (Map<String, Object>) codeObject;
             String value = map.get("code").toString();
 
-            memberService.codeVerification(memberDTO, value);
-            MemberDTO newMemberDTO = memberService.findByUsername(username);
-            
-                if ("verified".equals(newMemberDTO.getEmailVerification())) {
-                    responseDTO.setItem(memberDTO);
-                    responseDTO.setStatusCode(HttpStatus.OK.value());
-                    return ResponseEntity.ok(responseDTO);
-                } else {
-                    responseDTO.setErrorCode(200);
-                    responseDTO.setErrorMessage("인증번호가 일치하지 않습니다.");
-                }
-            } catch (Exception e) {
-                responseDTO.setErrorCode(201);
-                responseDTO.setErrorMessage(e.getMessage());
+            String checkResult = memberService.codeVerification(tempCode, value);
+
+            if(checkResult.equals("correct")) {
+                responseDTO.setItem("correct");
+                responseDTO.setStatusCode(HttpStatus.OK.value());
+
+                return ResponseEntity.ok(responseDTO);
+            } else {
+                responseDTO.setErrorCode(200);
+                responseDTO.setErrorMessage("code is not correct");
+                responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(responseDTO);
             }
 
-        responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        return ResponseEntity.badRequest().body(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setErrorCode(201);
+            responseDTO.setErrorMessage(e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
     }
 
     @PostMapping("/nickname-check")

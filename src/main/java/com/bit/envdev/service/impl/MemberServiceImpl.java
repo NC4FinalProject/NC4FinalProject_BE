@@ -2,6 +2,7 @@ package com.bit.envdev.service.impl;
 
 
 import com.bit.envdev.constant.Role;
+import com.bit.envdev.dto.EmailVerifyMemberDTO;
 import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.dto.MemberGraphDTO;
 import com.bit.envdev.dto.PointDTO;
@@ -12,10 +13,13 @@ import com.bit.envdev.repository.MemberGraphRepository;
 import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -80,6 +84,7 @@ public class MemberServiceImpl implements MemberService {
         if (loginMember.get().getRole().equals(Role.RESIGNED)) {
             throw new RuntimeException("탈퇴한 유저입니다.");
         }
+
         MemberDTO loginMemberDTO = loginMember.get().toDTO();
 
         // JWT 토큰 생성후 DTO에 세팅
@@ -137,9 +142,19 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberDTO findByUsername(String username) {
+        MemberDTO memberDTO = new MemberDTO();
+        Member newMember = memberRepository.findByUsername(username).orElse(null);
+        if (newMember != null) {
+            try {
+                memberDTO = newMember.toDTO();
 
-        MemberDTO NewMemberDTO = memberRepository.findByUsername(username).get().toDTO();
-        return NewMemberDTO;
+                return memberDTO;
+            } catch (Exception e) {
+                System.out.println("회원정보 조회 실패" + e.getMessage());
+            }
+        }
+
+        return memberDTO;
     }
 
     @Override
@@ -161,16 +176,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void codeVerification(MemberDTO memberDTO, String code) {
-        if("verified".equals(memberDTO.getEmailVerification())) {
-            throw new RuntimeException("이미 인증 완료한 계정입니다.");
+    public String codeVerification(String tempCode, String code) {
+
+        if (tempCode.equals(code)) {
+            return "correct";
         } else {
-            if(code.equals(memberDTO.getEmailVerification())) {
-                memberDTO.setEmailVerification("verified");
-                memberRepository.save(memberDTO.toEntity());
-            } else {
-                throw new RuntimeException("인증번호가 일치하지 않습니다.");
-            }
+            return "incorrect";
         }
     }
 
