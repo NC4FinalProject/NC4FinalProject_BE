@@ -15,12 +15,12 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewRep
 
     Optional<Review> findByMemberAndContentsId(Member member, int contentsId);
 
-    @Query("SELECT c.contentsTitle, m.role, m.userNickname, r.reviewContent, r.reviewCrtDate " +
-            "FROM Review r " +
-            "JOIN r.member m " +
-            "JOIN Contents c ON r.contentsId = c.contentsId " +
-            "ORDER BY r.reviewCrtDate DESC")
-    List<Object[]> findTop10ByMemberIdAndCreateAtDesc();
+        @Query("SELECT c.contentsTitle, m.role, m.userNickname, r.reviewContent, r.reviewCrtDate " +
+                "FROM Review r " +
+                "JOIN r.member m " +
+                "JOIN Contents c ON r.contentsId = c.contentsId " +
+                "ORDER BY r.reviewCrtDate DESC")
+        List<Object[]> findTop10ByMemberIdAndCreateAtDesc();
 
     @Query("SELECT c.contentsId, c.contentsTitle, c.thumbnail, c.category, c.member.memberId, c.price, m.userNickname, COUNT(r.reviewId) AS reviewCount, AVG(r.reviewRating) AS avgRating " +
             "FROM Contents c " +

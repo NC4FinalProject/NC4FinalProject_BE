@@ -2934,47 +2934,49 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
             "     , 0 AS BOOKMARK_COUNT\n" +
-            "    FROM CONTENTS A\n" +
-            "    LEFT JOIN (\n" +
+            "FROM CONTENTS A\n" +
+            "LEFT JOIN (\n" +
             "    SELECT C.CONTENTS_ID\n" +
             "         , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
             "         , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
-            "        FROM REVIEW C\n" +
-            "    ) B\n" +
-            "    ON A.contents_id = B.contents_id\n" +
-            "    JOIN contents_bookmark D\n" +
-            "    ON A.contents_id = D.contents_id\n" +
-            "    WHERE D.member_id = :memberId",
-        countQuery = "SELECT COUNT(*)" +
-                "   FROM (" +
-                "   SELECT A.CONTENTS_ID\n" +
-                "     , A.CATEGORY\n" +
-                "     , A.CONTENTS_TITLE\n" +
-                "     , A.INTRODUCE\n" +
-                "     , A.PRICE\n" +
-                "     , A.PRICE_TYPE\n" +
-                "     , A.REG_DATE\n" +
-                "     , A.THUMBNAIL\n" +
-                "     , A.MEMBER_ID\n" +
-                "     , A.MOD_DATE\n" +
-                "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
-                "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
-                "     , 0 AS PAYMENT_COUNT\n" +
-                "     , 0 AS BOOKMARK_COUNT\n" +
-                "    FROM CONTENTS A\n" +
-                "    LEFT JOIN (\n" +
-                "    SELECT C.CONTENTS_ID\n" +
-                "         , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
-                "         , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
-                "        FROM REVIEW C\n" +
-                "    ) B\n" +
-                "    ON A.contents_id = B.contents_id\n" +
-                "    JOIN contents_bookmark D\n" +
-                "    ON A.contents_id = D.contents_id\n" +
-                "    WHERE D.member_id = :memberId" +
-                ") D", nativeQuery = true
-    )
+            "    FROM REVIEW C\n" +
+            "    GROUP BY C.CONTENTS_ID\n" +
+            ") B\n" +
+            "ON A.contents_id = B.contents_id\n" +
+            "JOIN contents_bookmark D\n" +
+            "ON A.contents_id = D.contents_id\n" +
+            "WHERE D.member_id = :memberId",
+            countQuery = "SELECT COUNT(*)" +
+                    "   FROM (" +
+                    "       SELECT A.CONTENTS_ID\n" +
+                    "         , A.CATEGORY\n" +
+                    "         , A.CONTENTS_TITLE\n" +
+                    "         , A.INTRODUCE\n" +
+                    "         , A.PRICE\n" +
+                    "         , A.PRICE_TYPE\n" +
+                    "         , A.REG_DATE\n" +
+                    "         , A.THUMBNAIL\n" +
+                    "         , A.MEMBER_ID\n" +
+                    "         , A.MOD_DATE\n" +
+                    "         , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "         , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "         , 0 AS PAYMENT_COUNT\n" +
+                    "         , 0 AS BOOKMARK_COUNT\n" +
+                    "       FROM CONTENTS A\n" +
+                    "       LEFT JOIN (\n" +
+                    "           SELECT C.CONTENTS_ID\n" +
+                    "                , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "           FROM REVIEW C\n" +
+                    "           GROUP BY C.CONTENTS_ID\n" +
+                    "       ) B\n" +
+                    "       ON A.contents_id = B.contents_id\n" +
+                    "       JOIN contents_bookmark D\n" +
+                    "       ON A.contents_id = D.contents_id\n" +
+                    "       WHERE D.member_id = :memberId" +
+                    ") D", nativeQuery = true)
     Page<Contents> searchBookmarkAll(Pageable pageable, long memberId);
+
 
     long countByMember(Member member);
 }
