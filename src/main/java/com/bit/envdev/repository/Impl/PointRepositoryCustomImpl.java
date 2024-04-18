@@ -17,6 +17,7 @@ public class PointRepositoryCustomImpl implements PointRepositoryCustom {
                 .select(point.value.sum())
                 .from(point)
                 .where(point.member.memberId.eq(memberId))
+                .orderBy(point.createdAt.desc())
                 .fetchOne();
 
         return myPoint;

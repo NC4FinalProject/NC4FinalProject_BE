@@ -9,11 +9,15 @@ import com.bit.envdev.repository.InquiryCommentRepository;
 import com.bit.envdev.repository.InquiryRepository;
 import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.service.InquiryCommentService;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -98,5 +102,59 @@ public class InquiryCommentServiceImpl implements InquiryCommentService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<InquiryCommentDTO> getComments(Long inquiryId, String order, CustomUserDetails customUserDetails) {
+        if(order.equalsIgnoreCase("좋아요순")) {
+            List<Map<String, Object>> mapList = inquiryCommentRepository.findByInquiryInquiryIdOrderByInquiryCommentLikCountDesc(inquiryId);
+
+            List<InquiryComment> inquiryCommentList = mapList.stream().map(map -> {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+                try {
+                    return InquiryComment.builder()
+                            .inquiryCommentId(Long.valueOf(map.get("INQUIRY_COMMENT_ID").toString()))
+                            .inquiry(inquiryRepository.findById(Long.valueOf(map.get("INQUIRY_ID").toString())).orElseThrow())
+                            .inquiryCommentContent(map.get("INQUIRY_COMMENT_CRTDT").toString())
+                            .inquiryCommentCrtDT(format.parse(map.get("INQUIRY_COMMENT_CRTDT").toString()))
+                            .inquiryCommentUdtDT(format.parse(map.get("INQUIRY_COMMENT_UDTDT").toString()))
+                            .member(memberRepository.findById(Long.valueOf(map.get("MEMBER_ID").toString())).orElseThrow())
+                        .build();
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            }).toList();
+
+            return inquiryCommentList.stream()
+                    .map(inquiryComment -> {
+                        InquiryCommentDTO dto = inquiryComment.toDTO();
+                        dto.setInquiryCommentLikeCount(inquiryCommentLikeRepository.countByInquiryCommentInquiryCommentId(dto.getInquiryCommentId()));
+                        long inquiryCommentLike = inquiryCommentLikeRepository.countByMemberMemberIdAndInquiryCommentInquiryCommentId(customUserDetails.getMember().getMemberId(), dto.getInquiryCommentId());
+                        if(inquiryCommentLike == 0) {
+                            dto.setCommentLike(false);
+                        } else {
+                            dto.setCommentLike(true);
+                        }
+                        dto.getMemberDTO().setPassword("");
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
+        } else {
+            return inquiryCommentRepository.findByInquiryInquiryIdOrderByInquiryCommentCrtDTDesc(inquiryId).stream()
+                    .map(inquiryComment -> {
+                        InquiryCommentDTO dto = inquiryComment.toDTO();
+                        dto.setInquiryCommentLikeCount(inquiryCommentLikeRepository.countByInquiryCommentInquiryCommentId(dto.getInquiryCommentId()));
+                        long inquiryCommentLike = inquiryCommentLikeRepository.countByMemberMemberIdAndInquiryCommentInquiryCommentId(customUserDetails.getMember().getMemberId(), dto.getInquiryCommentId());
+                        if(inquiryCommentLike == 0) {
+                            dto.setCommentLike(false);
+                        } else {
+                            dto.setCommentLike(true);
+                        }
+                        dto.getMemberDTO().setPassword("");
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
+        }
     }
 }
