@@ -21,4 +21,6 @@ public interface QnaRepository extends JpaRepository<Qna, Long> {
     @Query("SELECT q FROM Qna q WHERE (q.askUser.userNickname LIKE %:searchKeyword% OR q.content LIKE %:searchKeyword%) AND (q.category LIKE %:searchCondition% OR q.content LIKE %:searchCondition%)ORDER BY q.id DESC")
     Page<Qna> findByMemberAndContentContaining(Pageable pageable, String searchCondition, String searchKeyword);
     Page<Qna> findByAskUserOrderByIdDesc(Pageable pageable, Member member);
+
+    long countByAskUser(Member entity);
 }

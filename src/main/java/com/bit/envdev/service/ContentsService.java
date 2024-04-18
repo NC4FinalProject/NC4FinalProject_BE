@@ -42,5 +42,7 @@ public interface ContentsService {
     void deleteContents(int contentsId);
 
     Page<ContentsDTO> searchBookmarkAll(Pageable pageable, Member member);
+
+    long countByMemberId(Member member);
 }
 

@@ -71,5 +71,10 @@ public class QnaServiceImpl implements QnaService {
                 .collect(Collectors.toList());
         return new PageImpl<>(qnaDTOList, pageable, qnaPage.getTotalElements());
     }
+
+    @Override
+    public long countByMemberId(Member entity) {
+        return qnaRepository.countByAskUser(entity);
+    }
 }
 

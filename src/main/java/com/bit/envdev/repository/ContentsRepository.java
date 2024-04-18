@@ -3,6 +3,7 @@ package com.bit.envdev.repository;
 
 import com.bit.envdev.dto.ContentsDTO;
 import com.bit.envdev.entity.Contents;
+import com.bit.envdev.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -2968,4 +2969,6 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                 ") D", nativeQuery = true
     )
     Page<Contents> searchBookmarkAll(Pageable pageable, long memberId);
+
+    long countByMember(Member member);
 }

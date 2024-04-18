@@ -5,7 +5,6 @@ import com.bit.envdev.constant.Role;
 import com.bit.envdev.dto.EmailVerifyMemberDTO;
 import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.dto.MemberGraphDTO;
-import com.bit.envdev.dto.PointDTO;
 import com.bit.envdev.entity.Member;
 import com.bit.envdev.entity.MemberGraph;
 import com.bit.envdev.jwt.JwtTokenProvider;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -133,10 +131,24 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO updateProfile(String fileString, MemberDTO memberDTO) {
 
-        MemberDTO NewMemberDTO = memberRepository.findByUsername(memberDTO.getUsername()).get().toDTO();
-        NewMemberDTO.setProfileFile(fileString);
+        Member NewMember = memberRepository.findByUsername(memberDTO.getUsername()).get();
+        memberDTO.setProfileFile(fileString);
 
-        Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
+        Member updatedMember = Member.builder()
+                .memberId(memberDTO.getMemberId())
+                .username(memberDTO.getUsername())
+                .password(memberDTO.getPassword())
+                .userNickname(memberDTO.getUserNickname())
+                .role(memberDTO.getRole())
+                .profileFile(memberDTO.getProfileFile())
+                .emailVerification(memberDTO.getEmailVerification())
+                .createdAt(LocalDateTime.parse(memberDTO.getCreatedAt()))
+                .modifiedAt(LocalDateTime.now())
+                .memo(memberDTO.getMemo())
+                .contentsList(memberDTO.toEntity().getContentsList())
+                .build();
+
+        Member joinMember = memberRepository.save(updatedMember);
         return joinMember.toDTO();
     }
 
@@ -161,17 +173,46 @@ public class MemberServiceImpl implements MemberService {
     public MemberDTO updateUserNickname(String userNickname, MemberDTO memberDTO) {
 
         MemberDTO NewMemberDTO = memberRepository.findByUsername(memberDTO.getUsername()).get().toDTO();
-        NewMemberDTO.setUserNickname(userNickname);
+        memberDTO.setUserNickname(userNickname);
 
-        Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
+        Member updatedMember = Member.builder()
+                .memberId(memberDTO.getMemberId())
+                .username(memberDTO.getUsername())
+                .password(memberDTO.getPassword())
+                .userNickname(memberDTO.getUserNickname())
+                .role(memberDTO.getRole())
+                .profileFile(memberDTO.getProfileFile())
+                .emailVerification(memberDTO.getEmailVerification())
+                .createdAt(LocalDateTime.parse(memberDTO.getCreatedAt()))
+                .modifiedAt(LocalDateTime.now())
+                .memo(memberDTO.getMemo())
+                .contentsList(memberDTO.toEntity().getContentsList())
+                .build();
+
+        Member joinMember = memberRepository.save(updatedMember);
         return joinMember.toDTO();
     }
 
     @Override
     public MemberDTO wannabeTeacher(MemberDTO memberDTO) {
         MemberDTO NewMemberDTO = memberRepository.findByUsername(memberDTO.getUsername()).get().toDTO();
-        NewMemberDTO.setRole(Role.PRETEACHER);
-        Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
+        memberDTO.setRole(Role.PRETEACHER);
+
+        Member updatedMember = Member.builder()
+                .memberId(memberDTO.getMemberId())
+                .username(memberDTO.getUsername())
+                .password(memberDTO.getPassword())
+                .userNickname(memberDTO.getUserNickname())
+                .role(memberDTO.getRole())
+                .profileFile(memberDTO.getProfileFile())
+                .emailVerification(memberDTO.getEmailVerification())
+                .createdAt(LocalDateTime.parse(memberDTO.getCreatedAt()))
+                .modifiedAt(LocalDateTime.now())
+                .memo(memberDTO.getMemo())
+                .contentsList(memberDTO.toEntity().getContentsList())
+                .build();
+
+        Member joinMember = memberRepository.save(updatedMember);
         return joinMember.toDTO();
     }
 
@@ -243,8 +284,23 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void updateUserMemo(MemberDTO memberDTO) {
         MemberDTO NewMemberDTO = memberRepository.findById(memberDTO.getMemberId()).get().toDTO();
-        NewMemberDTO.setMemo(memberDTO.getMemo());
-        memberRepository.save(NewMemberDTO.toEntity());
+        memberDTO.setMemo(memberDTO.getMemo());
+
+        Member updatedMember = Member.builder()
+                .memberId(memberDTO.getMemberId())
+                .username(memberDTO.getUsername())
+                .password(memberDTO.getPassword())
+                .userNickname(memberDTO.getUserNickname())
+                .role(memberDTO.getRole())
+                .profileFile(memberDTO.getProfileFile())
+                .emailVerification(memberDTO.getEmailVerification())
+                .createdAt(LocalDateTime.parse(memberDTO.getCreatedAt()))
+                .modifiedAt(LocalDateTime.now())
+                .memo(memberDTO.getMemo())
+                .contentsList(memberDTO.toEntity().getContentsList())
+                .build();
+
+        memberRepository.save(updatedMember);
     }
 
     @Override
@@ -293,7 +349,22 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void changePw(MemberDTO member, String userPw) {
         member.setPassword(passwordEncoder.encode(userPw));
-        memberRepository.save(member.toEntity());
+
+        Member updatedMember = Member.builder()
+                .memberId(member.getMemberId())
+                .username(member.getUsername())
+                .password(member.getPassword())
+                .userNickname(member.getUserNickname())
+                .role(member.getRole())
+                .profileFile(member.getProfileFile())
+                .emailVerification(member.getEmailVerification())
+                .createdAt(LocalDateTime.parse(member.getCreatedAt()))
+                .modifiedAt(LocalDateTime.now())
+                .memo(member.getMemo())
+                .contentsList(member.toEntity().getContentsList())
+                .build();
+
+        memberRepository.save(updatedMember);
     }
 
     @Override

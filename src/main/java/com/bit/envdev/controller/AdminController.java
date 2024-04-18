@@ -26,6 +26,8 @@ public class AdminController {
     private final PointService pointService;
     private final ContentsService contentsService;
     private final QnaService qnaService;
+    private final InquiryService inquiryService;
+    private final ReviewService reviewService;
     @GetMapping("/main")
     private ResponseEntity<?> userChart(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
@@ -113,10 +115,19 @@ public class AdminController {
 
     @GetMapping("/user/{id}")
     private ResponseEntity<?> getUser(@PathVariable("id") long id) {
-
+        Map<String, Object> responseData = new HashMap<>();
         try {
             MemberDTO member = memberService.findById(id);
-            return ResponseEntity.ok(member);
+            long contentCount = contentsService.countByMemberId(member.toEntity());
+            long inqueryCount = inquiryService.countByMemberId(member.toEntity());
+            long reviewCount = reviewService.countByMemberId(member.toEntity());
+            long qnaCount = qnaService.countByMemberId(member.toEntity());
+            responseData.put("member", member);
+            responseData.put("contentCount", contentCount);
+            responseData.put("inqueryCount", inqueryCount);
+            responseData.put("reviewCount", reviewCount);
+            responseData.put("qnaCount", qnaCount);
+            return ResponseEntity.ok(responseData);
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("errorCode", 101);

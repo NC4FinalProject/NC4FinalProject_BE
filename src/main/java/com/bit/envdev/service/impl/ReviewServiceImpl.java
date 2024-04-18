@@ -2,6 +2,7 @@ package com.bit.envdev.service.impl;
 
 import com.bit.envdev.dto.ReviewDTO;
 import com.bit.envdev.entity.CustomUserDetails;
+import com.bit.envdev.entity.Member;
 import com.bit.envdev.entity.Review;
 import com.bit.envdev.repository.ContentsRepository;
 import com.bit.envdev.repository.MemberRepository;
@@ -112,5 +113,10 @@ public class ReviewServiceImpl implements ReviewService {
     public List<Object[]> get12RandomContents() {
         List<Object[]>  reviews = reviewRepository.findTopRandom12ContentsWithMemberInfoByRatingAndReviewCount();
         return reviews;
+    }
+
+    @Override
+    public long countByMemberId(Member entity) {
+        return reviewRepository.countByMember(entity);
     }
 }
