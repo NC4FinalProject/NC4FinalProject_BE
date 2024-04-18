@@ -267,6 +267,11 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
+    public long countByMemberId(Member entity) {
+        return inquiryLikeRepository.countByMember(entity);
+    }
+
+    @Override
     public List<Long> modifyInquiryFileList(InquiryDTO inquiryDTO) {
         Inquiry inquiry = inquiryRepository.findById(inquiryDTO.getInquiryId()).orElseThrow(() -> new RuntimeException("질의응답이 존재하지 않습니다."));
         try {

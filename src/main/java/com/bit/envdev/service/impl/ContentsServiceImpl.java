@@ -429,4 +429,9 @@ public class ContentsServiceImpl implements ContentsService {
     public Page<ContentsDTO> searchBookmarkAll(Pageable pageable, Member member) {
         return contentsRepository.searchBookmarkAll(pageable, member.getMemberId()).map(Contents::toDTO);
     }
+
+    @Override
+    public long countByMemberId(Member member) {
+        return contentsRepository.countByMember(member);
+    }
 }
