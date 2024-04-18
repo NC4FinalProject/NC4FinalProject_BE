@@ -1,7 +1,6 @@
 package com.bit.envdev.repository;
 
 
-import com.bit.envdev.dto.ContentsDTO;
 import com.bit.envdev.entity.Contents;
 import com.bit.envdev.entity.Member;
 import org.springframework.data.domain.Page;
@@ -11,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Repository
@@ -1457,60 +1455,68 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
-            "     , 0 AS BOOKMARK_COUNT" +
-            "    FROM CONTENTS A\n" +
-            "    LEFT JOIN (\n" +
-            "    SELECT C.CONTENTS_ID\n" +
-            "         , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
-            "         , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
-            "        FROM REVIEW C\n" +
-            "    ) B\n" +
-            "    ON A.contents_id = B.contents_id\n" +
-            "    JOIN (\n" +
-            "        SELECT F.CONTENTS_ID\n" +
-            "             , E.MEMBER_ID\n" +
-            "            FROM payment E\n" +
-            "            JOIN payment_content F\n" +
-            "            ON E.payment_id = F.payment_id\n" +
-            "    ) D\n" +
-            "    ON A.contents_id = D.contents_id\n" +
-            "    WHERE D.member_id = :memberId",
-        countQuery = "SELECT COUNT(*) " +
-                " FROM (" +
-                "   SELECT A.CONTENTS_ID\n" +
-                "     , A.CATEGORY\n" +
-                "     , A.CONTENTS_TITLE\n" +
-                "     , A.INTRODUCE\n" +
-                "     , A.PRICE\n" +
-                "     , A.PRICE_TYPE\n" +
-                "     , A.REG_DATE\n" +
-                "     , A.THUMBNAIL\n" +
-                "     , A.MEMBER_ID\n" +
-                "     , A.MOD_DATE\n" +
-                "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
-                "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
-                "     , 0 AS PAYMENT_COUNT\n" +
-                "     , 0 AS BOOKMARK_COUNT" +
-                "    FROM CONTENTS A\n" +
-                "    LEFT JOIN (\n" +
-                "    SELECT C.CONTENTS_ID\n" +
-                "         , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
-                "         , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
-                "        FROM REVIEW C\n" +
-                "    ) B\n" +
-                "    ON A.contents_id = B.contents_id\n" +
-                "    JOIN (\n" +
-                "        SELECT F.CONTENTS_ID\n" +
-                "             , E.MEMBER_ID\n" +
-                "            FROM payment E\n" +
-                "            JOIN payment_content F\n" +
-                "            ON E.payment_id = F.payment_id\n" +
-                "    ) D\n" +
-                "    ON A.contents_id = D.contents_id\n" +
-                "    WHERE D.member_id = :memberId" +
-                ") G", nativeQuery = true
-    )
+            "     , IFNULL(C.BOOKMARK_COUNT, 0) AS BOOKMARK_COUNT" +
+            " FROM CONTENTS A\n" +
+            " LEFT JOIN (\n" +
+            "     SELECT CONTENTS_ID, COUNT(CONTENTS_ID) AS REVIEW_COUNT, AVG(REVIEW_RATING) AS REVIEW_RATING\n" +
+            "     FROM REVIEW\n" +
+            "     GROUP BY CONTENTS_ID\n" +
+            " ) B\n" +
+            " ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            " LEFT JOIN (\n" +
+            "     SELECT CONTENTS_ID, COUNT(*) AS BOOKMARK_COUNT\n" +
+            "     FROM CONTENTS_BOOKMARK\n" +
+            "     WHERE MEMBER_ID = :memberId\n" +
+            "     GROUP BY CONTENTS_ID\n" +
+            " ) C\n" +
+            " ON A.CONTENTS_ID = C.CONTENTS_ID\n" +
+            " JOIN (\n" +
+            "     SELECT PAYMENT_CONTENT.CONTENTS_ID\n" +
+            "     FROM PAYMENT_CONTENT\n" +
+            "     JOIN PAYMENT ON PAYMENT_CONTENT.PAYMENT_ID = PAYMENT.PAYMENT_ID\n" +
+            "     WHERE PAYMENT.MEMBER_ID = :memberId\n" +
+            " ) D\n" +
+            " ON A.CONTENTS_ID = D.CONTENTS_ID",
+            countQuery = "SELECT COUNT(*) " +
+                    " FROM (" +
+                    "   SELECT A.CONTENTS_ID\n" +
+                    "     , A.CATEGORY\n" +
+                    "     , A.CONTENTS_TITLE\n" +
+                    "     , A.INTRODUCE\n" +
+                    "     , A.PRICE\n" +
+                    "     , A.PRICE_TYPE\n" +
+                    "     , A.REG_DATE\n" +
+                    "     , A.THUMBNAIL\n" +
+                    "     , A.MEMBER_ID\n" +
+                    "     , A.MOD_DATE\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , IFNULL(C.BOOKMARK_COUNT, 0) AS BOOKMARK_COUNT" +
+                    "    FROM CONTENTS A\n" +
+                    "    LEFT JOIN (\n" +
+                    "    SELECT CONTENTS_ID, COUNT(CONTENTS_ID) AS REVIEW_COUNT, AVG(REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "    FROM REVIEW\n" +
+                    "    GROUP BY CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    LEFT JOIN (\n" +
+                    "    SELECT CONTENTS_ID, COUNT(*) AS BOOKMARK_COUNT\n" +
+                    "    FROM CONTENTS_BOOKMARK\n" +
+                    "    WHERE MEMBER_ID = :memberId\n" +
+                    "    GROUP BY CONTENTS_ID\n" +
+                    "    ) C\n" +
+                    "    ON A.CONTENTS_ID = C.CONTENTS_ID\n" +
+                    "    JOIN (\n" +
+                    "    SELECT PAYMENT_CONTENT.CONTENTS_ID\n" +
+                    "    FROM PAYMENT_CONTENT\n" +
+                    "    JOIN PAYMENT ON PAYMENT_CONTENT.PAYMENT_ID = PAYMENT.PAYMENT_ID\n" +
+                    "    WHERE PAYMENT.MEMBER_ID = :memberId\n" +
+                    "    ) D\n" +
+                    "    ON A.CONTENTS_ID = D.CONTENTS_ID" +
+                    ") G", nativeQuery = true)
     Page<Contents> searchMyAll(Pageable pageable, long memberId);
+
 
     @Query(value = "SELECT AA.*\n" +
             "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
