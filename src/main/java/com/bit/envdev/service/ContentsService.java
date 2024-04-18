@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface ContentsService {
@@ -32,7 +33,7 @@ public interface ContentsService {
 
     List<ContentsDTO> get12RandomContents();
 
-    Page<ContentsDTO> searchAll(Pageable pageable, String category, String pricePattern, String orderType);
+    Page<ContentsDTO> searchAll(Pageable pageable, String category, String pricePattern, String orderType, String searchKeyword);
 
     Page<ContentsDTO> searchMyAll(Pageable pageable, Member member);
 

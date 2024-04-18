@@ -4,8 +4,12 @@ import com.bit.envdev.entity.Contents;
 import com.bit.envdev.repository.ContentsRepositoryCustom;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.SimplePath;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,12 +30,4 @@ import static com.bit.envdev.entity.QReview.review;
 @RequiredArgsConstructor
 public class ContentsRepositoryCustomImpl implements ContentsRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
-
-    @Override
-    public Page<Map<String, Object>> searchAllSearch(Pageable pageable, String category, String pricePattern, String orderType, String searchKeyword) {
-        List<Tuple> tuples = jpaQueryFactory
-                .select(contents.contentsId)
-
-        return null;
-    }
 }

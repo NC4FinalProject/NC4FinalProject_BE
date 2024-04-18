@@ -1463,4 +1463,1285 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             nativeQuery = true
     )
     Page<Contents> searchTeacherAll(Pageable pageable, long memberId);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM CONTENTS A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT CONTENTS_ID\n" +
+            "                     , AVG(review_rating) AS REVIEW_RATING\n" +
+            "                     , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM review\n" +
+            "                    GROUP BY CONTENTS_ID\n" +
+            "              ) B\n" +
+            "    ON A.contents_id = B.contents_id" +
+            "    WHERE A.contents_title like CONCAT('%', :searchKeyword, '%')",
+            countQuery = "SELECT COUNT(*) " +
+                    "   FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM CONTENTS A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT CONTENTS_ID\n" +
+                    "                     , AVG(review_rating) AS REVIEW_RATING\n" +
+                    "                     , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM review\n" +
+                    "                    GROUP BY CONTENTS_ID\n" +
+                    "              ) B\n" +
+                    "    ON A.contents_id = B.contents_id" +
+                    "    WHERE A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    ") D",
+            nativeQuery = true
+    )
+    Page<Contents> searchAllkeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.price = 0" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    WHERE A.price = 0" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    ") D",nativeQuery = true)
+    Page<Contents> searchAllFreekeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.price != 0" +
+            "      AND A.PRICE != -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    WHERE A.price != 0" +
+                    "      AND A.PRICE != -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    ") D",nativeQuery = true)
+    Page<Contents> searchAllPaykeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.price = -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    WHERE A.price = -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    ") D",nativeQuery = true)
+    Page<Contents> searchAllNationalkeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.category = :category" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    WHERE A.category = :category" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategorykeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.category = :category" +
+            "      AND A.price = 0" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    WHERE A.category = :category" +
+                    "      AND A.price = 0" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategoryFreekeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.category = :category" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    WHERE A.category = :category" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategoryPaykeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.category = :category" +
+            "      AND A.price = -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    WHERE A.category = :category" +
+                    "      AND A.price = -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategoryNationalkeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT AA.*\n" +
+            "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(BB.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "    FROM (\n" +
+            "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                FROM contents A\n" +
+            "                LEFT JOIN (\n" +
+            "                    SELECT C.CONTENTS_ID\n" +
+            "                         , COUNT(C.contents_id) AS PAYMENT_COUNT\n" +
+            "                        FROM payment_content C\n" +
+            "                        GROUP BY C.CONTENTS_ID\n" +
+            "                ) B\n" +
+            "                ON A.contents_id = B.contents_id\n" +
+            "         ) AA\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT C.CONTENTS_ID\n" +
+            "             , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "            FROM review C\n" +
+            "            GROUP BY C.CONTENTS_ID\n" +
+            "    ) BB\n" +
+            "    ON AA.contents_id = BB.contents_id" +
+            "    WHERE AA.PRICE = 0" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY AA.PAYMENT_COUNT DESC",
+            countQuery = "SELECT COUNT(*)" +
+                    "FROM (" +
+                    "   SELECT AA.*\n" +
+                    "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(BB.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "    FROM (\n" +
+                    "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                FROM contents A\n" +
+                    "                LEFT JOIN (\n" +
+                    "                    SELECT C.CONTENTS_ID\n" +
+                    "                         , COUNT(C.contents_id) AS PAYMENT_COUNT\n" +
+                    "                        FROM payment_content C\n" +
+                    "                        GROUP BY C.CONTENTS_ID\n" +
+                    "                ) B\n" +
+                    "                ON A.contents_id = B.contents_id\n" +
+                    "         ) AA\n" +
+                    "    LEFT JOIN (\n" +
+                    "        SELECT C.CONTENTS_ID\n" +
+                    "             , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "            FROM review C\n" +
+                    "            GROUP BY C.CONTENTS_ID\n" +
+                    "    ) BB\n" +
+                    "    ON AA.contents_id = BB.contents_id" +
+                    "    WHERE AA.PRICE = 0" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY AA.PAYMENT_COUNT DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllFreeSalekeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value = "SELECT AA.*\n" +
+            "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(BB.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "    FROM (\n" +
+            "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                FROM contents A\n" +
+            "                LEFT JOIN (\n" +
+            "                    SELECT C.CONTENTS_ID\n" +
+            "                         , COUNT(C.contents_id) AS PAYMENT_COUNT\n" +
+            "                        FROM payment_content C\n" +
+            "                        GROUP BY C.CONTENTS_ID\n" +
+            "                ) B\n" +
+            "                ON A.contents_id = B.contents_id\n" +
+            "         ) AA\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT C.CONTENTS_ID\n" +
+            "             , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "            FROM review C\n" +
+            "            GROUP BY C.CONTENTS_ID\n" +
+            "    ) BB\n" +
+            "    ON AA.contents_id = BB.contents_id" +
+            "    WHERE AA.PRICE != 0" +
+            "      AND AA.PRICE != -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY AA.PAYMENT_COUNT DESC",
+            countQuery = "SELECT COUNT(*)" +
+                    "FROM (" +
+                    "   SELECT AA.*\n" +
+                    "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(BB.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "    FROM (\n" +
+                    "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                FROM contents A\n" +
+                    "                LEFT JOIN (\n" +
+                    "                    SELECT C.CONTENTS_ID\n" +
+                    "                         , COUNT(C.contents_id) AS PAYMENT_COUNT\n" +
+                    "                        FROM payment_content C\n" +
+                    "                        GROUP BY C.CONTENTS_ID\n" +
+                    "                ) B\n" +
+                    "                ON A.contents_id = B.contents_id\n" +
+                    "         ) AA\n" +
+                    "    LEFT JOIN (\n" +
+                    "        SELECT C.CONTENTS_ID\n" +
+                    "             , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "            FROM review C\n" +
+                    "            GROUP BY C.CONTENTS_ID\n" +
+                    "    ) BB\n" +
+                    "    ON AA.contents_id = BB.contents_id" +
+                    "    WHERE AA.PRICE != 0" +
+                    "      AND AA.PRICE != -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY AA.PAYMENT_COUNT DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllPaySalekeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value = "SELECT AA.*\n" +
+            "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(BB.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "    FROM (\n" +
+            "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                FROM contents A\n" +
+            "                LEFT JOIN (\n" +
+            "                    SELECT C.CONTENTS_ID\n" +
+            "                         , COUNT(C.contents_id) AS PAYMENT_COUNT\n" +
+            "                        FROM payment_content C\n" +
+            "                        GROUP BY C.CONTENTS_ID\n" +
+            "                ) B\n" +
+            "                ON A.contents_id = B.contents_id\n" +
+            "         ) AA\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT C.CONTENTS_ID\n" +
+            "             , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "            FROM review C\n" +
+            "            GROUP BY C.CONTENTS_ID\n" +
+            "    ) BB\n" +
+            "    ON AA.contents_id = BB.contents_id" +
+            "    WHERE AA.PRICE = -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY AA.PAYMENT_COUNT DESC",
+            countQuery = "SELECT COUNT(*)" +
+                    "FROM (" +
+                    "   SELECT AA.*\n" +
+                    "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(BB.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "    FROM (\n" +
+                    "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                FROM contents A\n" +
+                    "                LEFT JOIN (\n" +
+                    "                    SELECT C.CONTENTS_ID\n" +
+                    "                         , COUNT(C.contents_id) AS PAYMENT_COUNT\n" +
+                    "                        FROM payment_content C\n" +
+                    "                        GROUP BY C.CONTENTS_ID\n" +
+                    "                ) B\n" +
+                    "                ON A.contents_id = B.contents_id\n" +
+                    "         ) AA\n" +
+                    "    LEFT JOIN (\n" +
+                    "        SELECT C.CONTENTS_ID\n" +
+                    "             , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "            FROM review C\n" +
+                    "            GROUP BY C.CONTENTS_ID\n" +
+                    "    ) BB\n" +
+                    "    ON AA.contents_id = BB.contents_id" +
+                    "    WHERE AA.PRICE = -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY AA.PAYMENT_COUNT DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllNationalSalekeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value = "SELECT AA.*\n" +
+            "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(BB.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "    FROM (\n" +
+            "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                FROM contents A\n" +
+            "                LEFT JOIN (\n" +
+            "                    SELECT C.CONTENTS_ID\n" +
+            "                         , COUNT(C.contents_id) AS PAYMENT_COUNT\n" +
+            "                        FROM payment_content C\n" +
+            "                        GROUP BY C.CONTENTS_ID\n" +
+            "                ) B\n" +
+            "                ON A.contents_id = B.contents_id\n" +
+            "         ) AA\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT C.CONTENTS_ID\n" +
+            "             , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "            FROM review C\n" +
+            "            GROUP BY C.CONTENTS_ID\n" +
+            "    ) BB\n" +
+            "    ON AA.contents_id = BB.contents_id" +
+            "    WHERE AA.CATEGORY = :category" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY AA.PAYMENT_COUNT DESC",
+            countQuery = "SELECT COUNT(*)" +
+                    "FROM (" +
+                    "   SELECT AA.*\n" +
+                    "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(BB.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "    FROM (\n" +
+                    "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                FROM contents A\n" +
+                    "                LEFT JOIN (\n" +
+                    "                    SELECT C.CONTENTS_ID\n" +
+                    "                         , COUNT(C.contents_id) AS PAYMENT_COUNT\n" +
+                    "                        FROM payment_content C\n" +
+                    "                        GROUP BY C.CONTENTS_ID\n" +
+                    "                ) B\n" +
+                    "                ON A.contents_id = B.contents_id\n" +
+                    "         ) AA\n" +
+                    "    LEFT JOIN (\n" +
+                    "        SELECT C.CONTENTS_ID\n" +
+                    "             , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "            FROM review C\n" +
+                    "            GROUP BY C.CONTENTS_ID\n" +
+                    "    ) BB\n" +
+                    "    ON AA.contents_id = BB.contents_id" +
+                    "    WHERE AA.category = :category" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY AA.PAYMENT_COUNT DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategorySalekeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT AA.*\n" +
+            "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(BB.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "    FROM (\n" +
+            "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                FROM contents A\n" +
+            "                LEFT JOIN (\n" +
+            "                    SELECT C.CONTENTS_ID\n" +
+            "                         , COUNT(C.contents_id) AS PAYMENT_COUNT\n" +
+            "                        FROM payment_content C\n" +
+            "                        GROUP BY C.CONTENTS_ID\n" +
+            "                ) B\n" +
+            "                ON A.contents_id = B.contents_id\n" +
+            "         ) AA\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT C.CONTENTS_ID\n" +
+            "             , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "            FROM review C\n" +
+            "            GROUP BY C.CONTENTS_ID\n" +
+            "    ) BB\n" +
+            "    ON AA.contents_id = BB.contents_id" +
+            "    WHERE AA.category = :category" +
+            "      AND AA.price = 0" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY AA.PAYMENT_COUNT DESC",
+            countQuery = "SELECT COUNT(*)" +
+                    "FROM (" +
+                    "   SELECT AA.*\n" +
+                    "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(BB.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "    FROM (\n" +
+                    "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                FROM contents A\n" +
+                    "                LEFT JOIN (\n" +
+                    "                    SELECT C.CONTENTS_ID\n" +
+                    "                         , COUNT(C.contents_id) AS PAYMENT_COUNT\n" +
+                    "                        FROM payment_content C\n" +
+                    "                        GROUP BY C.CONTENTS_ID\n" +
+                    "                ) B\n" +
+                    "                ON A.contents_id = B.contents_id\n" +
+                    "         ) AA\n" +
+                    "    LEFT JOIN (\n" +
+                    "        SELECT C.CONTENTS_ID\n" +
+                    "             , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "            FROM review C\n" +
+                    "            GROUP BY C.CONTENTS_ID\n" +
+                    "    ) BB\n" +
+                    "    ON AA.contents_id = BB.contents_id" +
+                    "    WHERE AA.category = :category" +
+                    "      AND AA.price = 0" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY AA.PAYMENT_COUNT DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategoryFreeSalekeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT AA.*\n" +
+            "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(BB.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "    FROM (\n" +
+            "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                FROM contents A\n" +
+            "                LEFT JOIN (\n" +
+            "                    SELECT C.CONTENTS_ID\n" +
+            "                         , COUNT(C.contents_id) AS PAYMENT_COUNT\n" +
+            "                        FROM payment_content C\n" +
+            "                        GROUP BY C.CONTENTS_ID\n" +
+            "                ) B\n" +
+            "                ON A.contents_id = B.contents_id\n" +
+            "         ) AA\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT C.CONTENTS_ID\n" +
+            "             , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "            FROM review C\n" +
+            "            GROUP BY C.CONTENTS_ID\n" +
+            "    ) BB\n" +
+            "    ON AA.contents_id = BB.contents_id" +
+            "    WHERE AA.category = :category" +
+            "      AND AA.price != 0" +
+            "      AND AA.price != -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY AA.PAYMENT_COUNT DESC",
+            countQuery = "SELECT COUNT(*)" +
+                    "FROM (" +
+                    "   SELECT AA.*\n" +
+                    "     , IFNULL(BB.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(BB.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "    FROM (\n" +
+                    "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                FROM contents A\n" +
+                    "                LEFT JOIN (\n" +
+                    "                    SELECT C.CONTENTS_ID\n" +
+                    "                         , COUNT(C.contents_id) AS PAYMENT_COUNT\n" +
+                    "                        FROM payment_content C\n" +
+                    "                        GROUP BY C.CONTENTS_ID\n" +
+                    "                ) B\n" +
+                    "                ON A.contents_id = B.contents_id\n" +
+                    "         ) AA\n" +
+                    "    LEFT JOIN (\n" +
+                    "        SELECT C.CONTENTS_ID\n" +
+                    "             , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "            FROM review C\n" +
+                    "            GROUP BY C.CONTENTS_ID\n" +
+                    "    ) BB\n" +
+                    "    ON AA.contents_id = BB.contents_id" +
+                    "    WHERE AA.category = :category" +
+                    "      AND AA.price != 0" +
+                    "      AND AA.price != -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY AA.PAYMENT_COUNT DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategoryPaySalekeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.category = :category" +
+            "      AND A.price = -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    WHERE A.category = :category" +
+                    "      AND A.price = -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategoryNationalSalekeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM CONTENTS A\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT CONTENTS_ID\n" +
+            "             , AVG(review_rating) AS REVIEW_RATING\n" +
+            "             , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "            FROM review\n" +
+            "            GROUP BY CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.contents_id = B.contents_id\n" +
+            "    WHERE A.price = 0" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC",
+            countQuery = "SELECT COUNT(*)" +
+                    "   FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM CONTENTS A\n" +
+                    "    LEFT JOIN (\n" +
+                    "        SELECT CONTENTS_ID\n" +
+                    "             , AVG(review_rating) AS REVIEW_RATING\n" +
+                    "             , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "            FROM review\n" +
+                    "            GROUP BY CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.contents_id = B.contents_id" +
+                    "    WHERE A.price = 0" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllFreePopkeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM CONTENTS A\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT CONTENTS_ID\n" +
+            "             , AVG(review_rating) AS REVIEW_RATING\n" +
+            "             , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "            FROM review\n" +
+            "            GROUP BY CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.contents_id = B.contents_id\n" +
+            "    WHERE A.price != 0" +
+            "      AND A.price != -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC",
+            countQuery = "SELECT COUNT(*)" +
+                    "   FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM CONTENTS A\n" +
+                    "    LEFT JOIN (\n" +
+                    "        SELECT CONTENTS_ID\n" +
+                    "             , AVG(review_rating) AS REVIEW_RATING\n" +
+                    "             , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "            FROM review\n" +
+                    "            GROUP BY CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.contents_id = B.contents_id" +
+                    "    WHERE A.price != 0" +
+                    "      AND A.price != -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllPayPopkeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM CONTENTS A\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT CONTENTS_ID\n" +
+            "             , AVG(review_rating) AS REVIEW_RATING\n" +
+            "             , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "            FROM review\n" +
+            "            GROUP BY CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.contents_id = B.contents_id\n" +
+            "    WHERE A.price = -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC",
+            countQuery = "SELECT COUNT(*)" +
+                    "   FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM CONTENTS A\n" +
+                    "    LEFT JOIN (\n" +
+                    "        SELECT CONTENTS_ID\n" +
+                    "             , AVG(review_rating) AS REVIEW_RATING\n" +
+                    "             , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "            FROM review\n" +
+                    "            GROUP BY CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.contents_id = B.contents_id" +
+                    "    WHERE A.price = -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllNationalPopkeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM CONTENTS A\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT CONTENTS_ID\n" +
+            "             , AVG(review_rating) AS REVIEW_RATING\n" +
+            "             , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "            FROM review\n" +
+            "            GROUP BY CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.contents_id = B.contents_id\n" +
+            "    WHERE A.category = :category" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC",
+            countQuery = "SELECT COUNT(*)" +
+                    "   FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM CONTENTS A\n" +
+                    "    LEFT JOIN (\n" +
+                    "        SELECT CONTENTS_ID\n" +
+                    "             , AVG(review_rating) AS REVIEW_RATING\n" +
+                    "             , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "            FROM review\n" +
+                    "            GROUP BY CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.contents_id = B.contents_id" +
+                    "    WHERE A.category = :category" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategoryPopkeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM CONTENTS A\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT CONTENTS_ID\n" +
+            "             , AVG(review_rating) AS REVIEW_RATING\n" +
+            "             , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "            FROM review\n" +
+            "            GROUP BY CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.contents_id = B.contents_id\n" +
+            "    WHERE A.category = :category" +
+            "      AND A.price = 0" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC",
+            countQuery = "SELECT COUNT(*)" +
+                    "   FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM CONTENTS A\n" +
+                    "    LEFT JOIN (\n" +
+                    "        SELECT CONTENTS_ID\n" +
+                    "             , AVG(review_rating) AS REVIEW_RATING\n" +
+                    "             , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "            FROM review\n" +
+                    "            GROUP BY CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.contents_id = B.contents_id" +
+                    "    WHERE A.category = :category" +
+                    "      AND A.price = 0" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategoryFreePopkeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM CONTENTS A\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT CONTENTS_ID\n" +
+            "             , AVG(review_rating) AS REVIEW_RATING\n" +
+            "             , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "            FROM review\n" +
+            "            GROUP BY CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.contents_id = B.contents_id\n" +
+            "    WHERE A.category = :category" +
+            "      AND A.price != 0" +
+            "      AND A.price != -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC",
+            countQuery = "SELECT COUNT(*)" +
+                    "   FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM CONTENTS A\n" +
+                    "    LEFT JOIN (\n" +
+                    "        SELECT CONTENTS_ID\n" +
+                    "             , AVG(review_rating) AS REVIEW_RATING\n" +
+                    "             , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "            FROM review\n" +
+                    "            GROUP BY CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.contents_id = B.contents_id" +
+                    "    WHERE A.category = :category" +
+                    "      AND A.price != 0" +
+                    "      AND A.price != -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategoryPayPopkeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM CONTENTS A\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT CONTENTS_ID\n" +
+            "             , AVG(review_rating) AS REVIEW_RATING\n" +
+            "             , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "            FROM review\n" +
+            "            GROUP BY CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.contents_id = B.contents_id\n" +
+            "    WHERE A.category = :category" +
+            "      AND A.price = -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC",
+            countQuery = "SELECT COUNT(*)" +
+                    "   FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM CONTENTS A\n" +
+                    "    LEFT JOIN (\n" +
+                    "        SELECT CONTENTS_ID\n" +
+                    "             , AVG(review_rating) AS REVIEW_RATING\n" +
+                    "             , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "            FROM review\n" +
+                    "            GROUP BY CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.contents_id = B.contents_id" +
+                    "    WHERE A.category = :category" +
+                    "      AND A.price = -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategoryNationalPopkeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM CONTENTS A\n" +
+            "    LEFT JOIN (\n" +
+            "        SELECT C.CONTENTS_ID\n" +
+            "             , AVG(C.review_rating) AS REVIEW_RATING\n" +
+            "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "            FROM review C\n" +
+            "            GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.contents_id = B.contents_id\n" +
+            "    WHERE A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC",
+            countQuery = "SELECT COUNT(*)" +
+                    "   FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM CONTENTS A\n" +
+                    "    LEFT JOIN (\n" +
+                    "        SELECT C.CONTENTS_ID\n" +
+                    "             , AVG(C.review_rating) AS REVIEW_RATING\n" +
+                    "             , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "            FROM review C\n" +
+                    "            GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.contents_id = B.contents_id" +
+                    "    WHERE A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY B.REVIEW_RATING DESC, B.REVIEW_COUNT DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllPopkeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.price = 0" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY A.reg_date DESC",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    WHERE A.price = 0" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY A.reg_date DESC" +
+                    ") D",nativeQuery = true)
+    Page<Contents> searchAllFreeRegkeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.price != 0" +
+            "      AND A.price != -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY A.reg_date DESC",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    WHERE A.price != 0" +
+                    "      AND A.price != -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY A.reg_date DESC" +
+                    ") D",nativeQuery = true)
+    Page<Contents> searchAllPayRegkeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.price = -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY A.reg_date DESC",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    WHERE A.price = -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY A.reg_date DESC" +
+                    ") D",nativeQuery = true)
+    Page<Contents> searchAllNationalRegkeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.category = :category" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY A.reg_date DESC",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    WHERE A.category = :category" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY A.reg_date DESC" +
+                    ") D",nativeQuery = true)
+    Page<Contents> searchAllCategoryRegkeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SSELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.category = :category" +
+            "      AND A.price = 0" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY A.reg_date DESC",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    WHERE A.category = :category" +
+                    "      AND A.price = 0" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY A.reg_date DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategoryFreeRegkeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.category = :category" +
+            "      AND A.price != 0" +
+            "      AND A.price != -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY A.reg_date DESC",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    WHERE A.category = :category" +
+                    "      AND A.price != 0" +
+                    "      AND A.price != -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY A.reg_date DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategoryPayRegkeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM Contents A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT C.CONTENTS_ID\n" +
+            "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM REVIEW C\n" +
+            "                    GROUP BY C.CONTENTS_ID\n" +
+            "    ) B\n" +
+            "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+            "    WHERE A.category = :category" +
+            "      AND A.price = -1" +
+            "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "    ORDER BY A.reg_date DESC",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM Contents A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT C.CONTENTS_ID\n" +
+                    "                     , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                    "                     , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM REVIEW C\n" +
+                    "                    GROUP BY C.CONTENTS_ID\n" +
+                    "    ) B\n" +
+                    "    ON A.CONTENTS_ID = B.CONTENTS_ID\n" +
+                    "    WHERE A.category = :category" +
+                    "      AND A.price = -1" +
+                    "      AND A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY A.reg_date DESC" +
+                    ") D", nativeQuery = true)
+    Page<Contents> searchAllCategoryNationalRegkeyword(Pageable pageable, String category, String searchKeyword);
+
+    @Query(value = "SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "    FROM CONTENTS A\n" +
+            "    LEFT JOIN (\n" +
+            "                SELECT CONTENTS_ID\n" +
+            "                     , AVG(review_rating) AS REVIEW_RATING\n" +
+            "                     , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                    FROM review\n" +
+            "                    GROUP BY CONTENTS_ID\n" +
+            "              ) B\n" +
+            "    ON A.contents_id = B.contents_id" +
+            "   WHERE A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+            "   ORDER BY A.reg_date DESC",
+            countQuery = "SELECT count(*) " +
+                    "FROM (" +
+                    "   SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
+                    "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                    "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                    "     , 0 AS PAYMENT_COUNT\n" +
+                    "    FROM CONTENTS A\n" +
+                    "    LEFT JOIN (\n" +
+                    "                SELECT CONTENTS_ID\n" +
+                    "                     , AVG(review_rating) AS REVIEW_RATING\n" +
+                    "                     , COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+                    "                    FROM review\n" +
+                    "                    GROUP BY CONTENTS_ID\n" +
+                    "              ) B\n" +
+                    "    ON A.contents_id = B.contents_id" +
+                    "    WHERE A.contents_title like CONCAT('%', :searchKeyword, '%')" +
+                    "    ORDER BY A.reg_date DESC" +
+                    ") D",nativeQuery = true)
+    Page<Contents> searchAllRegkeyword(Pageable pageable, String searchKeyword);
 }

@@ -75,11 +75,12 @@ public class ContentsController {
     public ResponseEntity<?> listContents(@PageableDefault(page = 0, size = 16) Pageable pageable,
                                           @RequestParam("category") String category,
                                           @RequestParam("pricePattern") String pricePattern,
-                                          @RequestParam("orderType") String orderType) {
+                                          @RequestParam("orderType") String orderType,
+                                          @RequestParam("searchKeyword") String searchKeyword) {
         // ResponseDTO 객체 생성
         ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
         // contentsService에서 모든 컨텐츠를 조회하여 ContentsDTO 리스트로 가져옴
-        Page<ContentsDTO> contentsDTOList = contentsService.searchAll(pageable, category, pricePattern, orderType);
+        Page<ContentsDTO> contentsDTOList = contentsService.searchAll(pageable, category, pricePattern, orderType, searchKeyword);
         
         responseDTO.setPageItems(contentsDTOList);
         // ResponseDTO 객체를 ResponseEntity를 통해 클라이언트에게 반환
