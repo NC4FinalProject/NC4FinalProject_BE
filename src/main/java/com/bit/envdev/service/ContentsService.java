@@ -37,5 +37,7 @@ public interface ContentsService {
     Page<ContentsDTO> searchMyAll(Pageable pageable, Member member);
 
     Page<ContentsDTO> searchTeacherAll(Pageable pageable, Member member);
+
+    void deleteContents(int contentsId);
 }
 

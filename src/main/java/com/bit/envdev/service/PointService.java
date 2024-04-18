@@ -9,4 +9,5 @@ public interface PointService {
 
     void pointJoinWithBuilder (Member member, int point,  String reason);
 
+    long getMyPoint(long memberId);
 }

@@ -319,4 +319,9 @@ public class ContentsServiceImpl implements ContentsService {
     public Page<ContentsDTO> searchTeacherAll(Pageable pageable, Member member) {
         return contentsRepository.searchTeacherAll(pageable, member.getMemberId()).map(Contents::toDTO);
     }
+
+    @Override
+    public void deleteContents(int contentsId) {
+        contentsRepository.deleteById(contentsId);
+    }
 }
