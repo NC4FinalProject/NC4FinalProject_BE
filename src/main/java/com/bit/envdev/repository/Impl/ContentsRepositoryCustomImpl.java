@@ -19,9 +19,19 @@ import java.util.Objects;
 
 import static com.bit.envdev.entity.QContents.contents;
 import static com.bit.envdev.entity.QPaymentContent.paymentContent;
+import static com.bit.envdev.entity.QPayment.payment;
+import static com.bit.envdev.entity.QReview.review;
 
 @Repository
 @RequiredArgsConstructor
 public class ContentsRepositoryCustomImpl implements ContentsRepositoryCustom {
+    private final JPAQueryFactory jpaQueryFactory;
 
+    @Override
+    public Page<Map<String, Object>> searchAllSearch(Pageable pageable, String category, String pricePattern, String orderType, String searchKeyword) {
+        List<Tuple> tuples = jpaQueryFactory
+                .select(contents.contentsId)
+
+        return null;
+    }
 }
