@@ -98,6 +98,8 @@ public class Contents {
     @Column(nullable = true)
     private int paymentCount;
 
+    private int bookmarkCount;
+
     // // 이넘 데이터 관련
     // @Enumerated(EnumType.STRING)
 	// private RoleType role; // USER, ADMIN // or // private ItemSellStatus itemSellSTatus;
@@ -124,6 +126,7 @@ public class Contents {
                 .reviewRating(this.reviewRating)
                 .reviewCount(this.reviewCount)
                 .paymentCount(this.paymentCount)
+                .bookmarkCount(this.bookmarkCount)
                 .build();
     }
 

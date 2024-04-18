@@ -63,9 +63,9 @@ public class ContentsController {
     }
     // // 컨텐츠 상세 보기 * 유저 닉네임 리스폰 추가
     @GetMapping("/detail/{contentsId}")
-    public ResponseEntity<?> Detail(@PathVariable(name = "contentsId") int contentsId) {
+    public ResponseEntity<?> Detail(@PathVariable(name = "contentsId") int contentsId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
-        ContentsDTO contentsDTO = contentsService.findById(contentsId);
+        ContentsDTO contentsDTO = contentsService.findById(contentsId, customUserDetails);
         responseDTO.setItem(contentsDTO);
         return ResponseEntity.ok(responseDTO);
     }
@@ -75,11 +75,12 @@ public class ContentsController {
     public ResponseEntity<?> listContents(@PageableDefault(page = 0, size = 16) Pageable pageable,
                                           @RequestParam("category") String category,
                                           @RequestParam("pricePattern") String pricePattern,
-                                          @RequestParam("orderType") String orderType) {
+                                          @RequestParam("orderType") String orderType,
+                                          @RequestParam("searchKeyword") String searchKeyword) {
         // ResponseDTO 객체 생성
         ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
         // contentsService에서 모든 컨텐츠를 조회하여 ContentsDTO 리스트로 가져옴
-        Page<ContentsDTO> contentsDTOList = contentsService.searchAll(pageable, category, pricePattern, orderType);
+        Page<ContentsDTO> contentsDTOList = contentsService.searchAll(pageable, category, pricePattern, orderType, searchKeyword);
         
         responseDTO.setPageItems(contentsDTOList);
         // ResponseDTO 객체를 ResponseEntity를 통해 클라이언트에게 반환
@@ -111,64 +112,22 @@ public class ContentsController {
         return ResponseEntity.ok().body(videoReplyDTOList);
     }
 
+    @PostMapping("/bookmark/{contentsId}")
+    public ResponseEntity<?> bookmark(@PathVariable(name = "contentsId") int contentsId,
+                                      @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        int bookmarkCount = contentsBookmarkService.getBookmarkContents(contentsId, customUserDetails.getMember().getMemberId());
 
 
 
-    @GetMapping("/bookmark")
-    public ResponseEntity<?> getBookmarkContents(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        ResponseDTO<List<ContentsBookmarkDTO>> responseDTO = new ResponseDTO<>();
-        try {
-            List<ContentsBookmarkDTO> bookmarkContents = contentsBookmarkService.getBookmarkContents(customUserDetails.getMember().getMemberId());
-            responseDTO.setItem(bookmarkContents);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            return ResponseEntity.ok(responseDTO);
-        } catch(Exception e) {
-            responseDTO.setErrorMessage(e.getMessage());
-            responseDTO.setErrorCode(501);
-            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
-            return ResponseEntity.badRequest().body(responseDTO);
-        }
-
-    }
-
-    @PostMapping("/bookmark")
-    public ResponseEntity<?> addBookmark(@RequestBody ContentsBookmarkDTO contentsBookmarkDTO,@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
-        try {
-            System.out.println("=============================");
-            System.out.println(contentsBookmarkDTO);
-            contentsBookmarkService.addBookmark(contentsBookmarkDTO, customUserDetails.getMember());
-            Map<String, String> msgMap = new HashMap<>();
-            msgMap.put("msg", "Bookmark add");
-            responseDTO.setItem(msgMap);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            return ResponseEntity.ok(responseDTO);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            responseDTO.setErrorMessage(e.getMessage());
-            responseDTO.setErrorCode(502);
-            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
-            return ResponseEntity.badRequest().body(responseDTO);
-        }
-    }
-
-    @DeleteMapping("bookmark/{contentsId}")
-    public ResponseEntity<?> removeBookmark(@PathVariable int contentsId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
-        try {
+        if(bookmarkCount == 0) {
+            contentsBookmarkService.addBookmark(contentsId, customUserDetails.getMember().getMemberId());
+        } else {
             contentsBookmarkService.removeBookmark(contentsId, customUserDetails.getMember().getMemberId());
-            Map<String, String> msgMap = new HashMap<>();
-            msgMap.put("msg", "Bookmark remove");
-            responseDTO.setItem(msgMap);
-            responseDTO.setStatusCode(HttpStatus.OK.value());
-            return ResponseEntity.ok(responseDTO);
-        } catch(Exception e) {
-            responseDTO.setErrorMessage(e.getMessage());
-            responseDTO.setErrorCode(503);
-            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
-            return ResponseEntity.badRequest().body(responseDTO);
-
         }
+
+        ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
+        responseDTO.setStatusCode(HttpStatus.OK.value());
+        return ResponseEntity.ok(responseDTO);
     }
 
     @PostMapping("/upload")
@@ -200,11 +159,39 @@ public class ContentsController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @GetMapping("/bookmarklist")
+    public ResponseEntity<?> bookmarklistContents(@PageableDefault(page = 0, size = 16) Pageable pageable,
+                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        // ResponseDTO 객체 생성
+        ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
+        // contentsService에서 모든 컨텐츠를 조회하여 ContentsDTO 리스트로 가져옴
+        Page<ContentsDTO> contentsDTOList = contentsService.searchBookmarkAll(pageable, customUserDetails.getMember());
+        responseDTO.setPageItems(contentsDTOList);
+        // ResponseDTO 객체를 ResponseEntity를 통해 클라이언트에게 반환
+        return ResponseEntity.ok(responseDTO);
+    }
+
     @GetMapping("/teachercontentslist")
     public ResponseEntity<?> teacherContentsList(@PageableDefault(page = 0, size = 15) Pageable pageable,
                                             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         // ResponseDTO 객체 생성
         ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
+        // contentsService에서 모든 컨텐츠를 조회하여 ContentsDTO 리스트로 가져옴
+        Page<ContentsDTO> contentsDTOList = contentsService.searchTeacherAll(pageable, customUserDetails.getMember());
+        responseDTO.setPageItems(contentsDTOList);
+        // ResponseDTO 객체를 ResponseEntity를 통해 클라이언트에게 반환
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @DeleteMapping("/delete/{contentsId}")
+    public ResponseEntity<?> delete(@PageableDefault(page = 0, size = 15) Pageable pageable,
+                                     @PathVariable("contentsId") int contentsId,
+                                     @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        // ResponseDTO 객체 생성
+        ResponseDTO<ContentsDTO> responseDTO = new ResponseDTO<>();
+
+        contentsService.deleteContents(contentsId);
+
         // contentsService에서 모든 컨텐츠를 조회하여 ContentsDTO 리스트로 가져옴
         Page<ContentsDTO> contentsDTOList = contentsService.searchTeacherAll(pageable, customUserDetails.getMember());
         responseDTO.setPageItems(contentsDTOList);

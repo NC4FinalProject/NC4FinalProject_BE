@@ -1,5 +1,6 @@
 package com.bit.envdev.repository;
 
+import com.bit.envdev.entity.CustomUserDetails;
 import com.bit.envdev.entity.Member;
 import com.bit.envdev.entity.Review;
 import jakarta.transaction.Transactional;

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface ContentsService {
@@ -17,7 +18,7 @@ public interface ContentsService {
     Video createVideo(VideoDTO videoDTO, Contents createdContents, Long id,  MultipartFile videoFile);
     Section createSection(SectionDTO sectionDTO, Contents createdContents);
     
-    ContentsDTO findById(int contentsId);
+    ContentsDTO findById(int contentsId, CustomUserDetails customUserDetails);
     List<ContentsDTO> findAll();
 
 
@@ -32,10 +33,14 @@ public interface ContentsService {
 
     List<ContentsDTO> get12RandomContents();
 
-    Page<ContentsDTO> searchAll(Pageable pageable, String category, String pricePattern, String orderType);
+    Page<ContentsDTO> searchAll(Pageable pageable, String category, String pricePattern, String orderType, String searchKeyword);
 
     Page<ContentsDTO> searchMyAll(Pageable pageable, Member member);
 
     Page<ContentsDTO> searchTeacherAll(Pageable pageable, Member member);
+
+    void deleteContents(int contentsId);
+
+    Page<ContentsDTO> searchBookmarkAll(Pageable pageable, Member member);
 }
 
