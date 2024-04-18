@@ -124,9 +124,14 @@ public class ContentsServiceImpl implements ContentsService {
 
 
     @Override
-    public ContentsDTO findById(int contentsId) {
-        // Contents 엔티티 조회
-        Contents contents = contentsRepository.searchById(contentsId);
+    public ContentsDTO findById(int contentsId, CustomUserDetails customUserDetails) {
+        Contents contents = new Contents();
+        if(customUserDetails == null) {
+            // Contents 엔티티 조회
+            contents = contentsRepository.searchById(contentsId);
+        } else {
+            contents = contentsRepository.searchByIdMemberId(contentsId, customUserDetails.getMember().getMemberId());
+        }
         // Contents 엔티티를 DTO로 변환
         ContentsDTO contentsDTO = contents.toDTO();
         // Member의 userNickname을 ContentsDTO에 설정
@@ -418,5 +423,10 @@ public class ContentsServiceImpl implements ContentsService {
     @Override
     public void deleteContents(int contentsId) {
         contentsRepository.deleteById(contentsId);
+    }
+
+    @Override
+    public Page<ContentsDTO> searchBookmarkAll(Pageable pageable, Member member) {
+        return contentsRepository.searchBookmarkAll(pageable, member.getMemberId()).map(Contents::toDTO);
     }
 }

@@ -18,7 +18,7 @@ public interface ContentsService {
     Video createVideo(VideoDTO videoDTO, Contents createdContents, Long id,  MultipartFile videoFile);
     Section createSection(SectionDTO sectionDTO, Contents createdContents);
     
-    ContentsDTO findById(int contentsId);
+    ContentsDTO findById(int contentsId, CustomUserDetails customUserDetails);
     List<ContentsDTO> findAll();
 
 
@@ -40,5 +40,7 @@ public interface ContentsService {
     Page<ContentsDTO> searchTeacherAll(Pageable pageable, Member member);
 
     void deleteContents(int contentsId);
+
+    Page<ContentsDTO> searchBookmarkAll(Pageable pageable, Member member);
 }
 

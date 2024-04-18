@@ -1,15 +1,12 @@
 package com.bit.envdev.service;
 
-import com.bit.envdev.dto.ContentsBookmarkDTO;
-import com.bit.envdev.entity.Member;
-
-import java.util.List;
+import com.bit.envdev.dto.ContentsDTO;
 
 public interface ContentsBookmarkService {
 
-    List<ContentsBookmarkDTO> getBookmarkContents(long memberId);
+    int getBookmarkContents(int contentsId, long memberId);
 
-    void addBookmark(ContentsBookmarkDTO contentsBookmarkDTO, Member member);
+    void addBookmark(int contentsId, long memberId);
 
     void removeBookmark(int contentsId, long memberId);
 }

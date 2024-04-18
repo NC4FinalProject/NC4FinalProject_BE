@@ -54,6 +54,7 @@ public class ContentsDTO {
     private double reviewRating;
     private int reviewCount;
     private int paymentCount;
+    private int bookmarkCount;
 
     public Contents toEntity(Member member) {
         return Contents.builder()

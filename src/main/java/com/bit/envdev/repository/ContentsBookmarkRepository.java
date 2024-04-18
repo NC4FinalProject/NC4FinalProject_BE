@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-public interface ContentsBookmarkRepository extends JpaRepository<ContentsBookmark, ContentsBookmarkId> {
+public interface ContentsBookmarkRepository extends JpaRepository<ContentsBookmark, ContentsBookmarkId>, ContentsBookmarkRepositoryCustom {
     @Query("SELECT cb FROM ContentsBookmark cb WHERE cb.member.memberId = :memberId")
     List<ContentsBookmark> findAllByMemberId(long memberId);
 

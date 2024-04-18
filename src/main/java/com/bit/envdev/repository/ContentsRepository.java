@@ -30,6 +30,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -46,6 +47,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -63,6 +65,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -80,6 +83,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -98,6 +102,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -114,6 +119,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -131,6 +137,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -147,6 +154,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -164,6 +172,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -181,6 +190,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -199,6 +209,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -217,6 +228,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -236,6 +248,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -253,6 +266,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -271,6 +285,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -288,6 +303,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -306,6 +322,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -324,6 +341,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -343,6 +361,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -360,6 +379,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -378,6 +398,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -395,6 +416,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -413,6 +435,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -431,6 +454,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -450,6 +474,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -469,6 +494,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -489,6 +515,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -507,6 +534,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -528,6 +556,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -555,6 +584,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -583,6 +613,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -611,6 +642,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    FROM (\n" +
                     "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                 , 0 AS BOOKMARK_COUNT" +
                     "                FROM contents A\n" +
                     "                LEFT JOIN (\n" +
                     "                    SELECT C.CONTENTS_ID\n" +
@@ -640,6 +672,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -667,6 +700,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    FROM (\n" +
                     "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                 , 0 AS BOOKMARK_COUNT" +
                     "                FROM contents A\n" +
                     "                LEFT JOIN (\n" +
                     "                    SELECT C.CONTENTS_ID\n" +
@@ -695,6 +729,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -722,6 +757,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    FROM (\n" +
                     "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                 , 0 AS BOOKMARK_COUNT" +
                     "                FROM contents A\n" +
                     "                LEFT JOIN (\n" +
                     "                    SELECT C.CONTENTS_ID\n" +
@@ -750,6 +786,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -778,6 +815,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    FROM (\n" +
                     "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                 , 0 AS BOOKMARK_COUNT" +
                     "                FROM contents A\n" +
                     "                LEFT JOIN (\n" +
                     "                    SELECT C.CONTENTS_ID\n" +
@@ -807,6 +845,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -836,6 +875,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    FROM (\n" +
                     "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                 , 0 AS BOOKMARK_COUNT" +
                     "                FROM contents A\n" +
                     "                LEFT JOIN (\n" +
                     "                    SELECT C.CONTENTS_ID\n" +
@@ -866,6 +906,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -894,6 +935,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    FROM (\n" +
                     "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                 , 0 AS BOOKMARK_COUNT" +
                     "                FROM contents A\n" +
                     "                LEFT JOIN (\n" +
                     "                    SELECT C.CONTENTS_ID\n" +
@@ -921,6 +963,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -938,6 +981,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -956,6 +1000,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -974,6 +1019,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -993,6 +1039,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -1010,6 +1057,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -1028,6 +1076,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -1045,6 +1094,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -1063,6 +1113,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -1081,6 +1132,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -1100,6 +1152,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -1119,6 +1172,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -1139,6 +1193,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -1157,6 +1212,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -1178,6 +1234,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -1204,6 +1261,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    FROM (\n" +
                     "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                 , 0 AS BOOKMARK_COUNT" +
                     "                FROM contents A\n" +
                     "                LEFT JOIN (\n" +
                     "                    SELECT C.CONTENTS_ID\n" +
@@ -1230,6 +1288,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT C.CONTENTS_ID\n" +
@@ -1246,6 +1305,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT C.CONTENTS_ID\n" +
@@ -1263,6 +1323,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT CONTENTS_ID\n" +
@@ -1279,6 +1340,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT CONTENTS_ID\n" +
@@ -1296,6 +1358,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT CONTENTS_ID\n" +
@@ -1311,6 +1374,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT CONTENTS_ID\n" +
@@ -1329,6 +1393,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT\n" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT CONTENTS_ID\n" +
@@ -1340,6 +1405,43 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    ON A.contents_id = B.contents_id" +
             "    WHERE A.contents_id = :contentsId", nativeQuery = true)
     Contents searchById(int contentsId);
+
+    @Query(value = "SELECT AA.*,\n" +
+            "    IFNULL(C.BOOKMARK_COUNT, 0) AS BOOKMARK_COUNT\n" +
+            "    FROM (SELECT A.contents_id,\n" +
+            "                 A.category,\n" +
+            "                 A.contents_title,\n" +
+            "                 A.introduce,\n" +
+            "                 A.mod_date,\n" +
+            "                 A.price,\n" +
+            "                 A.price_type,\n" +
+            "                 A.reg_date,\n" +
+            "                 A.thumbnail,\n" +
+            "                 A.member_id,\n" +
+            "                 IFNULL(B.REVIEW_RATING, 0)  AS REVIEW_RATING,\n" +
+            "                 IFNULL(B.REVIEW_COUNT, 0)   AS REVIEW_COUNT,\n" +
+            "                 0                           AS PAYMENT_COUNT\n" +
+            "          FROM CONTENTS A\n" +
+            "                   LEFT JOIN\n" +
+            "               (SELECT CONTENTS_ID,\n" +
+            "                       AVG(review_rating) AS REVIEW_RATING,\n" +
+            "                       COUNT(CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "                FROM review\n" +
+            "                GROUP BY CONTENTS_ID) B\n" +
+            "               ON A.contents_id = B.contents_id) AA\n" +
+            "        LEFT JOIN\n" +
+            "    (         SELECT\n" +
+            "                  contents_id              , member_id              , COUNT(contents_id) AS BOOKMARK_COUNT\n" +
+            "              FROM\n" +
+            "                  contents_bookmark\n" +
+            "              GROUP BY\n" +
+            "                  contents_id, member_id\n" +
+            "              HAVING\n" +
+            "                      member_id = :memberId    ) C\n" +
+            "    ON AA.contents_id = C.contents_id\n" +
+            "WHERE\n" +
+            "        AA.contents_id = :contentsId", nativeQuery = true)
+    Contents searchByIdMemberId(int contentsId, long memberId);
 
     @Query(value = "SELECT A.CONTENTS_ID\n" +
             "     , A.CATEGORY\n" +
@@ -1354,6 +1456,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "    SELECT C.CONTENTS_ID\n" +
@@ -1386,6 +1489,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                 "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                 "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                 "     , 0 AS PAYMENT_COUNT\n" +
+                "     , 0 AS BOOKMARK_COUNT" +
                 "    FROM CONTENTS A\n" +
                 "    LEFT JOIN (\n" +
                 "    SELECT C.CONTENTS_ID\n" +
@@ -1413,6 +1517,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -1440,6 +1545,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                 "    FROM (\n" +
                 "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                 "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                "                 , 0 AS BOOKMARK_COUNT" +
                 "                FROM contents A\n" +
                 "                LEFT JOIN (\n" +
                 "                    SELECT C.CONTENTS_ID\n" +
@@ -1468,6 +1574,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT CONTENTS_ID\n" +
@@ -1484,6 +1591,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT CONTENTS_ID\n" +
@@ -1503,6 +1611,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -1520,6 +1629,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -1538,6 +1648,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -1556,6 +1667,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -1575,6 +1687,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -1592,6 +1705,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -1610,6 +1724,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -1627,6 +1742,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -1645,6 +1761,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -1663,6 +1780,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -1682,6 +1800,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -1699,6 +1818,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -1717,6 +1837,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -1735,6 +1856,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -1756,6 +1878,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -1784,6 +1907,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    FROM (\n" +
                     "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                 , 0 AS BOOKMARK_COUNT" +
                     "                FROM contents A\n" +
                     "                LEFT JOIN (\n" +
                     "                    SELECT C.CONTENTS_ID\n" +
@@ -1813,6 +1937,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -1842,6 +1967,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    FROM (\n" +
                     "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                 , 0 AS BOOKMARK_COUNT" +
                     "                FROM contents A\n" +
                     "                LEFT JOIN (\n" +
                     "                    SELECT C.CONTENTS_ID\n" +
@@ -1872,6 +1998,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -1900,6 +2027,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    FROM (\n" +
                     "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                 , 0 AS BOOKMARK_COUNT" +
                     "                FROM contents A\n" +
                     "                LEFT JOIN (\n" +
                     "                    SELECT C.CONTENTS_ID\n" +
@@ -1929,6 +2057,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -1957,6 +2086,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    FROM (\n" +
                     "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                 , 0 AS BOOKMARK_COUNT" +
                     "                FROM contents A\n" +
                     "                LEFT JOIN (\n" +
                     "                    SELECT C.CONTENTS_ID\n" +
@@ -1986,6 +2116,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -2015,6 +2146,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    FROM (\n" +
                     "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                 , 0 AS BOOKMARK_COUNT" +
                     "                FROM contents A\n" +
                     "                LEFT JOIN (\n" +
                     "                    SELECT C.CONTENTS_ID\n" +
@@ -2045,6 +2177,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "    FROM (\n" +
             "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
             "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+            "                 , 0 AS BOOKMARK_COUNT" +
             "                FROM contents A\n" +
             "                LEFT JOIN (\n" +
             "                    SELECT C.CONTENTS_ID\n" +
@@ -2075,6 +2208,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    FROM (\n" +
                     "            SELECT A.contents_id, A.category, A.contents_title, A.introduce, A.mod_date, A.price, A.price_type, A.reg_date, A.thumbnail, A.member_id\n" +
                     "                 , IFNULL(B.PAYMENT_COUNT, 0) AS PAYMENT_COUNT\n" +
+                    "                 , 0 AS BOOKMARK_COUNT" +
                     "                FROM contents A\n" +
                     "                LEFT JOIN (\n" +
                     "                    SELECT C.CONTENTS_ID\n" +
@@ -2104,6 +2238,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -2122,6 +2257,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -2141,6 +2277,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -2159,6 +2296,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -2178,6 +2316,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -2197,6 +2336,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -2217,6 +2357,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -2235,6 +2376,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -2254,6 +2396,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -2272,6 +2415,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -2291,6 +2435,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -2310,6 +2455,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -2330,6 +2476,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -2350,6 +2497,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -2371,6 +2519,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT CONTENTS_ID\n" +
@@ -2390,6 +2539,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT CONTENTS_ID\n" +
@@ -2410,6 +2560,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "        SELECT C.CONTENTS_ID\n" +
@@ -2427,6 +2578,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "        SELECT C.CONTENTS_ID\n" +
@@ -2445,6 +2597,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -2463,6 +2616,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -2482,6 +2636,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -2501,6 +2656,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -2521,6 +2677,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -2539,6 +2696,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -2558,6 +2716,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -2576,6 +2735,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -2595,6 +2755,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -2614,6 +2775,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -2634,6 +2796,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -2654,6 +2817,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -2675,6 +2839,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM Contents A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT C.CONTENTS_ID\n" +
@@ -2694,6 +2859,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM Contents A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT C.CONTENTS_ID\n" +
@@ -2714,6 +2880,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
             "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
             "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
             "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT" +
             "    FROM CONTENTS A\n" +
             "    LEFT JOIN (\n" +
             "                SELECT CONTENTS_ID\n" +
@@ -2731,6 +2898,7 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
                     "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
                     "     , 0 AS PAYMENT_COUNT\n" +
+                    "     , 0 AS BOOKMARK_COUNT" +
                     "    FROM CONTENTS A\n" +
                     "    LEFT JOIN (\n" +
                     "                SELECT CONTENTS_ID\n" +
@@ -2744,4 +2912,60 @@ public interface ContentsRepository extends JpaRepository<Contents, Integer>, Co
                     "    ORDER BY A.reg_date DESC" +
                     ") D",nativeQuery = true)
     Page<Contents> searchAllRegkeyword(Pageable pageable, String searchKeyword);
+
+    @Query(value ="SELECT A.CONTENTS_ID\n" +
+            "     , A.CATEGORY\n" +
+            "     , A.CONTENTS_TITLE\n" +
+            "     , A.INTRODUCE\n" +
+            "     , A.PRICE\n" +
+            "     , A.PRICE_TYPE\n" +
+            "     , A.REG_DATE\n" +
+            "     , A.THUMBNAIL\n" +
+            "     , A.MEMBER_ID\n" +
+            "     , A.MOD_DATE\n" +
+            "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+            "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+            "     , 0 AS PAYMENT_COUNT\n" +
+            "     , 0 AS BOOKMARK_COUNT\n" +
+            "    FROM CONTENTS A\n" +
+            "    LEFT JOIN (\n" +
+            "    SELECT C.CONTENTS_ID\n" +
+            "         , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+            "         , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+            "        FROM REVIEW C\n" +
+            "    ) B\n" +
+            "    ON A.contents_id = B.contents_id\n" +
+            "    JOIN contents_bookmark D\n" +
+            "    ON A.contents_id = D.contents_id\n" +
+            "    WHERE D.member_id = :memberId",
+        countQuery = "SELECT COUNT(*)" +
+                "   FROM (" +
+                "   SELECT A.CONTENTS_ID\n" +
+                "     , A.CATEGORY\n" +
+                "     , A.CONTENTS_TITLE\n" +
+                "     , A.INTRODUCE\n" +
+                "     , A.PRICE\n" +
+                "     , A.PRICE_TYPE\n" +
+                "     , A.REG_DATE\n" +
+                "     , A.THUMBNAIL\n" +
+                "     , A.MEMBER_ID\n" +
+                "     , A.MOD_DATE\n" +
+                "     , IFNULL(B.REVIEW_COUNT, 0) AS REVIEW_COUNT\n" +
+                "     , IFNULL(B.REVIEW_RATING, 0) AS REVIEW_RATING\n" +
+                "     , 0 AS PAYMENT_COUNT\n" +
+                "     , 0 AS BOOKMARK_COUNT\n" +
+                "    FROM CONTENTS A\n" +
+                "    LEFT JOIN (\n" +
+                "    SELECT C.CONTENTS_ID\n" +
+                "         , COUNT(C.CONTENTS_ID) AS REVIEW_COUNT\n" +
+                "         , AVG(C.REVIEW_RATING) AS REVIEW_RATING\n" +
+                "        FROM REVIEW C\n" +
+                "    ) B\n" +
+                "    ON A.contents_id = B.contents_id\n" +
+                "    JOIN contents_bookmark D\n" +
+                "    ON A.contents_id = D.contents_id\n" +
+                "    WHERE D.member_id = :memberId" +
+                ") D", nativeQuery = true
+    )
+    Page<Contents> searchBookmarkAll(Pageable pageable, long memberId);
 }
