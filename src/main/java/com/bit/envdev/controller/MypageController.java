@@ -7,6 +7,7 @@ import com.bit.envdev.dto.QnaDTO;
 import com.bit.envdev.dto.ResponseDTO;
 import com.bit.envdev.entity.CustomUserDetails;
 import com.bit.envdev.service.MemberService;
+import com.bit.envdev.service.PaymentService;
 import com.bit.envdev.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,8 @@ public class MypageController {
     private final MemberService memberService;
     private final FileUtils fileUtils;
     private final QnaService qnaService;
+    private final PaymentService paymentService;
+
     @GetMapping
     public ResponseEntity<?> mypage(@AuthenticationPrincipal UserDetails userDetails) {
         ResponseDTO<MemberDTO> responseDTO = new ResponseDTO<>();
@@ -147,6 +150,24 @@ public class MypageController {
             responseDTO.setStatusCode(HttpStatus.OK.value());
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
+            responseDTO.setErrorMessage(e.getMessage());
+            responseDTO.setErrorCode(205);
+            responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+
+    @GetMapping("/purchaselist")
+    public ResponseEntity<?> getPurchaseList(@PageableDefault(page = 0, size = 15) Pageable pageable,
+                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<Map<String, Object>> responseDTO = new ResponseDTO<>();
+        try {
+            Page<Map<String, Object>> purchaseList = paymentService.getPurchaseList(pageable, customUserDetails.getMember());
+            responseDTO.setPageItems(purchaseList);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             responseDTO.setErrorMessage(e.getMessage());
             responseDTO.setErrorCode(205);
             responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());

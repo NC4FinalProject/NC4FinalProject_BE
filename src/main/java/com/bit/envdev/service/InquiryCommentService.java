@@ -12,4 +12,5 @@ public interface InquiryCommentService {
     List<InquiryCommentDTO> modify(InquiryCommentDTO inquiryCommentDTO, CustomUserDetails customUserDetails);
     List<InquiryCommentDTO> delete(long inquiryId, long inquiryCommentId, CustomUserDetails customUserDetails);
 
+    List<InquiryCommentDTO> getComments(Long inquiryId, String order, CustomUserDetails customUserDetails);
 }

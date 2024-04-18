@@ -6,6 +6,7 @@ import com.bit.envdev.dto.CartDTO;
 import com.bit.envdev.dto.ResponseDTO;
 import com.bit.envdev.entity.CustomUserDetails;
 import com.bit.envdev.service.CartService;
+import com.bit.envdev.service.PointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.Map;
 @RequestMapping("/cart")
 public class CartController {
     private final CartService cartService;
+    private final PointService pointService;
 
     @PostMapping("/add")
     public ResponseEntity<?> addCart(@RequestBody CartDTO cartDTO,
@@ -72,6 +74,9 @@ public class CartController {
 
             List<Map<String, String>> cartContentsList = cartService.findCartContentsListByMemberId(cartDTO.getCartId());
             returnMap.put("cartContentsList", cartContentsList);
+
+            long myPoint = pointService.getMyPoint(customUserDetails.getMember().getMemberId());
+            returnMap.put("myPoint", myPoint);
 
             responseDTO.setItem(returnMap);
             responseDTO.setStatusCode(HttpStatus.OK.value());

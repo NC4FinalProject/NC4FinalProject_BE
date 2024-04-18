@@ -48,5 +48,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewRep
             "ORDER BY RAND() " +
             "LIMIT 12")
     List<Object[]> findTopRandom12ContentsWithMemberInfoByRatingAndReviewCount();
+
+    long countByMember(Member entity);
 }
 

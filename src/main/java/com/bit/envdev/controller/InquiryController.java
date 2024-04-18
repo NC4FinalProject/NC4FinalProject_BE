@@ -484,4 +484,26 @@ public class InquiryController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
         }
     }
+
+    @GetMapping("/comments/{inquiryId}")
+    public ResponseEntity<?> getComments(@PathVariable("inquiryId") Long inquiryId,
+                                         @RequestParam("order") String order,
+                                         @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        ResponseDTO<InquiryCommentDTO> responseDTO = new ResponseDTO<>();
+        try {
+            List<InquiryCommentDTO> inquiryCommentDTOList = inquiryCommentService.getComments(inquiryId, order, customUserDetails);
+
+            responseDTO.setItems(inquiryCommentDTOList);
+            responseDTO.setStatusCode(HttpStatus.OK.value());
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            responseDTO.setErrorCode(404);
+            responseDTO.setErrorMessage("inquiry not found: " + e.getMessage());
+            responseDTO.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+        }
+    }
 }

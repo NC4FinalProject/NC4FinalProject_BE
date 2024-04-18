@@ -1,6 +1,7 @@
 package com.bit.envdev.service;
 
 import com.bit.envdev.dto.InquiryDTO;
+import com.bit.envdev.entity.Member;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
@@ -38,4 +39,6 @@ public interface InquiryService {
     String getContentsAuthor(int contentsId);
 
     long getLikeCount(long inquiryId);
+
+    long countByMemberId(Member entity);
 }

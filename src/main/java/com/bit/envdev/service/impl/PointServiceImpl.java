@@ -40,5 +40,10 @@ public class PointServiceImpl implements PointService {
         } catch (Exception e) {
             System.out.println("포인트 추가 실패" + e.getMessage());
         }
-    } 
+    }
+
+    @Override
+    public long getMyPoint(long memberId) {
+        return pointRepository.getMyPoint(memberId);
+    }
 }

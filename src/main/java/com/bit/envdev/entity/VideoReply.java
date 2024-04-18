@@ -57,6 +57,7 @@ public class VideoReply {
     public VideoReplyDTO toDTO() {
         return VideoReplyDTO.builder()
                 .memberId(this.member.getMemberId())
+                .profileFile(this.member.getProfileFile())
                 .videoReplyId(this.videoReplyId)
                 .videoReplyContent(this.videoReplyContent)
                 .videoId(this.video.getVideoId())

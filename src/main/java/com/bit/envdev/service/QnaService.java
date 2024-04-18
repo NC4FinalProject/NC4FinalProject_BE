@@ -19,4 +19,6 @@ public interface QnaService {
     void answered(QnaDTO qnaDTO);
 
     Page<QnaDTO> getMyQnaData(Pageable pageable, Member member);
+
+    long countByMemberId(Member entity);
 }
