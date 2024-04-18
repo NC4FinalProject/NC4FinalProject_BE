@@ -194,7 +194,7 @@ public class NoticeController {
             noticeService.modifyNoticeFile(modifyNoticeFileLIst);
             temporaryImage.clear();
 
-           responseDTO.setStatusCode(HttpStatus.OK.value());
+            responseDTO.setStatusCode(HttpStatus.OK.value());
             responseDTO.setItem(modifyNoticeFileLIst);
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
@@ -234,8 +234,8 @@ public class NoticeController {
         FileDTO fileDTO = fileUtils.parseFileInfo(upload, "notice/");
         temporaryImage.add(fileDTO.getItemFilePath() + fileDTO.getItemFileName());
         System.out.println(temporaryImage);
-        System.out.println("https://kr.object.ncloudstorage.com/bitcamp-bucket-36/" + fileDTO.getItemFilePath() + fileDTO.getItemFileName());
-        result.put("url", "https://kr.object.ncloudstorage.com/bitcamp-bucket-36/" + fileDTO.getItemFilePath() + fileDTO.getItemFileName());
+        System.out.println("https://kr.object.ncloudstorage.com/envdev/" + fileDTO.getItemFilePath() + fileDTO.getItemFileName());
+        result.put("url", "https://kr.object.ncloudstorage.com/envdev/" + fileDTO.getItemFilePath() + fileDTO.getItemFileName());
         result.put("itemFilePath", fileDTO.getItemFilePath());
         result.put("itemFileName", fileDTO.getItemFileName());
         result.put("itemFileOrigin", fileDTO.getItemFileOrigin());

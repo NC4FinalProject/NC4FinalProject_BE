@@ -2,6 +2,8 @@ package com.bit.envdev.entity;
 
 import com.bit.envdev.dto.ContentsDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,9 +37,11 @@ public class Contents {
     private String contentsTitle;
 
     @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Section> sectionList;
 
     @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Video> videoList;
 
     // @JsonIgnoreProperties
@@ -81,6 +85,21 @@ public class Contents {
     @UpdateTimestamp
     private LocalDateTime modDate;
 
+    @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<ContentsFile> contentsFileList;
+
+    @Column(nullable = true)
+    private double reviewRating;
+
+    @Column(nullable = true)
+    private int reviewCount;
+
+    @Column(nullable = true)
+    private int paymentCount;
+
+    private int bookmarkCount;
+
     // // 이넘 데이터 관련
     // @Enumerated(EnumType.STRING)
 	// private RoleType role; // USER, ADMIN // or // private ItemSellStatus itemSellSTatus;
@@ -92,6 +111,7 @@ public class Contents {
     public ContentsDTO toDTO() {
         return ContentsDTO.builder()
                 .memberId(this.member.getUsername())
+                .userNickname(this.member.getUserNickname())
                 .contentsId(this.contentsId)
                 .contentsTitle(this.contentsTitle)
                 .category(this.category)
@@ -99,8 +119,14 @@ public class Contents {
                 .thumbnail(this.thumbnail)
                 .regDate(this.regDate)
                 .modDate(this.modDate)
+                .introduce(this.introduce)
                 .sectionList(this.sectionList != null ? this.sectionList.stream().map(Section::toDTO).toList() : null)
                 .videoList(this.videoList != null ? this.videoList.stream().map(Video::toDTO).toList() : null)
+                .contentsFileDTOList(this.contentsFileList != null ? this.contentsFileList.stream().map(ContentsFile::toDTO).toList() : null)
+                .reviewRating(this.reviewRating)
+                .reviewCount(this.reviewCount)
+                .paymentCount(this.paymentCount)
+                .bookmarkCount(this.bookmarkCount)
                 .build();
     }
 

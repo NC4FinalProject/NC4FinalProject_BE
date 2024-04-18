@@ -8,4 +8,5 @@ public interface ReviewRepositoryCustom {
     void post(Review review);
 
     void modify(Review review);
+
 }

@@ -2,9 +2,9 @@ package com.bit.envdev.service.impl;
 
 
 import com.bit.envdev.constant.Role;
+import com.bit.envdev.dto.EmailVerifyMemberDTO;
 import com.bit.envdev.dto.MemberDTO;
 import com.bit.envdev.dto.MemberGraphDTO;
-import com.bit.envdev.dto.PointDTO;
 import com.bit.envdev.entity.Member;
 import com.bit.envdev.entity.MemberGraph;
 import com.bit.envdev.jwt.JwtTokenProvider;
@@ -12,13 +12,15 @@ import com.bit.envdev.repository.MemberGraphRepository;
 import com.bit.envdev.repository.MemberRepository;
 import com.bit.envdev.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -80,6 +82,7 @@ public class MemberServiceImpl implements MemberService {
         if (loginMember.get().getRole().equals(Role.RESIGNED)) {
             throw new RuntimeException("탈퇴한 유저입니다.");
         }
+
         MemberDTO loginMemberDTO = loginMember.get().toDTO();
 
         // JWT 토큰 생성후 DTO에 세팅
@@ -128,49 +131,98 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO updateProfile(String fileString, MemberDTO memberDTO) {
 
-        MemberDTO NewMemberDTO = memberRepository.findByUsername(memberDTO.getUsername()).get().toDTO();
-        NewMemberDTO.setProfileFile(fileString);
+        Member NewMember = memberRepository.findByUsername(memberDTO.getUsername()).get();
+        memberDTO.setProfileFile(fileString);
 
-        Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
+        Member updatedMember = Member.builder()
+                .memberId(memberDTO.getMemberId())
+                .username(memberDTO.getUsername())
+                .password(memberDTO.getPassword())
+                .userNickname(memberDTO.getUserNickname())
+                .role(memberDTO.getRole())
+                .profileFile(memberDTO.getProfileFile())
+                .emailVerification(memberDTO.getEmailVerification())
+                .createdAt(LocalDateTime.parse(memberDTO.getCreatedAt()))
+                .modifiedAt(LocalDateTime.now())
+                .memo(memberDTO.getMemo())
+                .contentsList(memberDTO.toEntity().getContentsList())
+                .build();
+
+        Member joinMember = memberRepository.save(updatedMember);
         return joinMember.toDTO();
     }
 
     @Override
     public MemberDTO findByUsername(String username) {
+        MemberDTO memberDTO = new MemberDTO();
+        Member newMember = memberRepository.findByUsername(username).orElse(null);
+        if (newMember != null) {
+            try {
+                memberDTO = newMember.toDTO();
 
-        MemberDTO NewMemberDTO = memberRepository.findByUsername(username).get().toDTO();
-        return NewMemberDTO;
+                return memberDTO;
+            } catch (Exception e) {
+                System.out.println("회원정보 조회 실패" + e.getMessage());
+            }
+        }
+
+        return memberDTO;
     }
 
     @Override
     public MemberDTO updateUserNickname(String userNickname, MemberDTO memberDTO) {
 
         MemberDTO NewMemberDTO = memberRepository.findByUsername(memberDTO.getUsername()).get().toDTO();
-        NewMemberDTO.setUserNickname(userNickname);
+        memberDTO.setUserNickname(userNickname);
 
-        Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
+        Member updatedMember = Member.builder()
+                .memberId(memberDTO.getMemberId())
+                .username(memberDTO.getUsername())
+                .password(memberDTO.getPassword())
+                .userNickname(memberDTO.getUserNickname())
+                .role(memberDTO.getRole())
+                .profileFile(memberDTO.getProfileFile())
+                .emailVerification(memberDTO.getEmailVerification())
+                .createdAt(LocalDateTime.parse(memberDTO.getCreatedAt()))
+                .modifiedAt(LocalDateTime.now())
+                .memo(memberDTO.getMemo())
+                .contentsList(memberDTO.toEntity().getContentsList())
+                .build();
+
+        Member joinMember = memberRepository.save(updatedMember);
         return joinMember.toDTO();
     }
 
     @Override
     public MemberDTO wannabeTeacher(MemberDTO memberDTO) {
         MemberDTO NewMemberDTO = memberRepository.findByUsername(memberDTO.getUsername()).get().toDTO();
-        NewMemberDTO.setRole(Role.PRETEACHER);
-        Member joinMember = memberRepository.save(NewMemberDTO.toEntity());
+        memberDTO.setRole(Role.PRETEACHER);
+
+        Member updatedMember = Member.builder()
+                .memberId(memberDTO.getMemberId())
+                .username(memberDTO.getUsername())
+                .password(memberDTO.getPassword())
+                .userNickname(memberDTO.getUserNickname())
+                .role(memberDTO.getRole())
+                .profileFile(memberDTO.getProfileFile())
+                .emailVerification(memberDTO.getEmailVerification())
+                .createdAt(LocalDateTime.parse(memberDTO.getCreatedAt()))
+                .modifiedAt(LocalDateTime.now())
+                .memo(memberDTO.getMemo())
+                .contentsList(memberDTO.toEntity().getContentsList())
+                .build();
+
+        Member joinMember = memberRepository.save(updatedMember);
         return joinMember.toDTO();
     }
 
     @Override
-    public void codeVerification(MemberDTO memberDTO, String code) {
-        if("verified".equals(memberDTO.getEmailVerification())) {
-            throw new RuntimeException("이미 인증 완료한 계정입니다.");
+    public String codeVerification(String tempCode, String code) {
+
+        if (tempCode.equals(code)) {
+            return "correct";
         } else {
-            if(code.equals(memberDTO.getEmailVerification())) {
-                memberDTO.setEmailVerification("verified");
-                memberRepository.save(memberDTO.toEntity());
-            } else {
-                throw new RuntimeException("인증번호가 일치하지 않습니다.");
-            }
+            return "incorrect";
         }
     }
 
@@ -232,8 +284,23 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void updateUserMemo(MemberDTO memberDTO) {
         MemberDTO NewMemberDTO = memberRepository.findById(memberDTO.getMemberId()).get().toDTO();
-        NewMemberDTO.setMemo(memberDTO.getMemo());
-        memberRepository.save(NewMemberDTO.toEntity());
+        memberDTO.setMemo(memberDTO.getMemo());
+
+        Member updatedMember = Member.builder()
+                .memberId(memberDTO.getMemberId())
+                .username(memberDTO.getUsername())
+                .password(memberDTO.getPassword())
+                .userNickname(memberDTO.getUserNickname())
+                .role(memberDTO.getRole())
+                .profileFile(memberDTO.getProfileFile())
+                .emailVerification(memberDTO.getEmailVerification())
+                .createdAt(LocalDateTime.parse(memberDTO.getCreatedAt()))
+                .modifiedAt(LocalDateTime.now())
+                .memo(memberDTO.getMemo())
+                .contentsList(memberDTO.toEntity().getContentsList())
+                .build();
+
+        memberRepository.save(updatedMember);
     }
 
     @Override
@@ -282,13 +349,44 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void changePw(MemberDTO member, String userPw) {
         member.setPassword(passwordEncoder.encode(userPw));
-        memberRepository.save(member.toEntity());
+
+        Member updatedMember = Member.builder()
+                .memberId(member.getMemberId())
+                .username(member.getUsername())
+                .password(member.getPassword())
+                .userNickname(member.getUserNickname())
+                .role(member.getRole())
+                .profileFile(member.getProfileFile())
+                .emailVerification(member.getEmailVerification())
+                .createdAt(LocalDateTime.parse(member.getCreatedAt()))
+                .modifiedAt(LocalDateTime.now())
+                .memo(member.getMemo())
+                .contentsList(member.toEntity().getContentsList())
+                .build();
+
+        memberRepository.save(updatedMember);
     }
 
     @Override
-    public void changeRole(MemberDTO member, Role role) {
-        member.setRole(role);
-        memberRepository.save(member.toEntity());
+    public void changeRole(MemberDTO memberDTO, Role role) {
+        Member member = memberRepository.findById(memberDTO.getMemberId()).orElseThrow();
+
+        Member changedMember = Member.builder()
+                .memberId(member.getMemberId())
+                .contentsList(member.getContentsList())
+                .memo(member.getMemo())
+                .role(role)
+                .modifiedAt(LocalDateTime.now())
+                .createdAt(member.getCreatedAt())
+                .emailVerification(member.getEmailVerification())
+                .password(member.getPassword())
+                .pointList(member.getPointList())
+                .profileFile(member.getProfileFile())
+                .username(member.getUsername())
+                .userNickname(member.getUserNickname())
+                .build();
+
+        memberRepository.save(changedMember);
     }
 
 }

@@ -20,6 +20,7 @@ public class InquiryCommentDTO {
     private String inquiryCommentContent;
     private MemberDTO memberDTO;
     private boolean isCommentLike;
+    private long inquiryCommentLikeCount;
 
     public InquiryComment toEntity(Inquiry inquiry) {
         return InquiryComment.builder()

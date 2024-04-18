@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 public class ReviewRepositoryCustomImpl implements ReviewRepositoryCustom {
     private final EntityManager entityManager;
     private final JPAQueryFactory queryFactory;
+
     @Override
     public void post(Review review) {
         entityManager.merge(review);
@@ -21,4 +22,5 @@ public class ReviewRepositoryCustomImpl implements ReviewRepositoryCustom {
     public void modify(Review review) {
         entityManager.merge(review);
     }
+
 }

@@ -30,6 +30,7 @@ public class PaymentDTO {
                 .paymentDate(this.paymentDate)
                 .paymentUniqueNo(this.paymentUniqueNo)
                 .contentsList(new ArrayList<>())
+                .member(this.memberDTO.toEntity())
                 .build();
     }
 }

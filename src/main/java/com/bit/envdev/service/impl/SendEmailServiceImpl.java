@@ -1,5 +1,7 @@
 package com.bit.envdev.service.impl;
 
+import com.bit.envdev.dto.EmailVerifyMemberDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,9 @@ import com.bit.envdev.service.SendEmailService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SendEmailServiceImpl implements SendEmailService {
@@ -22,11 +26,14 @@ public class SendEmailServiceImpl implements SendEmailService {
     @Value("${FROM_ADDRESS}")
     private String FROM_ADDRESS ;
 
-    public void createMail(MemberDTO memberDTO) {
+    @Transactional
+    public String createMail(EmailVerifyMemberDTO tempMemberDTO) {
+        log.info("========== createMail arrived ========== ");
         String code  = getTempPassword();
+        log.info("code : " + code);
         MessageDTO messageDTO = new MessageDTO();
-        String username = memberDTO.getUsername();
-        String userNickname = memberDTO.getUserNickname();
+        String username = tempMemberDTO.getUsername();
+        String userNickname = tempMemberDTO.getUserNickname();
 
 
         messageDTO.setUsername(username);
@@ -35,10 +42,11 @@ public class SendEmailServiceImpl implements SendEmailService {
                                 + code + " 입니다.");
         messageDTO.setCode(code);
 
-        memberDTO.setEmailVerification(code);
-        memberRepository.save(memberDTO.toEntity());
+        tempMemberDTO.setEmailVerification(code);
 
         mailSend(messageDTO);
+
+        return code;
     }
 
 
@@ -56,6 +64,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         return code;
     }
 
+    @Transactional
     @Override
     public void mailSend(MessageDTO messageDTO) {
         SimpleMailMessage message = new SimpleMailMessage();

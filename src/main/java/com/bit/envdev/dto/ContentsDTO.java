@@ -50,6 +50,12 @@ public class ContentsDTO {
     private List<VideoDTO> videoList;
 
     private String userNickname;
+    private List<ContentsFileDTO> contentsFileDTOList;
+    private double reviewRating;
+    private int reviewCount;
+    private int paymentCount;
+    private int bookmarkCount;
+    private String profileFile;
 
     public Contents toEntity(Member member) {
         return Contents.builder()
@@ -61,9 +67,11 @@ public class ContentsDTO {
                 .introduce(this.introduce)
                 .regDate(this.regDate)
                 .modDate(this.modDate)
+                .introduce(this.introduce)
                 .videoList(new ArrayList<>())
                 .sectionList(new ArrayList<>())
                 .price(this.price)
+                .contentsFileList(new ArrayList<>())
                 .build();
     }
 

@@ -1,6 +1,9 @@
 package com.bit.envdev.service;
 
+import com.bit.envdev.dto.InquiryCommentDTO;
 import com.bit.envdev.entity.Member;
+
+import java.util.List;
 
 public interface InquiryCommentLikeService {
 
@@ -8,5 +11,5 @@ public interface InquiryCommentLikeService {
 
     long findByInquiryCommentId(Long inquiryCommentId);
 
-    void insertLike(Member member, Long inquiryCommentId);
+    List<InquiryCommentDTO> insertLike(Member member, Long inquiryCommentId);
 }

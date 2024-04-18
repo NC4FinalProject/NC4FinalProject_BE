@@ -31,6 +31,7 @@ public class Tag {
         return TagDTO.builder()
                 .tagId(this.tagId)
                 .tagContent(this.tagContent)
+                .inquiryId(this.inquiry.getInquiryId())
                 .build();
     }
 

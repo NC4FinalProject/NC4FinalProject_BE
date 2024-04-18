@@ -1,12 +1,10 @@
 package com.bit.envdev.controller;
 
-import com.bit.envdev.dto.PaymentContentDTO;
-import com.bit.envdev.dto.PaymentDTO;
-import com.bit.envdev.dto.ResponseDTO;
-import com.bit.envdev.dto.ReviewDTO;
+import com.bit.envdev.dto.*;
 import com.bit.envdev.entity.CustomUserDetails;
 import com.bit.envdev.service.CartService;
 import com.bit.envdev.service.PaymentService;
+import com.bit.envdev.service.PointService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +26,7 @@ public class PaymentController {
 
     private final PaymentService paymentService;
     private final CartService cartService;
+    private final PointService pointService;
 
     @GetMapping("/payment")
     public ResponseEntity<?> getPaymentList(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -52,6 +51,7 @@ public class PaymentController {
     @PostMapping("/success")
     public ResponseEntity<?> paymentSuccess(@RequestPart("paymentDTO") PaymentDTO paymentDTO,
                                             @RequestPart("contentsList")List<PaymentContentDTO> paymentContentDTOList,
+                                            @RequestPart("pointDTO") PointDTO pointDTO,
                                             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         ResponseDTO<PaymentDTO> responseDTO = new ResponseDTO<>();
@@ -61,11 +61,18 @@ public class PaymentController {
 
             // 2. cartContents 테이블에 ispaid true로 변경
             int cartContentCnt = cartService.updateCartContentsPaid(paymentDTO.getCartId(), paymentContentDTOList);
-            System.out.println("======================================");
-            System.out.println(cartContentCnt);
+
             // 3. cartContents 테이블에 ispaid false인 게 0개면 cart 테이블 ispaid true로 변경
             if (cartContentCnt == 0) {
                 cartService.updateCartPaid(paymentDTO.getCartId(), customUserDetails.getMember());
+            }
+
+            if(paymentDTO.getTotalPrice() > 0) {
+                pointService.pointJoinWithBuilder(customUserDetails.getMember(), Math.round(paymentDTO.getTotalPrice() / 100), "강의 구매");
+            }
+
+            if(pointDTO.getValue() > 0) {
+                pointService.pointJoinWithBuilder(customUserDetails.getMember(), -pointDTO.getValue(), "포인트 사용");
             }
 
             PaymentDTO returnPaymentDTO = paymentService.getPayment(paymentId, customUserDetails.getMember().getMemberId());
