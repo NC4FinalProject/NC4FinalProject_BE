@@ -136,6 +136,8 @@ public class ContentsServiceImpl implements ContentsService {
         ContentsDTO contentsDTO = contents.toDTO();
         // Member의 userNickname을 ContentsDTO에 설정
         contentsDTO.setUserNickname(contents.getMember().getUserNickname());
+        contentsDTO.setProfileFile(contents.getMember().getProfileFile());
+
         return contentsDTO;
     }
 

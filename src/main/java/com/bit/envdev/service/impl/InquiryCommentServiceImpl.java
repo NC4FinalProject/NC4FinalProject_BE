@@ -16,8 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -110,15 +109,27 @@ public class InquiryCommentServiceImpl implements InquiryCommentService {
             List<Map<String, Object>> mapList = inquiryCommentRepository.findByInquiryInquiryIdOrderByInquiryCommentLikCountDesc(inquiryId);
 
             List<InquiryComment> inquiryCommentList = mapList.stream().map(map -> {
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                format.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
                 try {
+                    Date crtDt = format.parse(map.get("INQUIRY_COMMENT_CRTDT").toString());
+                    Date udtDt = format.parse(map.get("INQUIRY_COMMENT_UDTDT").toString());
+
+                    Calendar crtCal = Calendar.getInstance();
+                    Calendar udtCal = Calendar.getInstance();
+
+                    crtCal.setTime(crtDt);
+                    udtCal.setTime(udtDt);
+
+                    crtCal.add(Calendar.HOUR_OF_DAY, 9);
+                    udtCal.add(Calendar.HOUR_OF_DAY, 9);
+
                     return InquiryComment.builder()
                             .inquiryCommentId(Long.valueOf(map.get("INQUIRY_COMMENT_ID").toString()))
                             .inquiry(inquiryRepository.findById(Long.valueOf(map.get("INQUIRY_ID").toString())).orElseThrow())
-                            .inquiryCommentContent(map.get("INQUIRY_COMMENT_CRTDT").toString())
-                            .inquiryCommentCrtDT(format.parse(map.get("INQUIRY_COMMENT_CRTDT").toString()))
-                            .inquiryCommentUdtDT(format.parse(map.get("INQUIRY_COMMENT_UDTDT").toString()))
+                            .inquiryCommentContent(map.get("INQUIRY_COMMENT_CONTENT").toString())
+                            .inquiryCommentCrtDT(new Date(crtCal.getTimeInMillis()))
+                            .inquiryCommentUdtDT(new Date(udtCal.getTimeInMillis()))
                             .member(memberRepository.findById(Long.valueOf(map.get("MEMBER_ID").toString())).orElseThrow())
                         .build();
                 } catch (ParseException e) {

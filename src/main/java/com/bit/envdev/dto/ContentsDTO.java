@@ -55,6 +55,7 @@ public class ContentsDTO {
     private int reviewCount;
     private int paymentCount;
     private int bookmarkCount;
+    private String profileFile;
 
     public Contents toEntity(Member member) {
         return Contents.builder()

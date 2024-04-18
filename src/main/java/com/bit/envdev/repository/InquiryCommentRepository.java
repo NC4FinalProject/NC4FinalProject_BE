@@ -30,6 +30,7 @@ public interface InquiryCommentRepository extends JpaRepository<InquiryComment, 
             "            GROUP BY B.INQUIRY_COMMENT_ID\n" +
             "    ) C\n" +
             "    ON A.INQUIRY_COMMENT_ID = C.INQUIRY_COMMENT_ID\n" +
+            "    WHERE A.INQUIRY_ID = :inquiryId" +
             "    ORDER BY C.LIKE_COUNT DESC", nativeQuery = true)
     List<Map<String, Object>> findByInquiryInquiryIdOrderByInquiryCommentLikCountDesc(Long inquiryId);
 }
