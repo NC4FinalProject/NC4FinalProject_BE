@@ -1,6 +1,7 @@
 package com.bit.envdev.entity;
 
 import com.bit.envdev.dto.NoticeLikeDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +18,7 @@ public class NoticeLike {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notice_id")
+    @JsonBackReference
     private Notice notice;
 
     @Id

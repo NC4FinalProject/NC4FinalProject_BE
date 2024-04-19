@@ -58,6 +58,7 @@ public class NoticeController {
 
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             responseDTO.setErrorCode(401);
             responseDTO.setErrorMessage(e.getMessage());
             responseDTO.setStatusCode(HttpStatus.BAD_REQUEST.value());

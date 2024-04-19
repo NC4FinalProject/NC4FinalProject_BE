@@ -28,6 +28,8 @@ public class QNotice extends EntityPathBase<Notice> {
 
     public final ListPath<NoticeFile, QNoticeFile> noticeFileList = this.<NoticeFile, QNoticeFile>createList("noticeFileList", NoticeFile.class, QNoticeFile.class, PathInits.DIRECT2);
 
+    public final ListPath<NoticeLike, QNoticeLike> noticeLikeList = this.<NoticeLike, QNoticeLike>createList("noticeLikeList", NoticeLike.class, QNoticeLike.class, PathInits.DIRECT2);
+
     public final StringPath noticeTitle = createString("noticeTitle");
 
     public final StringPath noticeWriter = createString("noticeWriter");

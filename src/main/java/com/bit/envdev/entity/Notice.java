@@ -40,6 +40,10 @@ public class Notice {
     @JsonManagedReference
     private List<NoticeFile> noticeFileList;
 
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<NoticeLike> noticeLikeList;
+
     public NoticeDTO toDTO() {
         return NoticeDTO.builder()
                 .id(this.id)

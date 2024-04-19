@@ -283,21 +283,21 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateUserMemo(MemberDTO memberDTO) {
-        MemberDTO NewMemberDTO = memberRepository.findById(memberDTO.getMemberId()).get().toDTO();
-        memberDTO.setMemo(memberDTO.getMemo());
+        Member NewMember = memberRepository.findById(memberDTO.getMemberId()).get();
+        System.out.println(memberDTO.getMemo());
 
         Member updatedMember = Member.builder()
-                .memberId(memberDTO.getMemberId())
-                .username(memberDTO.getUsername())
-                .password(memberDTO.getPassword())
-                .userNickname(memberDTO.getUserNickname())
-                .role(memberDTO.getRole())
-                .profileFile(memberDTO.getProfileFile())
-                .emailVerification(memberDTO.getEmailVerification())
-                .createdAt(LocalDateTime.parse(memberDTO.getCreatedAt()))
+                .memberId(NewMember.getMemberId())
+                .username(NewMember.getUsername())
+                .password(NewMember.getPassword())
+                .userNickname(NewMember.getUserNickname())
+                .role(NewMember.getRole())
+                .profileFile(NewMember.getProfileFile())
+                .emailVerification(NewMember.getEmailVerification())
+                .createdAt(NewMember.getCreatedAt())
                 .modifiedAt(LocalDateTime.now())
                 .memo(memberDTO.getMemo())
-                .contentsList(memberDTO.toEntity().getContentsList())
+                .contentsList(NewMember.getContentsList())
                 .build();
 
         memberRepository.save(updatedMember);

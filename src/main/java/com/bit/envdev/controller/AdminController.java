@@ -105,6 +105,7 @@ public class AdminController {
 
             return ResponseEntity.ok(null);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("errorCode", 101);
             errorResponse.put("errorMessage", e.getMessage());
@@ -118,6 +119,7 @@ public class AdminController {
         Map<String, Object> responseData = new HashMap<>();
         try {
             MemberDTO member = memberService.findById(id);
+            System.out.println(member);
             long contentCount = contentsService.countByMemberId(member.toEntity());
             long inqueryCount = inquiryService.countByMemberId(member.toEntity());
             long reviewCount = reviewService.countByMemberId(member.toEntity());
